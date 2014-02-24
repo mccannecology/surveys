@@ -6,11 +6,11 @@
 
 # Creates the followind data frames: 
 # data (n = 410)                  all surveys (including CAES 2004 surveys when FP were not measured)
-# dataONEperpond (n = 201)        surveys combined to one per waterbody
-# dataCAES (n = 166)              waterbodies surveyed by CAES
-# dataFP (n = 97)                 waterbodies with floating plants present 
-# dataCAESFP (n = 62)             waterbodies surveyed by CAES - with floating plants present 
-# dataFPoutliers (n = 95)         waterbodies with floating plants present - total P < 0.5 mg/L (2 waterbodies removed)
+# dataONEperpond (n = 203)        surveys combined to one per waterbody
+# dataCAES (n = 170)              waterbodies surveyed by CAES
+# dataFP (n = 98)                 waterbodies with floating plants present 
+# dataCAESFP (n = 65)             waterbodies surveyed by CAES - with floating plants present 
+# dataFPoutliers (n = 96)         waterbodies with floating plants present - total P < 0.5 mg/L (2 waterbodies removed)
 # dataFPsmall (n = 54)            waterbodies with floating plants present and <5 ha. surface area 
 # dataFPextrasmall (n = 19)       waterbodies with floating plants present and <=0.4 ha. surface area 
 # dataFPsmalloutliers (n = 52)    waterbodies with floating plants present and <5 ha. surface area - total P < 0.5 mg/L (2 waterbodies removed)
@@ -27,12 +27,13 @@
 ###############################################################################################
 rm(list=ls()) # clear your workspace 
 
+# Not sure that I need to set working directory when this is a project on git 
 setwd("C:/Users/Mike/Desktop/Dropbox/surveys")
 # setwd(choose.dir()) # interactively choose the directory that you want 
 
 list.files() # see the files/folders inside your working directory 
 
-data = read.csv("allsurveys+combined.csv") # import data matrix 
+data = read.csv("survey analysis all.csv") # import data matrix 
 
 # check to see the classes of your variables 
 # tells you if variables are numerical, factors, integers, etc.
