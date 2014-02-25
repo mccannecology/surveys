@@ -19,10 +19,10 @@ dataFPsmall$FPcover_max_percent <- dataFPsmall$FPcover_max*100
 # LINEAR       #
 ################ 
 a1 <- ggplot(data.frame(x = c(0, 0.5)), aes(x)) # set-up blank plot 
-a1 <- a1 + scale_x_log10() # x-axis on log scale
 a1 <- a1 + geom_segment(aes(x=0,y=1,xend=0.5,yend=100),size=1) # add linear line
 a1 <- a1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)") # label axes 
 a1 <- a1 + geom_text(aes(x=0.01,y=100,label="a)"),size=7) # add pane label
+a1 <- a1 + theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) # remove x-axis values & ticks
 a1
 
 ################
@@ -32,11 +32,11 @@ a1
 # THRESHOLD    #
 ################
 a2 <- ggplot(data.frame(x = c(0, 0.5)), aes(x)) # set-up blank plot 
-a2 <- a2 + scale_x_log10() # x-axis on log scale
 a2 <- a2 + geom_segment(aes(x=0,y=1,xend=0.25,yend=10),size=1) + geom_segment(aes(x=0.25,y=90,xend=0.5,yend=100),size=1) # add two segments 
 a2 <- a2 + geom_vline(xintercept=0.25,colour="red",size=1) # add vertical line @ threshold value 
 a2 <- a2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)") # label axes 
 a2 <- a2 + geom_text(aes(x=0.01,y=100,label="b)"),size=7) # add pane label 
+a2 <- a2 + theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) # remove x-axis values & ticks
 a2
 
 ################
@@ -47,12 +47,12 @@ a2
 ################
 # create a blank plot - but you cannot view it until you add a line 
 a3 <- ggplot(data.frame(x = c(0, 0.5)), aes(x)) # set-up blank plot 
-a3 <- a3 + scale_x_log10() # x-axis on log scale
 a3 <- a3 + geom_segment(aes(x=0,y=1,xend=0.3,yend=10),size=1) + geom_segment(aes(x=0.2,y=90,xend=0.5,yend=100),size=1) # add two segments 
 a3 <- a3 + geom_vline(xintercept=0.20,colour="red",size=1) # add vertical line @ 1st threshold value 
 a3 <- a3 + geom_vline(xintercept=0.30,colour="red",size=1) # add vertical line @ 2nd threshold value 
 a3 <- a3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)") # label axes 
 a3 <- a3 + geom_text(aes(x=0.01,y=100,label="c)"),size=7) # add pane label 
+a3 <- a3 + theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) # remove x-axis values & ticks
 a3
 
 ################
@@ -61,15 +61,20 @@ a3
 # "LINEAR"     #
 # (LOGISTIC)   #
 ################ 
-b1 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=as.factor(FPcover_max_percent))) + geom_point(shape=1) +geom_smooth(method="glm",family=binomial)
-b1 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max_percent)) + geom_point(shape=1) 
+b1 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max_percent)) + geom_point() 
+b1 <- ggplot(data=dataFPsmall, aes(x=log(TOTP_avg),y=FPcover_max_percent)) + geom_point() 
 b1 <- b1 + scale_x_log10()
 b1 <- b1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
 b1 <- b1 + geom_text(aes(x=0.01,y=100,label="d)"),size=7)
 
-b1 <- b1 + geom_smooth(method="glm", family=quasibinomial) # add logistic regression here - problem: y(0,100) not (0,1) # may need to covert to "factor
+# not working - does not plot the right line 
+b1 <- b1 + stat_function(fun=logistic) # add the logistic regression line from "logistic regression.R" script 
 
 b1  
+
+# this might work 
+# do a coordinate transformation AFTER plotting the function with stat_function 
+b1 <- b1 + coord_trans(xtrans="log10")
 
 ################
 # Fig. 1e      #
@@ -77,10 +82,14 @@ b1
 # SEGMENTED    #
 # THRESHOLD    #
 ################
-b2 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max_percent)) + geom_point(shape=1) 
+b2 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max_percent)) + geom_point() 
 b2 <- b2 + scale_x_log10()
 b2 <- b2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
 b2 <- b2 + geom_text(aes(x=0.01,y=100,label="e)"),size=7)
+
+# not working - does not plot the right line 
+b2 <- b2 + stat_function(fun=segmented) # add the segmented logistic regression line from "segmented logistic.R" script 
+
 b2  
   
 ################
@@ -89,7 +98,7 @@ b2
 # OVERLAPPING  #
 # ALT. STATES  #
 ################
-b3 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max_percent)) + geom_point(shape=1) 
+b3 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max_percent)) + geom_point() 
 b3 <- b3 + scale_x_log10()
 b3 <- b3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
 b3 <- b3 + geom_text(aes(x=0.01,y=100,label="f)"),size=7)
@@ -99,4 +108,5 @@ b3
 # ARRANGING PLOTS #
 ###################
 Fig01 <- arrangeGrob(a1,a2,a3,b1,b2,b3,ncol=3,nrow=2) #grid.arrange does not work with ggsave()
+Fig01
 ggsave(file="Figure 01.pdf", Fig02)

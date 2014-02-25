@@ -67,6 +67,7 @@ for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actua
 }
 mse <- as.numeric(mse) # converts list to numeric 
 breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
+
 # re-run the glm() using this breakpoint 
 segmented.lmFPsmallTOTP.ver2 <- lm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), data=dataFPsmall)
 summary(segmented.lmFPsmallTOTP.ver2)     
@@ -135,7 +136,7 @@ summary(glmFPsmallupper50)
 summary(glmFPsmalllower50)
 ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max)) + geom_point() + stat_smooth(method=glm, family=binomial, aes(fill=factor(half)))
 
-# partitioned 33:67 y-variable + linear
+# partitioned 33:67 y-variable + logistic
 glmFPsmallupperthird <- glm(FPcover_max ~ TOTP_avg, family = binomial, data = subset(dataFPsmall, FPcover_max >= 0.6666)) 
 glmFPsmalllowerthird <- glm(FPcover_max ~ TOTP_avg, family = binomial, data = subset(dataFPsmall, FPcover_max < 0.6666)) 
 summary(glmFPsmallupperthird)

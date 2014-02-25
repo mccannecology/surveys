@@ -29,11 +29,9 @@ intercept(segmented.glmFPsmallTOTPbinomial)
 
 # You have to manually enter the breakpoint from the summary here 
 breakpoint <- 0.019810
-
 # manually definte slope & intercept for 1st line 
 intercept01 <- -10.8300
 slope01 <- 518.800
-
 # manually definte slope & intercept for 2nd line 
 intercept02 <- -0.6459
 slope02 <- 5.012
@@ -41,9 +39,8 @@ slope02 <- 5.012
 # define the function that will be used to plot this on a ggplot2 object
 segmented <- function(x){
   if(x<breakpoint) {100 * (exp(intercept01 + slope01*x)) / (1 + exp(intercept01 + slope01*x))}
-  if(x>=breakpoint) {100 * (exp(intercept02 + slope02*x)) / (1 + exp(intercept02 + slope02*x))}
+  else {100 * (exp(intercept02 + slope02*x)) / (1 + exp(intercept02 + slope02*x))}
 }
-
 
 # model fit
 AIC(segmented.glmFPsmallTOTPbinomial)
