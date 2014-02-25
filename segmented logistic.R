@@ -1,6 +1,7 @@
 ############################################
 # ANALYSIS OF CT & LI DUCKWEED SURVEY DATA #
 # Segmented logistic regression            #
+# 2 methods: manual or package             #
 # Data: dataFPsmall (n=54)                 #
 # Waterbodies <5 ha with FP present        #
 # MJM 2/25/2014                            #
@@ -18,6 +19,33 @@ ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max)) + geom_point()
 #################################
 segmented.glmFPsmallTOTPbinomial <- segmented(glmFPsmallTOTPbinomial, seg.Z=~TOTP_avg, psi=list(TOTP_avg=c(0.05)), data = dataFPsmall)
 summary(segmented.glmFPsmallTOTPbinomial)
+
+# U1.TOTP_avg is not the slop of the second segment 
+# it is the difference in slopes between the 1st and 2nd segments 
+
+# so instead, you need to extract these manually: 
+slope(segmented.glmFPsmallTOTPbinomial)
+intercept(segmented.glmFPsmallTOTPbinomial)
+
+# You have to manually enter the breakpoint from the summary here 
+breakpoint <- 0.019810
+
+# manually definte slope & intercept for 1st line 
+intercept01 <- -10.8300
+slope01 <- 518.800
+
+# manually definte slope & intercept for 2nd line 
+intercept02 <- -0.6459
+slope02 <- 5.012
+
+# define the function that will be used to plot this on a ggplot2 object
+segmented <- function(x){
+  if(x<breakpoint) {100 * (exp(intercept01 + slope01*x)) / (1 + exp(intercept01 + slope01*x))}
+  if(x>=breakpoint) {100 * (exp(intercept02 + slope02*x)) / (1 + exp(intercept02 + slope02*x))}
+}
+
+
+# model fit
 AIC(segmented.glmFPsmallTOTPbinomial)
 
 # plotting the segmented model
