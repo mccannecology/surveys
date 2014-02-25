@@ -61,20 +61,31 @@ a3
 # "LINEAR"     #
 # (LOGISTIC)   #
 ################ 
+# only works if you don't log-transform the x-axis 1st 
+# do a coordinate transformation after you plot the function 
+# still doesn't look quite right, but OK for now 
 b1 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max_percent)) + geom_point() 
-b1 <- ggplot(data=dataFPsmall, aes(x=log(TOTP_avg),y=FPcover_max_percent)) + geom_point() 
-b1 <- b1 + scale_x_log10()
 b1 <- b1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
 b1 <- b1 + geom_text(aes(x=0.01,y=100,label="d)"),size=7)
-
-# not working - does not plot the right line 
 b1 <- b1 + stat_function(fun=logistic) # add the logistic regression line from "logistic regression.R" script 
-
+b1 <- b1 + coord_trans(xtrans="log10")
 b1  
 
-# this might work 
-# do a coordinate transformation AFTER plotting the function with stat_function 
-b1 <- b1 + coord_trans(xtrans="log10")
+# Alternative try
+# Y-variable: FPcover_max (0,1)
+# Still need to convert the y-axis to percentage (0,100)
+b1 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
+b1 <- b1 + stat_smooth(method=glm, family=binomial, se=F)
+b1 <- b1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
+b1 <- b1 + geom_text(aes(x=0.01,y=1,label="d)"),size=7)
+b1 <- b1 + scale_x_log10() 
+
+# trying to convert FP proprtion to % 
+# These don't work 
+b1 <- b1 + scale_y_discrete(breaks=c(0.00,0.25,0.50,0.75,1.00)),labels=c("0","25","50","75","100")) + ylab(NULL)
+b1 <- b1 + theme(axis.text.x=labels=c("0","25","50","75","100"))
+
+b1 
 
 ################
 # Fig. 1e      #
@@ -82,28 +93,43 @@ b1 <- b1 + coord_trans(xtrans="log10")
 # SEGMENTED    #
 # THRESHOLD    #
 ################
+# Almost works - but does not plot the first equation 
+# Plotting a user-defined function based on the coefficents of the segmented logistic regression 
 b2 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max_percent)) + geom_point() 
-b2 <- b2 + scale_x_log10()
 b2 <- b2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
 b2 <- b2 + geom_text(aes(x=0.01,y=100,label="e)"),size=7)
+b2 <- b2 + stat_function(fun=segment2)
+b2 <- b2 + stat_function(fun=segment1)
+b2 <- b2 + coord_trans(xtrans="log10")
+b2 <- b2 + geom_vline(xintercept=breakpoint,colour="red",size=1) # add vertical line @ threshold value 
+b2
 
-# not working - does not plot the right line 
-b2 <- b2 + stat_function(fun=segmented) # add the segmented logistic regression line from "segmented logistic.R" script 
+# Alternative try
+# Y-variable: FPcover_max (0,1)
+# Still need to convert the y-axis to percentage (0,100)
+b2 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
+b2 <- b2 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint)))
+b2 <- b2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
+b2 <- b2 + geom_text(aes(x=0.01,y=1,label="e)"),size=7)
+b2 <- b2 + geom_vline(xintercept=breakpoint,colour="red",size=1) # add vertical line @ threshold value 
+b2 <- b2 + scale_x_log10()
+b2 <- b2 + theme(legend.position="none")
+b2
 
-b2  
-  
 ################
 # Fig. 1f      #
 # EMPIRICAL    #
 # OVERLAPPING  #
 # ALT. STATES  #
 ################
-b3 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max_percent)) + geom_point() 
-b3 <- b3 + scale_x_log10()
+b3 <- ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
+b3 <- b3 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(third))) 
 b3 <- b3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b3 <- b3 + geom_text(aes(x=0.01,y=100,label="f)"),size=7)
-b3  
-  
+b3 <- b3 + geom_text(aes(x=0.01,y=1,label="f)"),size=7)
+b3 <- b3 + scale_x_log10()
+b3 <- b3 + theme(legend.position="none")
+b3 
+
 ###################
 # ARRANGING PLOTS #
 ###################

@@ -36,18 +36,23 @@ slope01 <- 518.800
 intercept02 <- -0.6459
 slope02 <- 5.012
 
-# define the function that will be used to plot this on a ggplot2 object
-segmented <- function(x){
-  if(x<breakpoint) {100 * (exp(intercept01 + slope01*x)) / (1 + exp(intercept01 + slope01*x))}
-  else {100 * (exp(intercept02 + slope02*x)) / (1 + exp(intercept02 + slope02*x))}
-}
+# define the functions that will be used to plot this on a ggplot2 object
+# Make these functions not return any values if they are outside of the range specified by the breakpoint 
+segment1 <- function(x) ifelse(x<breakpoint, (100 * (exp(intercept01 + slope01*x)) / (1 + exp(intercept01 + slope01*x))), NA)
+segment2 <- function(x) ifelse(x>=breakpoint, (100 * (exp(intercept02 + slope02*x)) / (1 + exp(intercept02 + slope02*x))), NA)
+
+# need a function that plots the SE for this line 
 
 # model fit
 AIC(segmented.glmFPsmallTOTPbinomial)
 
-# plotting the segmented model
-plot(FPcover_max ~ TOTP_avg,data=dataFPsmall)
-plot(segmented.glmFPsmallTOTPbinomial, add=T, conf.level=0.95, shade=F, rug=F)
+
+# Add new variables to the data frame just for plotting the segmented data in ggplot2
+# segmented data: TOTP_avg < breakpoint and TOTP_avg >= breakpoint 
+dataFPsmall$breakpoint <- ifelse(dataFPsmall$TOTP_avg <= breakpoint, "below", "above")
+
+stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint)))
+
 
 #################################
 # segmented logistic regression #

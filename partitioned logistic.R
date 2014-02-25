@@ -26,4 +26,4 @@ glmFPsmallupperthird <- glm(FPcover_max ~ TOTP_avg, family = binomial, data = su
 glmFPsmalllowerthird <- glm(FPcover_max ~ TOTP_avg, family = binomial, data = subset(dataFPsmall, FPcover_max < 0.6666)) 
 summary(glmFPsmallupperthird)
 summary(glmFPsmalllowerthird)
-ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max)) + geom_point() + stat_smooth(method=glm, family=binomial, aes(fill=factor(third)))
+ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max)) + geom_point() + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(third))) + scale_x_log10()
