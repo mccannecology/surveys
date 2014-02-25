@@ -28,7 +28,7 @@ slope(segmented.glmFPsmallTOTPbinomial)
 intercept(segmented.glmFPsmallTOTPbinomial)
 
 # You have to manually enter the breakpoint from the summary here 
-breakpoint <- 0.019810
+breakpoint01 <- 0.019810
 # manually definte slope & intercept for 1st line 
 intercept01 <- -10.8300
 slope01 <- 518.800
@@ -46,12 +46,11 @@ segment2 <- function(x) ifelse(x>=breakpoint, (100 * (exp(intercept02 + slope02*
 # model fit
 AIC(segmented.glmFPsmallTOTPbinomial)
 
-
 # Add new variables to the data frame just for plotting the segmented data in ggplot2
-# segmented data: TOTP_avg < breakpoint and TOTP_avg >= breakpoint 
-dataFPsmall$breakpoint <- ifelse(dataFPsmall$TOTP_avg <= breakpoint, "below", "above")
+# segmented data: TOTP_avg < breakpoint01 and TOTP_avg >= breakpoint01 
+dataFPsmall$breakpoint01 <- ifelse(dataFPsmall$TOTP_avg <= breakpoint01, "below", "above")
 
-stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint)))
+stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint01)))
 
 
 #################################
@@ -59,15 +58,20 @@ stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint)))
 # via iterative searching       #
 #################################
 breaks <- dataFPsmall$TOTP_avg[which(dataFPsmall$TOTP_avg >= 0.00001 & dataFPsmall$TOTP_avg <= 0.2)]    # create a vector to hold potential breakpoints 
+
 mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
+
 for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
   piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family = binomial, data=dataFPsmall)
   mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
 }
-mse <- as.numeric(mse) # converts list to numeric 
-breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
 
-# re-run the glm() using this breakpoint 
-segmented.glmFPsmallTOTPbinomial.ver2 <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial, data=dataFPsmall)
-summary(segmented.glmFPsmallTOTPbinomial.ver2)     
-rm(breaks,mse,breakpoint,piecewise) # clean up your workspace 
+mse <- as.numeric(mse) # converts list to numeric 
+
+breakpoint02<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
+breakpoint02
+
+# Add new variables to the data frame just for plotting the segmented data in ggplot2
+# segmented data: TOTP_avg < breakpoint02 and TOTP_avg >= breakpoint02 
+dataFPsmall$breakpoint02 <- ifelse(dataFPsmall$TOTP_avg <= breakpoint02, "below", "above")
+

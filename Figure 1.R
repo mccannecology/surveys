@@ -33,7 +33,7 @@ a1
 ################
 a2 <- ggplot(data.frame(x = c(0, 0.5)), aes(x)) # set-up blank plot 
 a2 <- a2 + geom_segment(aes(x=0,y=1,xend=0.25,yend=10),size=1) + geom_segment(aes(x=0.25,y=90,xend=0.5,yend=100),size=1) # add two segments 
-a2 <- a2 + geom_vline(xintercept=0.25,colour="red",size=1) # add vertical line @ threshold value 
+a2 <- a2 + geom_vline(xintercept=0.25,colour="red",size=1,linetype="longdash") # add vertical line @ threshold value 
 a2 <- a2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)") # label axes 
 a2 <- a2 + geom_text(aes(x=0.01,y=100,label="b)"),size=7) # add pane label 
 a2 <- a2 + theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) # remove x-axis values & ticks
@@ -48,8 +48,8 @@ a2
 # create a blank plot - but you cannot view it until you add a line 
 a3 <- ggplot(data.frame(x = c(0, 0.5)), aes(x)) # set-up blank plot 
 a3 <- a3 + geom_segment(aes(x=0,y=1,xend=0.3,yend=10),size=1) + geom_segment(aes(x=0.2,y=90,xend=0.5,yend=100),size=1) # add two segments 
-a3 <- a3 + geom_vline(xintercept=0.20,colour="red",size=1) # add vertical line @ 1st threshold value 
-a3 <- a3 + geom_vline(xintercept=0.30,colour="red",size=1) # add vertical line @ 2nd threshold value 
+a3 <- a3 + geom_vline(xintercept=0.20,colour="red",size=1,linetype="longdash") # add vertical line @ 1st threshold value 
+a3 <- a3 + geom_vline(xintercept=0.30,colour="red",size=1,linetype="longdash") # add vertical line @ 2nd threshold value 
 a3 <- a3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)") # label axes 
 a3 <- a3 + geom_text(aes(x=0.01,y=100,label="c)"),size=7) # add pane label 
 a3 <- a3 + theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) # remove x-axis values & ticks
@@ -79,12 +79,9 @@ b1 <- b1 + stat_smooth(method=glm, family=binomial, se=F)
 b1 <- b1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
 b1 <- b1 + geom_text(aes(x=0.01,y=1,label="d)"),size=7)
 b1 <- b1 + scale_x_log10() 
-
-# trying to convert FP proprtion to % 
-# These don't work 
-b1 <- b1 + scale_y_discrete(breaks=c(0.00,0.25,0.50,0.75,1.00)),labels=c("0","25","50","75","100")) + ylab(NULL)
-b1 <- b1 + theme(axis.text.x=labels=c("0","25","50","75","100"))
-
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+b1 <- b1 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
 b1 
 
 ################
@@ -101,19 +98,22 @@ b2 <- b2 + geom_text(aes(x=0.01,y=100,label="e)"),size=7)
 b2 <- b2 + stat_function(fun=segment2)
 b2 <- b2 + stat_function(fun=segment1)
 b2 <- b2 + coord_trans(xtrans="log10")
-b2 <- b2 + geom_vline(xintercept=breakpoint,colour="red",size=1) # add vertical line @ threshold value 
+b2 <- b2 + geom_vline(xintercept=breakpoint,colour="red",size=1,linetype="longdash") # add vertical line @ threshold value 
 b2
 
 # Alternative try
 # Y-variable: FPcover_max (0,1)
 # Still need to convert the y-axis to percentage (0,100)
 b2 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
-b2 <- b2 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint)))
+b2 <- b2 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint02)))
 b2 <- b2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
 b2 <- b2 + geom_text(aes(x=0.01,y=1,label="e)"),size=7)
-b2 <- b2 + geom_vline(xintercept=breakpoint,colour="red",size=1) # add vertical line @ threshold value 
+b2 <- b2 + geom_vline(xintercept=breakpoint02,colour="red",size=1,linetype="longdash") # add vertical line @ threshold value 
 b2 <- b2 + scale_x_log10()
 b2 <- b2 + theme(legend.position="none")
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+b2 <- b2 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
 b2
 
 ################
@@ -128,6 +128,11 @@ b3 <- b3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
 b3 <- b3 + geom_text(aes(x=0.01,y=1,label="f)"),size=7)
 b3 <- b3 + scale_x_log10()
 b3 <- b3 + theme(legend.position="none")
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+b3 <- b3 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+b3 <- b3 + geom_vline(xintercept=0.01972,colour="red",size=1,linetype="longdash") # add vertical line @ lower threshold value 
+b3 <- b3 + geom_vline(xintercept=0.2085,colour="red",size=1,linetype="longdash") # add vertical line @ upper threshold value 
 b3 
 
 ###################
