@@ -1,12 +1,26 @@
 ##############################################
 # ANALYSIS OF CT & LI DUCKWEED SURVEY DATA   #
 # Threshold & breakpoint detection           #
-# UPDATED: 02/24/2014 by MJ McCann           #
+# UPDATED: 02/25/2014 by MJ McCann           #
 ##############################################
+
+library(strucchange)
+library(changepoint)
+
+############################################################################################### 
+# Package: tree 
+###############################################################################################
+# threshold, with package: tree 
+treeFPsmallTOTP <- tree(dataFPsmall$FPcover_max ~ dataFPsmall$TOTP_avg)
+treeFPsmallTOTP
 
 ############################################################################################### 
 # Package: strucchange 
 ###############################################################################################
+# threshold, with package: strucchange 
+breakpointFPsmallTOTP <- breakpoints(FPcover_max ~ TOTP_avg, h=5, data=dataFPsmall)
+summary(breakpointFPsmallTOTP)
+
 # returns breakpoints, but this is with y = Total P --- Not what I want 
 breakpoints(dataFP$TOTP_avg ~ dataFP$FPcover_max)
 
