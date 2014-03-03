@@ -49,5 +49,5 @@ summary(subset(dataONEperpond, dataONEperpond$FPcover_max >= 0.66666))
 combineddataFPsmall <- subset(dataFPsmall, dataFPsmall$year == "comb")
 combineddataFPsmall$waterbody 
 
-d# Is FP richness = 0 more likely then we would expect? 
+# Is FP richness = 0 more likely then we would expect? 
 # I did the G-test in Excel and the answer is Yes. (But this might not really be an interesting question)
