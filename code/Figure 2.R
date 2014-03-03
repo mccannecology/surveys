@@ -6,7 +6,7 @@
 
 # Set working directory 
 setwd("C:/Users/Mike/Desktop/Dropbox/CT & LI  Duckweed Surveys/Survey Analysis All") 
-s
+
 library(ggplot2)
 
 # make a new variable on the data frame - convert proportion to precentage FP cover 
