@@ -15,6 +15,12 @@ summary(subset(dataONEperpond, dataONEperpond$data_source == "CAES" | dataONEper
 summary(dataONEperpond$date) # problem with this: some surveys have already been combined 
 summary(data$date) 
 
+# number of waterbodies (dataONEperpond) from CAES - #183
+nrow(subset(dataONEperpond, dataONEperpond$data_source == "CAES" |dataONEperpond$data_source == "CAES/MJM"))
+
+# number of waterbodies (dataONEperpond) from me - #21
+nrow(subset(dataONEperpond, dataONEperpond$data_source == "MJM"))
+
 # number of waterbodies (dataONEperpond) with FP cover> 66.666%
 nrow(subset(dataONEperpond, dataONEperpond$FPcover_max >= 0.66666))
 
