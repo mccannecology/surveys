@@ -61,19 +61,6 @@ a3
 # "LINEAR"     #
 # (LOGISTIC)   #
 ################ 
-# only works if you don't log-transform the x-axis 1st 
-# do a coordinate transformation after you plot the function 
-# still doesn't look quite right, but OK for now 
-b1 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max_percent)) + geom_point() 
-b1 <- b1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b1 <- b1 + geom_text(aes(x=0.01,y=100,label="d)"),size=7)
-b1 <- b1 + stat_function(fun=logistic) # add the logistic regression line from "logistic regression.R" script 
-b1 <- b1 + coord_trans(xtrans="log10")
-b1  
-
-# Alternative try
-# Y-variable: FPcover_max (0,1)
-# Still need to convert the y-axis to percentage (0,100)
 b1 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
 b1 <- b1 + stat_smooth(method=glm, family=binomial, se=F)
 b1 <- b1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
@@ -90,20 +77,9 @@ b1
 # SEGMENTED    #
 # THRESHOLD    #
 ################
-# Almost works - but does not plot the first equation 
-# Plotting a user-defined function based on the coefficents of the segmented logistic regression 
-b2 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max_percent)) + geom_point() 
-b2 <- b2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b2 <- b2 + geom_text(aes(x=0.01,y=100,label="e)"),size=7)
-b2 <- b2 + stat_function(fun=segment2)
-b2 <- b2 + stat_function(fun=segment1)
-b2 <- b2 + coord_trans(xtrans="log10")
-b2 <- b2 + geom_vline(xintercept=breakpoint,colour="red",size=1,linetype="longdash") # add vertical line @ threshold value 
-b2
+# use "segmented logistic.R" first 
+# generates your breakpoint 
 
-# Alternative try
-# Y-variable: FPcover_max (0,1)
-# Still need to convert the y-axis to percentage (0,100)
 b2 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
 b2 <- b2 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint02)))
 b2 <- b2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
