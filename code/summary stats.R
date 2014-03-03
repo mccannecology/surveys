@@ -1,7 +1,7 @@
 ##############################################
 # ANALYSIS OF CT & LI DUCKWEED SURVEY DATA   #
 # Summary stats                              #
-# UPDATED: 03/02/2014 by MJ McCann           #
+# UPDATED: 03/03/2014 by MJ McCann           #
 ##############################################
 
 # stats on waterbody sizes in my surveys 
@@ -20,6 +20,9 @@ nrow(subset(dataONEperpond, dataONEperpond$data_source == "CAES" |dataONEperpond
 
 # number of waterbodies (dataONEperpond) from me - #21
 nrow(subset(dataONEperpond, dataONEperpond$data_source == "MJM"))
+
+# number of waterbodies without floating plants 
+nrow(dataONEperpond) - nrow(dataFP)
 
 # number of waterbodies (dataONEperpond) with FP cover> 66.666%
 nrow(subset(dataONEperpond, dataONEperpond$FPcover_max >= 0.66666))
