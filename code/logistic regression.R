@@ -3,7 +3,7 @@
 # Logistic regression                      #
 # Data: dataFPsmall (n=54)                 #
 # Waterbodies <5 ha with FP present        #
-# MJM 2/25/2014                            #
+# MJM 3/3/2014                             #
 ############################################
 
 library(ggplot2)
@@ -11,6 +11,7 @@ library(ggplot2)
 # logistic regression (generalized linear model, family = binomial)
 glmFPsmallTOTPbinomial <- glm(FPcover_max ~ TOTP_avg, family=binomial, data=dataFPsmall)
 summary(glmFPsmallTOTPbinomial) 
+AIC(glmFPsmallTOTPbinomial) 
 
 # trying to extract values/formula to manually plot on a ggplo2 object 
 coef(glmFPsmallTOTPbinomial) # Intercept: -0.7962583 # TOTP_avg: 5.7943365 

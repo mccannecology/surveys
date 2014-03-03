@@ -75,3 +75,22 @@ breakpoint02
 # segmented data: TOTP_avg < breakpoint02 and TOTP_avg >= breakpoint02 
 dataFPsmall$breakpoint02 <- ifelse(dataFPsmall$TOTP_avg <= breakpoint02, "below", "above")
 
+# re-run the glm() using this breakpoint 
+segmented.glmFPsmallTOTPbinomial2 <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint02) + TOTP_avg*(TOTP_avg>=breakpoint02), family=binomial, data=dataFPsmall)
+summary(segmented.glmFPsmallTOTPbinomial)     
+rm(breaks,mse,breakpoint02,piecewise) # clean up your workspace 
+
+# try to look at each segment separately 
+# segment 1
+dataFPsmallseg1 <- subset(dataFPsmall, TOTP_avg < 0.03698)
+segmented.glmFPsmallTOTPbinomial.seg1 <- glm(FPcover_max ~ TOTP_avg, family=binomial, data=dataFPsmallseg1)
+summary(segmented.glmFPsmallTOTPbinomial.seg1)     
+
+# segment 2
+dataFPsmallseg2 <- subset(dataFPsmall, TOTP_avg >= 0.03698)
+segmented.glmFPsmallTOTPbinomial.seg2 <- glm(FPcover_max ~ TOTP_avg, family=binomial, data=dataFPsmallseg2)
+summary(segmented.glmFPsmallTOTPbinomial.seg2)     
+
+
+
+
