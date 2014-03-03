@@ -7,9 +7,9 @@
 # Creates the followind data frames: 
 # data (n = 412)                  all surveys (including CAES 2004 surveys when FP were not measured)
 # dataONEperpond (n = 204)        surveys combined to one per waterbody
-# dataCAES (n = 171)              waterbodies surveyed by CAES
+# dataCAES (n = 169)              waterbodies surveyed by CAES
 # dataFP (n = 98)                 waterbodies with floating plants present 
-# dataCAESFP (n = 65)             waterbodies surveyed by CAES - with floating plants present 
+# dataCAESFP (n = 63)             waterbodies surveyed by CAES - with floating plants present 
 # dataFPoutliers (n = 96)         waterbodies with floating plants present - total P < 0.5 mg/L (2 waterbodies removed)
 # dataFPsmall (n = 54)            waterbodies with floating plants present and <5 ha. surface area 
 # dataFPextrasmall (n = 19)       waterbodies with floating plants present and <=0.4 ha. surface area 
