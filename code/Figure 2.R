@@ -16,11 +16,17 @@ Fig02 <- ggplot(dataFPsmall,aes(FPcover_max_percent)) + stat_bin(binwidth=20,rig
 
 Fig02 <- Fig02 + ylab("Frequency") + xlab("Floating plant cover (%)")
 
-Fig02 <- Fig02 + scale_x_continuous(limits=c(0,100),breaks=c(0,20,40,60,80,100),expand=c(0,0))
+Fig02 <- Fig02 + scale_x_continuous(limits=c(0,101),breaks=c(0,20,40,60,80,100),expand=c(0,0)) + scale_y_continuous(limits=c(0,25),expand=c(0,0))
 
-# I can't get the scale_x_continuous(expand) to work with theme_classic()
-# Fig02 <- Fig02 + theme_classic()
+Fig02 <- Fig02 + theme_classic(base_size=18)
+
 Fig02
+
+
+
+
+#Fig02 <- Fig02 + theme_bw()
+#Fig02 <- Fig02 + theme_minimal()
 
 # save your plot in the working directory 
 ggsave(file="Figure 2 - histogram - FP cover max - small FP ponds.jpg")
