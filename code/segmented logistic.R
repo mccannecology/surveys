@@ -71,8 +71,8 @@ mse <- as.numeric(mse) # converts list to numeric
 breakpoint02<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
 breakpoint02
 
-# Add new variables to the data frame just for plotting the segmented data in ggplot2
-# segmented data: TOTP_avg < breakpoint02 and TOTP_avg >= breakpoint02 
+# Add new variables to the data frame 
+# used to plot the segmented data in ggplot2
 dataFPsmall$breakpoint02 <- ifelse(dataFPsmall$TOTP_avg <= breakpoint02, "below", "above")
 
 # re-run the glm() using this breakpoint 
@@ -80,7 +80,8 @@ segmented.glmFPsmallTOTPbinomial2 <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakp
 summary(segmented.glmFPsmallTOTPbinomial)     
 rm(breaks,mse,breakpoint02,piecewise) # clean up your workspace 
 
-# try to look at each segment separately 
+# Look at each segment separately 
+
 # segment 1
 dataFPsmallseg1 <- subset(dataFPsmall, TOTP_avg < 0.03698)
 segmented.glmFPsmallTOTPbinomial.seg1 <- glm(FPcover_max ~ TOTP_avg, family=binomial, data=dataFPsmallseg1)
