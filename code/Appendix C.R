@@ -11,9 +11,11 @@ appendixC <-ggplot(data=dataFP, aes(x=surfacearea_ha,y=FPcover_max_percent)) + g
 
 appendixC <- appendixC + scale_x_log10()
 
-appendixC <- appendixC + geom_vline(xintercept = 5) 
+appendixC <- appendixC + geom_vline(xintercept = 5,colour="red",size=1,linetype="longdash") 
 
 appendixC <- appendixC + ylab("Floating plant cover (%)") + xlab("Surface area (ha)")
+
+appendixC <- appendixC + theme_classic(base_size=18)
 
 appendixC
 
