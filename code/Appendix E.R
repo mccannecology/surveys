@@ -8,7 +8,7 @@
 library(ggplot2)
 
 # dataFPsmall - no outliers removed 
-appendixE <- ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
+appendixE <- ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=3) 
 
 appendixE <- appendixE + stat_smooth(method="glm", family=binomial,col="red", se=F) 
 
@@ -25,6 +25,8 @@ y_labels <- as.character(y_breaks*100)
 appendixE <- appendixE + scale_y_continuous(breaks=y_breaks,labels=y_labels)
 
 appendixE <- appendixE + scale_x_log10() 
+
+appendixE <- appendixE + theme_classic(base_size=18)
 
 appendixE
 
