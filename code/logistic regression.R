@@ -8,6 +8,11 @@
 
 library(ggplot2)
 
+# linear regression 
+lmFPsmallTOTP <- lm(FPcover_max ~ TOTP_avg, data=dataFPsmall)
+summary(lmFPsmallTOTP) 
+AIC(lmFPsmallTOTP)
+
 # logistic regression (generalized linear model, family = binomial)
 glmFPsmallTOTPbinomial <- glm(FPcover_max ~ TOTP_avg, family=binomial, data=dataFPsmall)
 summary(glmFPsmallTOTPbinomial) 
