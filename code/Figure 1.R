@@ -51,9 +51,9 @@ a2
 ################
 # create a blank plot - but you cannot view it until you add a line 
 a3 <- ggplot(data.frame(x = c(0, 0.5)), aes(x)) # set-up blank plot 
-a3 <- a3 + geom_segment(aes(x=0,y=1,xend=0.3,yend=10),size=1) + geom_segment(aes(x=0.2,y=90,xend=0.5,yend=100),size=1) # add two segments 
-a3 <- a3 + geom_vline(xintercept=0.20,colour="red",size=1,linetype="longdash") # add vertical line @ 1st threshold value 
-a3 <- a3 + geom_vline(xintercept=0.30,colour="red",size=1,linetype="longdash") # add vertical line @ 2nd threshold value 
+a3 <- a3 + geom_segment(aes(x=0,y=1,xend=0.35,yend=12),size=1) + geom_segment(aes(x=0.15,y=88,xend=0.5,yend=100),size=1) # add two segments 
+a3 <- a3 + geom_vline(xintercept=0.15,colour="red",size=1,linetype="longdash") # add vertical line @ 1st threshold value 
+a3 <- a3 + geom_vline(xintercept=0.35,colour="red",size=1,linetype="longdash") # add vertical line @ 2nd threshold value 
 a3 <- a3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)") # label axes 
 a3 <- a3 + geom_text(aes(x=0.01,y=100,label="c)"),size=7) # add pane label 
 a3 <- a3 + theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) # remove x-axis values & ticks
