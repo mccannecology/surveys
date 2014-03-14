@@ -5,20 +5,38 @@
 #############################################
 library(ggplot2)
 ###########################################################################################
-# include 8 waterbodies that shift as separate points in Fig. 1
+# FPcover ~ TOTP - include 8 waterbodies that shift as separate points in Fig. 1
 ###########################################################################################
 dataSHIFTStwice = read.csv("survey analysis shiftsoccurtwice.csv") # import data matrix 
 
 # plot the data 
-j <- ggplot(data=dataSHIFTStwice, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(shape=1) 
+j <- ggplot(data=dataSHIFTStwice, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
 j <- j + xlab("Total P (mg/L)") + ylab("Proportion FP cover")
 j <- j + scale_x_log10() 
+j <- j + theme_classic(base_size=18) 
 j
+
+###########################################################################################
+# FPcover ~ TOTP - all waterbodies - even w/o FP 
+###########################################################################################
+k <- ggplot(data=dataSHIFTStwice, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
+k <- k + xlab("Total P (mg/L)") + ylab("Proportion FP cover")
+k <- k + scale_x_log10() 
+k <- k + theme_classic(base_size=18) 
+k
 
 ###########################################################################################
 # Fit mixed distribution to frequency data - Fig. 2 - compare two- vs. one-distribution
 ###########################################################################################
 
+###########################################################################################
+# Fit beta distribution to frequency data - Fig. 2 - compare uniform vs. urn 
+###########################################################################################
+# qqplot(x, y, plot.it = TRUE, xlab = deparse(substitute(x)), ylab = deparse(substitute(y)), ...)
+library(MASS)
+
+fitdistr(dataFPsmall$FPcover_max,"beta",list(shape1=1,shape2=1))
+### I get a different error message depending the values for shape1 and shape2 used
 
 ###########################################################################################
 # Include ponds w/o FP in analyses - Fig. 1
