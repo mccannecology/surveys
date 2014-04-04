@@ -13,7 +13,7 @@
 # dataFPoutliers (n = 96)         waterbodies with floating plants present - total P < 0.5 mg/L (2 waterbodies removed)
 # dataFPsmall (n = 54)            waterbodies with floating plants present and <5 ha. surface area 
 # dataFPextrasmall (n = 19)       waterbodies with floating plants present and <=0.4 ha. surface area 
-# dataFPsmalloutliers (n = 52)    waterbodies with floating plants present and <5 ha. surface area - total P < 0.5 mg/L (2 waterbodies removed)
+# dataFPoutlierssmall (n = 52)    waterbodies with floating plants present and <5 ha. surface area - total P < 0.5 mg/L (2 waterbodies removed)
 
 ###############################################################################################
 # SAVING EXCEL FILES FOR IMPORTING 

@@ -10,7 +10,7 @@ formuala <- FPcover_max ~ TOTP_avg # formula for the beta regression
 
 data(dataFPsmall) # load  your dataset
 
-# you need to get rid of any 0s and 1s in the dependent (Y) variable
+# Get rid of any 0s and 1s in the dependent (Y) variable
 # modify dataFPsmall$FPcover_max so there are no 0s or 1s 
 dataFPsmall$FPcover_max[dataFPsmall$FPcover_max == 1] <- 0.999
 dataFPoutlierssmall$FPcover_max[dataFPoutlierssmall$FPcover_max == 1] <- 0.999
@@ -63,8 +63,6 @@ summary(betareg_mix_FPsmalloutliers_loglog_3clusters)
 betareg_mix_FPsmalloutliers_loglog_2clusters <- betamix(FPcover_max ~ TOTP_avg, link="loglog", data = dataFPoutlierssmall, k = 2, nstart = 100)
 summary(betareg_mix_FPsmalloutliers_loglog_2clusters)
 # returns a solution with 2 clusters 
-
-
 
 ##################
 # Compare models #
