@@ -23,9 +23,9 @@ dataFPoutlierssmall$FPcover_max[dataFPoutlierssmall$FPcover_max == 1] <- 0.999
 # link: logit         #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
-
-betareg_dataONEperpond_logit
+formula <- dataONEperpond$FPcover_max ~ dataONEperpond$TOTP_avg
+betareg_dataONEperpond_logit <- betareg(formula, data=dataONEperpond, link="logit")
+summary(betareg_dataONEperpond_logit)
 
 ####################### 
 # Beta regression     #
@@ -34,8 +34,8 @@ betareg_dataONEperpond_logit
 # Constant dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg
-
-betareg_dataFP_logit
+betareg_dataFP_logit <- betareg(formula, data=dataFP, link="logit")
+summary(betareg_dataFP_logit)
 
 ####################### 
 # Beta regression     #
@@ -44,8 +44,8 @@ betareg_dataFP_logit
 # Constant dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg
-
-betareg_dataFPsmall_logit
+betareg_dataFPsmall_logit <- betareg(formula, data=dataFPsmall, link="logit")
+summary(betareg_dataFPsmall_logit)
 
 ####################### 
 # Beta regression     #
@@ -54,8 +54,8 @@ betareg_dataFPsmall_logit
 # Constant dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg
-
-betareg_dataFPoutliers_logit
+betareg_dataFPoutliers_logit <- betareg(formula, data=dataFPoutliers, link="logit")
+summary(betareg_dataFPoutliers_logit)
 
 ####################### 
 # Beta regression     #
@@ -64,8 +64,58 @@ betareg_dataFPoutliers_logit
 # Constant dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg
+betareg_dataFPoutlierssmall_logit <- betareg(formula, data=dataFPoutlierssmall, link="logit")
+summary(betareg_dataFPoutlierssmall_logit)
 
-betareg_dataFPoutlierssmall_logit
+####################### 
+# Beta regression     #
+# dataONEperpond      #
+# link: loglog        #
+# Constant dispersion #
+#######################
+formula <- FPcover ~ TOTP_avg
+betareg_dataONEperpond_loglog <- betareg(formula, data=dataONEperpond, link="loglog")
+summary(betareg_dataONEperpond_loglog) 
+
+####################### 
+# Beta regression     #
+# dataFP              #
+# link: loglog        #
+# Constant dispersion #
+#######################
+formula <- FPcover ~ TOTP_avg
+betareg_dataFP_loglog <- betareg(formula, data=dataFP, link="loglog")
+summary(betareg_dataFP_loglog) 
+
+####################### 
+# Beta regression     #
+# dataFPsmall         #
+# link: loglog        #
+# Constant dispersion #
+#######################
+formula <- FPcover ~ TOTP_avg
+betareg_dataFPsmall_loglog <- betareg(formula, data=dataFPsmall, link="loglog")
+summary(betareg_dataFPsmall_loglog) 
+
+####################### 
+# Beta regression     #
+# dataFPoutliers      #
+# link: loglog        #
+# Constant dispersion #
+#######################
+formula <- FPcover ~ TOTP_avg
+betareg_dataFPoutliers_loglog <- betareg(formula, data=dataFPoutliers, link="loglog")
+summary(betareg_dataFPoutliers_loglog) 
+
+####################### 
+# Beta regression     #
+# dataFPoutlierssmall #
+# link: loglog        #
+# Constant dispersion #
+#######################
+formula <- FPcover ~ TOTP_avg
+betareg_dataFPoutlierssmall_loglog <- betareg(formula, data=dataFPoutlierssmall, link="loglog")
+summary(betareg_dataFPoutlierssmall_loglog) 
 
 ####################### 
 # Beta regression     #
@@ -74,8 +124,8 @@ betareg_dataFPoutlierssmall_logit
 # Variable dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg | TOTP_avg
-
-betareg_dataONEperpond_logit_vardisp
+betareg_dataONEperpond_logit_vardisp <- betareg(formula, data=dataONEperpond, link="logit")
+summary(betareg_dataONEperpond_logit_vardisp) 
 
 ####################### 
 # Beta regression     #
@@ -84,8 +134,8 @@ betareg_dataONEperpond_logit_vardisp
 # Variable dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg | TOTP_avg
-
-betareg_dataFP_logit_vardisp
+betareg_dataFP_logit_vardisp <- betareg(formula, data=dataFP, link="logit")
+summary(betareg_dataFP_logit_vardisp) 
 
 ####################### 
 # Beta regression     #
@@ -94,8 +144,8 @@ betareg_dataFP_logit_vardisp
 # Variable dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg | TOTP_avg
-
-betareg_dataFPsmall_logit_vardisp
+betareg_dataFPsmall_logit_vardisp <- betareg(formula, data=dataFPsmall, link="logit")
+summary(betareg_dataFPsmall_logit_vardisp) 
 
 ####################### 
 # Beta regression     #
@@ -104,8 +154,8 @@ betareg_dataFPsmall_logit_vardisp
 # Variable dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg | TOTP_avg
-
-betareg_dataFPoutliers_logit_vardisp
+betareg_dataFPoutliers_logit_vardisp <- betareg(formula, data=dataFPoutliers, link="logit")
+summary(betareg_dataFPoutliers_logit_vardisp) 
 
 ####################### 
 # Beta regression     #
@@ -114,8 +164,8 @@ betareg_dataFPoutliers_logit_vardisp
 # Variable dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg | TOTP_avg
-
-betareg_dataFPoutlierssmall_logit_vardisp
+betareg_dataFPoutlierssmall_logit_vardisp <- betareg(formula, data=dataFPoutlierssmall, link="logit")
+summary(betareg_dataFPoutlierssmall_logit_vardisp) 
 
 ####################### 
 # Beta regression     #
@@ -125,8 +175,8 @@ betareg_dataFPoutlierssmall_logit_vardisp
 # Constant dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg
-
-betareg_mix_dataONEperpond_logit
+betareg_mix_dataONEperpond_logit <- betamix(formula, link="logit", data=dataONEperpond, k = 2, nstart = 100)
+summary(betareg_mix_dataONEperpond_logit) 
 
 ####################### 
 # Beta regression     #
@@ -136,8 +186,8 @@ betareg_mix_dataONEperpond_logit
 # Constant dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg
-
-betareg_mix_dataFP_logit
+betareg_mix_dataFP_logit <- betamix(formula, link="logit", data=dataFP, k = 2, nstart = 100)
+summary(betareg_mix_dataFP_logit) 
 
 ####################### 
 # Beta regression     #
@@ -147,8 +197,8 @@ betareg_mix_dataFP_logit
 # Constant dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg
-
-betareg_mix_dataFPsmall_logit
+betareg_mix_dataFPsmall_logit <- betamix(formula, link="logit", data=dataFPsmall, k = 2, nstart = 100)
+summary(betareg_mix_dataFPsmall_logit) 
 
 ####################### 
 # Beta regression     #
@@ -158,8 +208,8 @@ betareg_mix_dataFPsmall_logit
 # Constant dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg
-
-betareg_mix_dataFPoutliers_logit
+betareg_mix_dataFPoutliers_logit <- betamix(formula, link="logit", data=dataFPoutliers, k = 2, nstart = 100)
+summary(betareg_mix_dataFPoutliers_logit) 
 
 ####################### 
 # Beta regression     #
@@ -169,12 +219,8 @@ betareg_mix_dataFPoutliers_logit
 # Constant dispersion #
 #######################
 formula <- FPcover ~ TOTP_avg
-
-betareg_mix_dataFPoutlierssmall_logit 
-
-
-
-
+betareg_mix_dataFPoutlierssmall_logit <- betamix(formula, link="logit", data=dataFPoutlierssmall, k = 2, nstart = 100)
+summary(betareg_mix_dataFPoutlierssmall_logit) 
 
 
 
