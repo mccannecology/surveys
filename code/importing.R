@@ -5,12 +5,12 @@
 ##############################################
 
 # Creates the followind data frames: 
-# data (n = 412)                  all surveys (including CAES 2004 surveys when FP were not measured)
-# dataONEperpond (n = 204)        surveys combined to one per waterbody
-# dataCAES (n = 169)              waterbodies surveyed by CAES
-# dataFP (n = 98)                 waterbodies with floating plants present 
-# dataCAESFP (n = 63)             waterbodies surveyed by CAES - with floating plants present 
-# dataFPoutliers (n = 96)         waterbodies with floating plants present - total P < 0.5 mg/L (2 waterbodies removed)
+# data (n = 415)                  all surveys (including CAES 2004 surveys when FP were not measured)
+# dataONEperpond (n = 205)        surveys combined to one per waterbody
+# dataCAES (n = 170)              waterbodies surveyed by CAES
+# dataFP (n = 99)                 waterbodies with floating plants present 
+# dataCAESFP (n = 64)             waterbodies surveyed by CAES - with floating plants present 
+# dataFPoutliers (n = 97)         waterbodies with floating plants present - total P < 0.5 mg/L (2 waterbodies removed)
 # dataFPsmall (n = 54)            waterbodies with floating plants present and <5 ha. surface area 
 # dataFPextrasmall (n = 19)       waterbodies with floating plants present and <=0.4 ha. surface area 
 # dataFPoutlierssmall (n = 52)    waterbodies with floating plants present and <5 ha. surface area - total P < 0.5 mg/L (2 waterbodies removed)
@@ -33,7 +33,7 @@ setwd("C:/Users/Mike/Desktop/Dropbox/surveys")
 
 list.files() # see the files/folders inside your working directory 
 
-data = read.csv("survey analysis all.csv") # import data matrix 
+data = read.csv("allsurveys+combined.csv") # import data matrix 
 
 # check to see the classes of your variables 
 # tells you if variables are numerical, factors, integers, etc.
