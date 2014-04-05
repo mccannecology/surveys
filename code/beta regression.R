@@ -8,14 +8,19 @@ library(betareg)
 
 # Get rid of any 0s and 1s in the dependent (Y) variable
 dataONEperpond$FPcover_max[dataONEperpond$FPcover_max == 1] <- 0.999
+dataONEperpond$FPcover_max[dataONEperpond$FPcover_max == 0] <- 0.001
 
 dataFP$FPcover_max[dataFP$FPcover_max == 1] <- 0.999
+dataFP$FPcover_max[dataFP$FPcover_max == 0] <- 0.001
 
 dataFPsmall$FPcover_max[dataFPsmall$FPcover_max == 1] <- 0.999
+dataFPsmall$FPcover_max[dataFPsmall$FPcover_max == 0] <- 0.001
 
 dataFPoutliers$FPcover_max[dataFPoutliers$FPcover_max == 1] <- 0.999
+dataFPoutliers$FPcover_max[dataFPoutliers$FPcover_max == 0] <- 0.001
 
 dataFPoutlierssmall$FPcover_max[dataFPoutlierssmall$FPcover_max == 1] <- 0.999
+dataFPoutlierssmall$FPcover_max[dataFPoutlierssmall$FPcover_max == 0] <- 0.001
 
 ####################### 
 # Beta regression     #
@@ -24,8 +29,11 @@ dataFPoutlierssmall$FPcover_max[dataFPoutlierssmall$FPcover_max == 1] <- 0.999
 # Constant dispersion #
 #######################
 formula <- dataONEperpond$FPcover_max ~ dataONEperpond$TOTP_avg
-betareg_dataONEperpond_logit <- betareg(formula, data=dataONEperpond, link="logit")
+betareg_dataONEperpond_logit <- betareg(FPcover_max ~ TOTP_avg, data=dataONEperpond, link="logit", type="ML")
 summary(betareg_dataONEperpond_logit)
+#  failed to invert the information matrix: iteration stopped prematurely
+
+plot(dataONEperpond$FPcover_max ~ dataONEperpond$TOTP_avg,main="dataONEperpond")
 
 ####################### 
 # Beta regression     #
@@ -33,9 +41,10 @@ summary(betareg_dataONEperpond_logit)
 # link: logit         #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- dataFP$FPcover_max ~ dataFP$TOTP_avg
 betareg_dataFP_logit <- betareg(formula, data=dataFP, link="logit")
 summary(betareg_dataFP_logit)
+#  failed to invert the information matrix: iteration stopped prematurely
 
 ####################### 
 # Beta regression     #
@@ -43,9 +52,10 @@ summary(betareg_dataFP_logit)
 # link: logit         #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_dataFPsmall_logit <- betareg(formula, data=dataFPsmall, link="logit")
 summary(betareg_dataFPsmall_logit)
+#  failed to invert the information matrix: iteration stopped prematurely
 
 ####################### 
 # Beta regression     #
@@ -53,9 +63,10 @@ summary(betareg_dataFPsmall_logit)
 # link: logit         #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_dataFPoutliers_logit <- betareg(formula, data=dataFPoutliers, link="logit")
 summary(betareg_dataFPoutliers_logit)
+#  failed to invert the information matrix: iteration stopped prematurely
 
 ####################### 
 # Beta regression     #
@@ -63,9 +74,10 @@ summary(betareg_dataFPoutliers_logit)
 # link: logit         #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_dataFPoutlierssmall_logit <- betareg(formula, data=dataFPoutlierssmall, link="logit")
 summary(betareg_dataFPoutlierssmall_logit)
+# works!
 
 ####################### 
 # Beta regression     #
@@ -73,9 +85,10 @@ summary(betareg_dataFPoutlierssmall_logit)
 # link: loglog        #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_dataONEperpond_loglog <- betareg(formula, data=dataONEperpond, link="loglog")
 summary(betareg_dataONEperpond_loglog) 
+#  failed to invert the information matrix: iteration stopped prematurely
 
 ####################### 
 # Beta regression     #
@@ -83,9 +96,10 @@ summary(betareg_dataONEperpond_loglog)
 # link: loglog        #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_dataFP_loglog <- betareg(formula, data=dataFP, link="loglog")
 summary(betareg_dataFP_loglog) 
+#  optimization failed to converge
 
 ####################### 
 # Beta regression     #
@@ -93,9 +107,10 @@ summary(betareg_dataFP_loglog)
 # link: loglog        #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_dataFPsmall_loglog <- betareg(formula, data=dataFPsmall, link="loglog")
 summary(betareg_dataFPsmall_loglog) 
+#  failed to invert the information matrix: iteration stopped prematurely
 
 ####################### 
 # Beta regression     #
@@ -103,9 +118,10 @@ summary(betareg_dataFPsmall_loglog)
 # link: loglog        #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_dataFPoutliers_loglog <- betareg(formula, data=dataFPoutliers, link="loglog")
 summary(betareg_dataFPoutliers_loglog) 
+#  failed to invert the information matrix: iteration stopped prematurely
 
 ####################### 
 # Beta regression     #
@@ -113,9 +129,10 @@ summary(betareg_dataFPoutliers_loglog)
 # link: loglog        #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_dataFPoutlierssmall_loglog <- betareg(formula, data=dataFPoutlierssmall, link="loglog")
 summary(betareg_dataFPoutlierssmall_loglog) 
+#  failed to invert the information matrix: iteration stopped prematurely
 
 ####################### 
 # Beta regression     #
@@ -123,9 +140,10 @@ summary(betareg_dataFPoutlierssmall_loglog)
 # link: logit         #
 # Variable dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg | TOTP_avg
+formula <- FPcover_max ~ TOTP_avg | TOTP_avg
 betareg_dataONEperpond_logit_vardisp <- betareg(formula, data=dataONEperpond, link="logit")
 summary(betareg_dataONEperpond_logit_vardisp) 
+#   optimization failed to converge
 
 ####################### 
 # Beta regression     #
@@ -133,9 +151,10 @@ summary(betareg_dataONEperpond_logit_vardisp)
 # link: logit         #
 # Variable dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg | TOTP_avg
+formula <- FPcover_max ~ TOTP_avg | TOTP_avg
 betareg_dataFP_logit_vardisp <- betareg(formula, data=dataFP, link="logit")
 summary(betareg_dataFP_logit_vardisp) 
+#   optimization failed to converge
 
 ####################### 
 # Beta regression     #
@@ -143,9 +162,10 @@ summary(betareg_dataFP_logit_vardisp)
 # link: logit         #
 # Variable dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg | TOTP_avg
+formula <- FPcover_max ~ TOTP_avg | TOTP_avg
 betareg_dataFPsmall_logit_vardisp <- betareg(formula, data=dataFPsmall, link="logit")
 summary(betareg_dataFPsmall_logit_vardisp) 
+#  failed to invert the information matrix: iteration stopped prematurely
 
 ####################### 
 # Beta regression     #
@@ -153,9 +173,10 @@ summary(betareg_dataFPsmall_logit_vardisp)
 # link: logit         #
 # Variable dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg | TOTP_avg
+formula <- FPcover_max ~ TOTP_avg | TOTP_avg
 betareg_dataFPoutliers_logit_vardisp <- betareg(formula, data=dataFPoutliers, link="logit")
 summary(betareg_dataFPoutliers_logit_vardisp) 
+#   optimization failed to converge
 
 ####################### 
 # Beta regression     #
@@ -163,9 +184,10 @@ summary(betareg_dataFPoutliers_logit_vardisp)
 # link: logit         #
 # Variable dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg | TOTP_avg
+formula <- FPcover_max ~ TOTP_avg | TOTP_avg
 betareg_dataFPoutlierssmall_logit_vardisp <- betareg(formula, data=dataFPoutlierssmall, link="logit")
 summary(betareg_dataFPoutlierssmall_logit_vardisp) 
+#   optimization failed to converge
 
 ####################### 
 # Beta regression     #
@@ -174,9 +196,11 @@ summary(betareg_dataFPoutlierssmall_logit_vardisp)
 # link: logit         #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataONEperpond_logit <- betamix(formula, link="logit", data=dataONEperpond, k = 2, nstart = 100)
 summary(betareg_mix_dataONEperpond_logit) 
+# 1 cluster
+# convergence after 5 iterations
 
 ####################### 
 # Beta regression     #
@@ -185,9 +209,11 @@ summary(betareg_mix_dataONEperpond_logit)
 # link: logit         #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFP_logit <- betamix(formula, link="logit", data=dataFP, k = 2, nstart = 100)
 summary(betareg_mix_dataFP_logit) 
+# 1 cluster
+# convergence after 3 iterations
 
 ####################### 
 # Beta regression     #
@@ -196,7 +222,7 @@ summary(betareg_mix_dataFP_logit)
 # link: logit         #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFPsmall_logit <- betamix(formula, link="logit", data=dataFPsmall, k = 2, nstart = 100)
 summary(betareg_mix_dataFPsmall_logit) 
 
@@ -207,7 +233,7 @@ summary(betareg_mix_dataFPsmall_logit)
 # link: logit         #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFPoutliers_logit <- betamix(formula, link="logit", data=dataFPoutliers, k = 2, nstart = 100)
 summary(betareg_mix_dataFPoutliers_logit) 
 
@@ -218,7 +244,7 @@ summary(betareg_mix_dataFPoutliers_logit)
 # link: logit         #
 # Constant dispersion #
 #######################
-formula <- FPcover ~ TOTP_avg
+formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFPoutlierssmall_logit <- betamix(formula, link="logit", data=dataFPoutlierssmall, k = 2, nstart = 100)
 summary(betareg_mix_dataFPoutlierssmall_logit) 
 
