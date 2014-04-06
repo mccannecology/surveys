@@ -11,17 +11,17 @@ library(betareg)
 dataONEperpond$FPcover_max[dataONEperpond$FPcover_max == 1] <- (1*(length(dataONEperpond$FPcover_max)-1)+0.5)/(length(dataONEperpond$FPcover_max))
 dataONEperpond$FPcover_max[dataONEperpond$FPcover_max == 0] <- (0*(length(dataONEperpond$FPcover_max)-1)+0.5)/(length(dataONEperpond$FPcover_max))
 
-dataFP$FPcover_max[dataFP$FPcover_max == 1] <- 0.999
-dataFP$FPcover_max[dataFP$FPcover_max == 0] <- 0.001
+dataFP$FPcover_max[dataFP$FPcover_max == 1] <- (1*(length(dataFP$FPcover_max)-1)+0.5)/(length(dataFP$FPcover_max))
+dataFP$FPcover_max[dataFP$FPcover_max == 0] <- (0*(length(dataFP$FPcover_max)-1)+0.5)/(length(dataFP$FPcover_max))
 
-dataFPsmall$FPcover_max[dataFPsmall$FPcover_max == 1] <- 0.999
-dataFPsmall$FPcover_max[dataFPsmall$FPcover_max == 0] <- 0.001
+dataFPsmall$FPcover_max[dataFPsmall$FPcover_max == 1] <- (1*(length(dataFPsmall$FPcover_max)-1)+0.5)/(length(dataFPsmall$FPcover_max))
+dataFPsmall$FPcover_max[dataFPsmall$FPcover_max == 0] <- (0*(length(dataFPsmall$FPcover_max)-1)+0.5)/(length(dataFPsmall$FPcover_max))
 
-dataFPoutliers$FPcover_max[dataFPoutliers$FPcover_max == 1] <- 0.999
-dataFPoutliers$FPcover_max[dataFPoutliers$FPcover_max == 0] <- 0.001
+dataFPoutliers$FPcover_max[dataFPoutliers$FPcover_max == 1] <- (1*(length(dataFPoutliers$FPcover_max)-1)+0.5)/(length(dataFPoutliers$FPcover_max))
+dataFPoutliers$FPcover_max[dataFPoutliers$FPcover_max == 0] <- (0*(length(dataFPoutliers$FPcover_max)-1)+0.5)/(length(dataFPoutliers$FPcover_max))
 
-dataFPoutlierssmall$FPcover_max[dataFPoutlierssmall$FPcover_max == 1] <- 0.999
-dataFPoutlierssmall$FPcover_max[dataFPoutlierssmall$FPcover_max == 0] <- 0.001
+dataFPoutlierssmall$FPcover_max[dataFPoutlierssmall$FPcover_max == 1] <- (1*(length(dataFPoutlierssmall$FPcover_max)-1)+0.5)/(length(dataFPoutlierssmall$FPcover_max))
+dataFPoutlierssmall$FPcover_max[dataFPoutlierssmall$FPcover_max == 0] <- (0*(length(dataFPoutlierssmall$FPcover_max)-1)+0.5)/(length(dataFPoutlierssmall$FPcover_max))
 
 # Plot the different data sets
 # Use these later for adding fitted models 
@@ -41,6 +41,10 @@ betareg_dataONEperpond_logit <- betareg(FPcover_max ~ TOTP_avg, data=dataONEperp
 summary(betareg_dataONEperpond_logit)
 # WORKS!
 
+# plot fitted model 
+plot(dataONEperpond$FPcover_max ~ dataONEperpond$TOTP_avg,main="dataONEperpond",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),betareg_dataONEperpond_logit$fitted,type="p",col="red")
+
 ####################### 
 # Beta regression     #
 # dataFP              #
@@ -50,6 +54,10 @@ summary(betareg_dataONEperpond_logit)
 betareg_dataFP_logit <- betareg(FPcover_max ~ TOTP_avg, data=dataFP, link="logit")
 summary(betareg_dataFP_logit)
 # WORKS!
+
+# plot fitted model 
+plot(dataFP$FPcover_max ~ dataFP$TOTP_avg,main="dataFP",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),betareg_dataFP_logit$fitted,type="p",col="red")
 
 ####################### 
 # Beta regression     #
@@ -62,6 +70,10 @@ betareg_dataFPsmall_logit <- betareg(formula, data=dataFPsmall, link="logit")
 summary(betareg_dataFPsmall_logit)
 # WORKS!
 
+# plot fitted model 
+plot(dataFPsmall$FPcover_max ~ dataFPsmall$TOTP_avg,main="dataFPsmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFPsmall$TOTP_avg, dataFPsmall$TOTP_avg >0),betareg_dataFPsmall_logit$fitted,type="p",col="red")
+
 ####################### 
 # Beta regression     #
 # dataFPoutliers      #
@@ -72,6 +84,10 @@ formula <- FPcover_max ~ TOTP_avg
 betareg_dataFPoutliers_logit <- betareg(FPcover_max ~ TOTP_avg, data=dataFPoutliers, link="logit")
 summary(betareg_dataFPoutliers_logit)
 # WORKS!
+
+# plot fitted model 
+plot(dataFPoutliers$FPcover_max ~ dataFPoutliers$TOTP_avg,main="dataFPoutliers",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFPoutliers$TOTP_avg, dataFPoutliers$TOTP_avg >0),betareg_dataFPoutliers_logit$fitted,type="p",col="red")
 
 ####################### 
 # Beta regression     #
@@ -84,6 +100,10 @@ betareg_dataFPoutlierssmall_logit <- betareg(FPcover_max ~ TOTP_avg, data=dataFP
 summary(betareg_dataFPoutlierssmall_logit)
 # works!
 
+# plot fitted model 
+plot(dataFPoutlierssmall$FPcover_max ~ dataFPoutlierssmall$TOTP_avg,main="dataFPoutlierssmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFPoutlierssmall$TOTP_avg, dataFPoutlierssmall$TOTP_avg >0),betareg_dataFPoutlierssmall_logit$fitted,type="p",col="red")
+
 ####################### 
 # Beta regression     #
 # dataONEperpond      #
@@ -94,6 +114,10 @@ formula <- FPcover_max ~ TOTP_avg
 betareg_dataONEperpond_loglog <- betareg(formula, data=dataONEperpond, link="loglog")
 summary(betareg_dataONEperpond_loglog) 
 # works
+
+# plot fitted model 
+plot(dataONEperpond$FPcover_max ~ dataONEperpond$TOTP_avg,main="dataONEperpond",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),betareg_dataONEperpond_loglog$fitted,type="p",col="red")
 
 ####################### 
 # Beta regression     #
@@ -106,6 +130,10 @@ betareg_dataFP_loglog <- betareg(formula, data=dataFP, link="loglog")
 summary(betareg_dataFP_loglog) 
 # works
 
+# plot fitted model 
+plot(dataFP$FPcover_max ~ dataFP$TOTP_avg,main="dataFP",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),betareg_dataFP_loglog$fitted,type="p",col="red")
+
 ####################### 
 # Beta regression     #
 # dataFPsmall         #
@@ -116,6 +144,10 @@ formula <- FPcover_max ~ TOTP_avg
 betareg_dataFPsmall_loglog <- betareg(formula, data=dataFPsmall, link="loglog")
 summary(betareg_dataFPsmall_loglog) 
 # works
+
+# plot fitted model 
+plot(dataFPsmall$FPcover_max ~ dataFPsmall$TOTP_avg,main="dataFPsmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFPsmall$TOTP_avg, dataFPsmall$TOTP_avg >0),betareg_dataFPsmall_loglog$fitted,type="p",col="red")
 
 ####################### 
 # Beta regression     #
@@ -128,6 +160,10 @@ betareg_dataFPoutliers_loglog <- betareg(formula, data=dataFPoutliers, link="log
 summary(betareg_dataFPoutliers_loglog) 
 # works
 
+# plot fitted model 
+plot(dataFPoutliers$FPcover_max ~ dataFPoutliers$TOTP_avg,main="dataFPoutliers",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFPoutliers$TOTP_avg, dataFPoutliers$TOTP_avg >0),betareg_dataFPoutliers_loglog$fitted,type="p",col="red")
+
 ####################### 
 # Beta regression     #
 # dataFPoutlierssmall #
@@ -139,6 +175,10 @@ betareg_dataFPoutlierssmall_loglog <- betareg(formula, data=dataFPoutlierssmall,
 summary(betareg_dataFPoutlierssmall_loglog) 
 # works
 
+# plot fitted model 
+plot(dataFPoutlierssmall$FPcover_max ~ dataFPoutlierssmall$TOTP_avg,main="dataFPoutlierssmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFPoutlierssmall$TOTP_avg, dataFPoutlierssmall$TOTP_avg >0),betareg_dataFPoutlierssmall_loglog$fitted,type="p",col="red")
+
 ####################### 
 # Beta regression     #
 # dataONEperpond      #
@@ -148,7 +188,9 @@ summary(betareg_dataFPoutlierssmall_loglog)
 formula <- FPcover_max ~ TOTP_avg | TOTP_avg
 betareg_dataONEperpond_logit_vardisp <- betareg(formula, data=dataONEperpond, link="logit")
 summary(betareg_dataONEperpond_logit_vardisp) 
-#   optimization failed to converge
+# works 
+
+# add plot 
 
 ####################### 
 # Beta regression     #
@@ -161,6 +203,8 @@ betareg_dataFP_logit_vardisp <- betareg(formula, data=dataFP, link="logit")
 summary(betareg_dataFP_logit_vardisp) 
 # works
 
+# add plot 
+
 ####################### 
 # Beta regression     #
 # dataFPsmall         #
@@ -171,6 +215,8 @@ formula <- FPcover_max ~ TOTP_avg | TOTP_avg
 betareg_dataFPsmall_logit_vardisp <- betareg(formula, data=dataFPsmall, link="logit")
 summary(betareg_dataFPsmall_logit_vardisp) 
 # works
+
+# add plot 
 
 ####################### 
 # Beta regression     #
@@ -183,6 +229,8 @@ betareg_dataFPoutliers_logit_vardisp <- betareg(formula, data=dataFPoutliers, li
 summary(betareg_dataFPoutliers_logit_vardisp) 
 # works
 
+# add plot 
+
 ####################### 
 # Beta regression     #
 # dataFPoutlierssmall #
@@ -194,6 +242,8 @@ betareg_dataFPoutlierssmall_logit_vardisp <- betareg(formula, data=dataFPoutlier
 summary(betareg_dataFPoutlierssmall_logit_vardisp) 
 # works
 
+# add plot 
+
 ####################### 
 # Beta regression     #
 # Mixed model         #
@@ -204,6 +254,9 @@ summary(betareg_dataFPoutlierssmall_logit_vardisp)
 formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataONEperpond_logit <- betamix(formula, link="logit", data=dataONEperpond, k = 2, nstart = 100)
 summary(betareg_mix_dataONEperpond_logit) 
+# one cluster 
+
+# add plot 
 
 ####################### 
 # Beta regression     #
@@ -215,6 +268,9 @@ summary(betareg_mix_dataONEperpond_logit)
 formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFP_logit <- betamix(formula, link="logit", data=dataFP, k = 2, nstart = 100)
 summary(betareg_mix_dataFP_logit) 
+# two clusters 
+
+# add plot 
 
 ####################### 
 # Beta regression     #
@@ -226,6 +282,9 @@ summary(betareg_mix_dataFP_logit)
 formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFPsmall_logit <- betamix(formula, link="logit", data=dataFPsmall, k = 2, nstart = 100)
 summary(betareg_mix_dataFPsmall_logit) 
+# one cluster
+
+# add plot 
 
 ####################### 
 # Beta regression     #
@@ -237,6 +296,9 @@ summary(betareg_mix_dataFPsmall_logit)
 formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFPoutliers_logit <- betamix(formula, link="logit", data=dataFPoutliers, k = 2, nstart = 100)
 summary(betareg_mix_dataFPoutliers_logit) 
+# two clusters
+
+# add plot 
 
 ####################### 
 # Beta regression     #
@@ -248,62 +310,14 @@ summary(betareg_mix_dataFPoutliers_logit)
 formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFPoutlierssmall_logit <- betamix(formula, link="logit", data=dataFPoutlierssmall, k = 2, nstart = 100)
 summary(betareg_mix_dataFPoutlierssmall_logit) 
+# one cluster
+
+# add plot 
 
 
 
 
 
-
-
-
-
-###################
-# Beta-regression #
-###################
-# try different link functions
-
-betaregFPsmall_logit <- betareg(FPcover_max ~ TOTP_avg, data = dataFPsmall, link="logit", type="ML")
-summary(betaregFPsmall_logit)
-
-betaregFPsmall_loglog <- betareg(FPcover_max ~ TOTP_avg, data = dataFPsmall, link="loglog", type="ML")
-summary(betaregFPsmall_loglog)
-# a slight improvement in pseudo-r-squared
-
-#######################################
-# Variable dispersion beta-regression #
-#######################################
-# try different link functions
-
-betaregFPsmall_logit_vardisp <- betareg(FPcover_max ~ TOTP_avg | TOTP_avg, data = dataFPsmall, link="logit", type="ML")
-summary(betaregFPsmall_logit_vardisp)
-
-betaregFPsmall_loglog_vardisp <- betareg(FPcover_max ~ TOTP_avg | TOTP_avg, data = dataFPsmall, link="loglog", type="ML")
-summary(betaregFPsmall_loglog_vardisp)
-
-###############################################
-# Mixture beta-regression with latent classes #
-###############################################
-# If you think you have >1 class (groups) but you don't know what they are a priori 
-
-# try it with dataFPsmall 
-betareg_mix_FPsmall_loglog <- betamix(FPcover_max ~ TOTP_avg, link="loglog", data = dataFPsmall, k = 3, nstart = 100)
-summary(betareg_mix_FPsmall_loglog)
-# this only returns 1 cluster (group)
-
-# try it with ALL ponds 
-betareg_mix_oneperpond_loglog <- betamix(FPcover_max ~ TOTP_avg, link="loglog", data = dataONEperpond, k = 3, nstart = 100)
-summary(betareg_mix_oneperpond_loglog)
-# does not converge 
-
-# try it with dataFPoutlierssmall - 3 clusters
-betareg_mix_FPsmalloutliers_loglog_3clusters <- betamix(FPcover_max ~ TOTP_avg, link="loglog", data = dataFPoutlierssmall, k = 3, nstart = 100)
-summary(betareg_mix_FPsmalloutliers_loglog_3clusters)
-# converges on a solution with 3 clusters 
-
-# try it with dataFPoutlierssmall - 2 clusters
-betareg_mix_FPsmalloutliers_loglog_2clusters <- betamix(FPcover_max ~ TOTP_avg, link="loglog", data = dataFPoutlierssmall, k = 2, nstart = 100)
-summary(betareg_mix_FPsmalloutliers_loglog_2clusters)
-# returns a solution with 2 clusters 
 
 ##################
 # Compare models #
