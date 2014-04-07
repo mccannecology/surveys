@@ -15,10 +15,9 @@ library(ggplot2)
 # link: logit         #
 #######################
 formula <- FPcover_max ~ TOTP_avg
-glm_dataONEperpond_binomial_logit <- glm(formula, data=dataONEperpond, link="logit")
+glm_dataONEperpond_binomial_logit <- glm(formula, data=dataONEperpond, family=binomial(link=logit))
 summary(glm_dataONEperpond_binomial_logit)
 AIC(glm_dataONEperpond_binomial_logit)
-# WORKS!
 
 # plot fitted model 
 plot(dataONEperpond$FPcover_max ~ dataONEperpond$TOTP_avg,main="dataONEperpond",xlab="Total P (mg/L)",ylab="FP cover",log="x")
@@ -31,10 +30,9 @@ lines(subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),glm_dataONEper
 # link: logit         #
 #######################
 formula <- FPcover_max ~ TOTP_avg
-glm_dataFP_binomial_logit <- glm(formula, data=dataFP, link="logit")
+glm_dataFP_binomial_logit <- glm(formula, data=dataFP, family="binomial",link="logit")
 summary(glm_dataFP_binomial_logit)
 AIC(glm_dataFP_binomial_logit)
-# WORKS!
 
 # plot fitted model 
 plot(dataFP$FPcover_max ~ dataFP$TOTP_avg,main="dataFP",xlab="Total P (mg/L)",ylab="FP cover",log="x")
@@ -47,10 +45,9 @@ lines(subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),glm_dataFP_binomial_logit$fitt
 # link: logit         #
 #######################
 formula <- FPcover_max ~ TOTP_avg
-glm_dataFPsmall_binomial_logit <- glm(formula, data=dataFPsmall, link="logit")
+glm_dataFPsmall_binomial_logit <- glm(formula, data=dataFPsmall, family="binomial",link="logit")
 summary(glm_dataFPsmall_binomial_logit)
 AIC(glm_dataFPsmall_binomial_logit)
-# WORKS!
 
 # plot fitted model 
 plot(dataFPsmall$FPcover_max ~ dataFPsmall$TOTP_avg,main="dataFPsmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
@@ -63,10 +60,9 @@ lines(subset(dataFPsmall$TOTP_avg, dataFPsmall$TOTP_avg >0),glm_dataFPsmall_bino
 # link: logit         #
 #######################
 formula <- FPcover_max ~ TOTP_avg
-glm_dataFPoutliers_binomial_logit <- glm(FPcover_max ~ TOTP_avg, data=dataFPoutliers, link="logit")
+glm_dataFPoutliers_binomial_logit <- glm(FPcover_max ~ TOTP_avg, data=dataFPoutliers, family="binomial",link="logit")
 summary(glm_dataFPoutliers_binomial_logit)
 AIC(glm_dataFPoutliers_binomial_logit)
-# WORKS!
 
 # plot fitted model 
 plot(dataFPoutliers$FPcover_max ~ dataFPoutliers$TOTP_avg,main="dataFPoutliers",xlab="Total P (mg/L)",ylab="FP cover",log="x")
@@ -79,10 +75,9 @@ lines(subset(dataFPoutliers$TOTP_avg, dataFPoutliers$TOTP_avg >0),glm_dataFPoutl
 # link: logit         #
 #######################
 formula <- FPcover_max ~ TOTP_avg
-glm_dataFPoutlierssmall_binomial_logit <- glm(FPcover_max ~ TOTP_avg, data=dataFPoutlierssmall, link="logit")
+glm_dataFPoutlierssmall_binomial_logit <- glm(FPcover_max ~ TOTP_avg, data=dataFPoutlierssmall, family="binomial",link="logit")
 summary(glm_dataFPoutlierssmall_binomial_logit)
 AIC(glm_dataFPoutlierssmall_binomial_logit)
-# works!
 
 # plot fitted model 
 plot(dataFPoutlierssmall$FPcover_max ~ dataFPoutlierssmall$TOTP_avg,main="dataFPoutlierssmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
