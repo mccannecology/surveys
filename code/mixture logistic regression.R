@@ -42,101 +42,167 @@ flexmix_dataONEperpond_binomial
 summary(flexmix_dataONEperpond_binomial)
 parameters(flexmix_dataONEperpond_binomial,component=1) # logistic regression coefficients - component 1
 parameters(flexmix_dataONEperpond_binomial,component=2) # logistic regression coefficients - component 2
-
 dataONEperpond_flexmix$cluster<-clusters(flexmix_dataONEperpond_binomial) # add cluster identities to your original data.frame 
+dataONEperpond_flexmix[,1:2] <- dataONEperpond_flexmix[,1:2]/100 # convert 0-100 back to 0-1
 
-temp <- ggplot(dataONEperpond_flexmix,aes(x=TOTP_avg,y=FPcover_max,shape=factor(cluster))) + geom_point() 
-temp <- temp + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(cluster))) 
-temp
-
-xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-
-geom_text(aes(x=0.015,y=1,label="f)"),size=7)
-
-scale_x_log10()
-theme(legend.position="none")
+# plot 
+dataONEperpond_flexmix_plot <- ggplot(dataONEperpond_flexmix,aes(x=TOTP_avg,y=FPcover_max,shape=factor(cluster))) + geom_point(size=3) 
+dataONEperpond_flexmix_plot <- dataONEperpond_flexmix_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(cluster))) 
+dataONEperpond_flexmix_plot <- dataONEperpond_flexmix_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataONEperpond_flexmix_plot <- dataONEperpond_flexmix_plot + ggtitle("dataONEperpond")
+dataONEperpond_flexmix_plot <- dataONEperpond_flexmix_plot + scale_x_log10()
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
-scale_y_continuous(breaks=y_breaks,labels=y_labels)
-geom_vline(xintercept=0.01972,colour="red",size=1,linetype="longdash") # add vertical line @ lower threshold value 
-geom_vline(xintercept=0.2085,colour="red",size=1,linetype="longdash") # add vertical line @ upper threshold value 
-theme_classic(base_size=18) + theme(legend.position="none")
-theme(axis.title.y=element_blank())
+dataONEperpond_flexmix_plot <- dataONEperpond_flexmix_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataONEperpond_flexmix_plot <- dataONEperpond_flexmix_plot + theme_classic(base_size=18)
+dataONEperpond_flexmix_plot
 
-
+# save the plot 
+ggsave(file="dataONEperpond_flexmix_plot.jpg", dataONEperpond_flexmix_plot, height=8,width=11)
 
 # rootogram of posterior class probabilities
 # Peak at prob. 1 = mixture component is well seperated from the other components
 # No peak at 1 and/or signiﬁcant mass in the middle of the unit interval indicates overlap with other components.
-plot(flexmix_dataONEperpond_binomial)
-
-# still need a method to plot this 
-# predicted values for component 1
-predict(flexmix_dataONEperpond_binomial)[1]
-
-# predicted values for component 2
-predict(flexmix_dataONEperpond_binomial)[2]
-
-# plot fitted model 
-plot(dataONEperpond_flexmix$FPcover_max ~ dataONEperpond_flexmix$TOTP_avg,main="dataONEperpond_flexmix",xlab="Total P (mg/L)",ylab="FP cover",log="x")
-lines(subset(dataONEperpond_flexmix$TOTP_avg, dataONEperpond_flexmix$TOTP_avg >0),flexmix_dataONEperpond_binomial$fitted,type="p",col="red")
+jpeg("flexmix_dataONEperpond_binomial.jpg")
+plot(flexmix_dataONEperpond_binomial,sub="flexmix_dataONEperpond_binomial")
+dev.off()
 
 ####################### 
 # Latent Mixture      #
 # dataFP              #
 # family: binomial    #
 #######################
-formula <- FPcover_max ~ TOTP_avg
-flexmix_dataFP_binomial <- flexmix(formula, data=dataFP, k=2, model=FLXMRglm(family="binomial"))
+flexmix_dataFP_binomial <- flexmix(cbind(FPcover_max,NotFP) ~ TOTP_avg, data=dataFP_flexmix, k=2, model=FLXMRglm(family="binomial"))
+flexmix_dataFP_binomial
 summary(flexmix_dataFP_binomial)
-AIC(flexmix_dataFP_binomial)
-# WORKS!
+parameters(flexmix_dataFP_binomial,component=1) # logistic regression coefficients - component 1
+parameters(flexmix_dataFP_binomial,component=2) # logistic regression coefficients - component 2
+dataFP_flexmix$cluster<-clusters(flexmix_dataFP_binomial) # add cluster identities to your original data.frame 
+dataFP_flexmix[,1:2] <- dataFP_flexmix[,1:2]/100 # convert 0-100 back to 0-1
 
-# plot fitted model 
-plot(dataFP$FPcover_max ~ dataFP$TOTP_avg,main="dataFP",xlab="Total P (mg/L)",ylab="FP cover",log="x")
-lines(subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),flexmix_dataFP_binomial$fitted,type="p",col="red")
+# plot 
+dataFP_flexmix_plot <- ggplot(dataFP_flexmix,aes(x=TOTP_avg,y=FPcover_max,shape=factor(cluster))) + geom_point(size=3) 
+dataFP_flexmix_plot <- dataFP_flexmix_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(cluster))) 
+dataFP_flexmix_plot <- dataFP_flexmix_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFP_flexmix_plot <- dataFP_flexmix_plot + ggtitle("dataFP")
+dataFP_flexmix_plot <- dataFP_flexmix_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFP_flexmix_plot <- dataFP_flexmix_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFP_flexmix_plot <- dataFP_flexmix_plot + theme_classic(base_size=18)
+dataFP_flexmix_plot
+
+# save the plot 
+ggsave(file="dataFP_flexmix_plot.jpg", dataFP_flexmix_plot, height=8,width=11)
+
+# rootogram of posterior class probabilities
+# Peak at prob. 1 = mixture component is well seperated from the other components
+# No peak at 1 and/or signiﬁcant mass in the middle of the unit interval indicates overlap with other components.
+jpeg("flexmix_dataFP_binomial.jpg")
+plot(flexmix_dataFP_binomial,sub="flexmix_dataFP_binomial")
+dev.off()
 
 ####################### 
 # Latent Mixture      #
 # dataFPsmall         #
 # family: binomial    #
 #######################
-formula <- FPcover_max ~ TOTP_avg
-flexmix_dataFPsmall_binomial <- flexmix(formula, data=dataFPsmall, k=2, model=FLXMRglm(family="binomial"))
+flexmix_dataFPsmall_binomial <- flexmix(cbind(FPcover_max,NotFP) ~ TOTP_avg, data=dataFPsmall_flexmix, k=2, model=FLXMRglm(family="binomial"))
+flexmix_dataFPsmall_binomial
 summary(flexmix_dataFPsmall_binomial)
-AIC(flexmix_dataFPsmall_binomial)
-# WORKS!
+parameters(flexmix_dataFPsmall_binomial,component=1) # logistic regression coefficients - component 1
+parameters(flexmix_dataFPsmall_binomial,component=2) # logistic regression coefficients - component 2
+dataFPsmall_flexmix$cluster<-clusters(flexmix_dataFPsmall_binomial) # add cluster identities to your original data.frame 
+dataFPsmall_flexmix[,1:2] <- dataFPsmall_flexmix[,1:2]/100 # convert 0-100 back to 0-1
 
-# plot fitted model 
-plot(dataFPsmall$FPcover_max ~ dataFPsmall$TOTP_avg,main="dataFPsmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
-lines(subset(dataFPsmall$TOTP_avg, dataFPsmall$TOTP_avg >0),flexmix_dataFPsmall_binomial$fitted,type="p",col="red")
+# plot 
+dataFPsmall_flexmix_plot <- ggplot(dataFPsmall_flexmix,aes(x=TOTP_avg,y=FPcover_max,shape=factor(cluster))) + geom_point(size=3) 
+dataFPsmall_flexmix_plot <- dataFPsmall_flexmix_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(cluster))) 
+dataFPsmall_flexmix_plot <- dataFPsmall_flexmix_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFPsmall_flexmix_plot <- dataFPsmall_flexmix_plot + ggtitle("dataFPsmall")
+dataFPsmall_flexmix_plot <- dataFPsmall_flexmix_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFPsmall_flexmix_plot <- dataFPsmall_flexmix_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFPsmall_flexmix_plot <- dataFPsmall_flexmix_plot + theme_classic(base_size=18)
+dataFPsmall_flexmix_plot
+
+# save the plot 
+ggsave(file="dataFPsmall_flexmix_plot.jpg", dataFPsmall_flexmix_plot, height=8,width=11)
+
+# rootogram of posterior class probabilities
+# Peak at prob. 1 = mixture component is well seperated from the other components
+# No peak at 1 and/or signiﬁcant mass in the middle of the unit interval indicates overlap with other components.
+jpeg("flexmix_dataFPsmall_binomial.jpg")
+plot(flexmix_dataFPsmall_binomial,sub="flexmix_dataFPsmall_binomial")
+dev.off()
 
 ####################### 
 # Latent Mixture      #
 # dataFPoutliers      #
 # family: binomial    #
 #######################
-formula <- FPcover_max ~ TOTP_avg
-flexmix_dataFPoutliers_binomial <- flexmix(FPcover_max ~ TOTP_avg, data=dataFPoutliers, k=2, model=FLXMRglm(family="binomial"))
+flexmix_dataFPoutliers_binomial <- flexmix(cbind(FPcover_max,NotFP) ~ TOTP_avg, data=dataFPoutliers_flexmix, k=2, model=FLXMRglm(family="binomial"))
+flexmix_dataFPoutliers_binomial
 summary(flexmix_dataFPoutliers_binomial)
-AIC(flexmix_dataFPoutliers_binomial)
-# WORKS!
+parameters(flexmix_dataFPoutliers_binomial,component=1) # logistic regression coefficients - component 1
+parameters(flexmix_dataFPoutliers_binomial,component=2) # logistic regression coefficients - component 2
+dataFPoutliers_flexmix$cluster<-clusters(flexmix_dataFPoutliers_binomial) # add cluster identities to your original data.frame 
+dataFPoutliers_flexmix[,1:2] <- dataFPoutliers_flexmix[,1:2]/100 # convert 0-100 back to 0-1
 
-# plot fitted model 
-plot(dataFPoutliers$FPcover_max ~ dataFPoutliers$TOTP_avg,main="dataFPoutliers",xlab="Total P (mg/L)",ylab="FP cover",log="x")
-lines(subset(dataFPoutliers$TOTP_avg, dataFPoutliers$TOTP_avg >0),flexmix_dataFPoutliers_binomial$fitted,type="p",col="red")
+# plot 
+dataFPoutliers_flexmix_plot <- ggplot(dataFPoutliers_flexmix,aes(x=TOTP_avg,y=FPcover_max,shape=factor(cluster))) + geom_point(size=3) 
+dataFPoutliers_flexmix_plot <- dataFPoutliers_flexmix_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(cluster))) 
+dataFPoutliers_flexmix_plot <- dataFPoutliers_flexmix_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFPoutliers_flexmix_plot <- dataFPoutliers_flexmix_plot + ggtitle("dataFPoutliers")
+dataFPoutliers_flexmix_plot <- dataFPoutliers_flexmix_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFPoutliers_flexmix_plot <- dataFPoutliers_flexmix_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFPoutliers_flexmix_plot <- dataFPoutliers_flexmix_plot + theme_classic(base_size=18)
+dataFPoutliers_flexmix_plot
+
+# save the plot 
+ggsave(file="dataFPoutliers_flexmix_plot.jpg", dataFPoutliers_flexmix_plot, height=8,width=11)
+
+# rootogram of posterior class probabilities
+# Peak at prob. 1 = mixture component is well seperated from the other components
+# No peak at 1 and/or signiﬁcant mass in the middle of the unit interval indicates overlap with other components.
+jpeg("flexmix_dataFPoutliers_binomial.jpg")
+plot(flexmix_dataFPoutliers_binomial,sub="flexmix_dataFPoutliers_binomial")
+dev.off()
 
 ####################### 
 # Latent Mixture      #
 # dataFPoutlierssmall #
 # family: binomial    #
 #######################
-formula <- FPcover_max ~ TOTP_avg
-flexmix_dataFPoutlierssmall_binomial <- flexmix(FPcover_max ~ TOTP_avg, data=dataFPoutlierssmall, k=2, model=FLXMRglm(family="binomial"))
+flexmix_dataFPoutlierssmall_binomial <- flexmix(cbind(FPcover_max,NotFP) ~ TOTP_avg, data=dataFPoutlierssmall_flexmix, k=2, model=FLXMRglm(family="binomial"))
+flexmix_dataFPoutlierssmall_binomial
 summary(flexmix_dataFPoutlierssmall_binomial)
-AIC(flexmix_dataFPoutlierssmall_binomial)
-# works!
+parameters(flexmix_dataFPoutlierssmall_binomial,component=1) # logistic regression coefficients - component 1
+parameters(flexmix_dataFPoutlierssmall_binomial,component=2) # logistic regression coefficients - component 2
+dataFPoutlierssmall_flexmix$cluster<-clusters(flexmix_dataFPoutlierssmall_binomial) # add cluster identities to your original data.frame 
+dataFPoutlierssmall_flexmix[,1:2] <- dataFPoutlierssmall_flexmix[,1:2]/100 # convert 0-100 back to 0-1
 
-# plot fitted model 
-plot(dataFPoutlierssmall$FPcover_max ~ dataFPoutlierssmall$TOTP_avg,main="dataFPoutlierssmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
-lines(subset(dataFPoutlierssmall$TOTP_avg, dataFPoutlierssmall$TOTP_avg >0),flexmix_dataFPoutlierssmall_binomial$fitted,type="p",col="red")
+# plot 
+dataFPoutlierssmall_flexmix_plot <- ggplot(dataFPoutlierssmall_flexmix,aes(x=TOTP_avg,y=FPcover_max,shape=factor(cluster))) + geom_point(size=3) 
+dataFPoutlierssmall_flexmix_plot <- dataFPoutlierssmall_flexmix_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(cluster))) 
+dataFPoutlierssmall_flexmix_plot <- dataFPoutlierssmall_flexmix_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFPoutlierssmall_flexmix_plot <- dataFPoutlierssmall_flexmix_plot + ggtitle("dataFPoutlierssmall")
+dataFPoutlierssmall_flexmix_plot <- dataFPoutlierssmall_flexmix_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFPoutlierssmall_flexmix_plot <- dataFPoutlierssmall_flexmix_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFPoutlierssmall_flexmix_plot <- dataFPoutlierssmall_flexmix_plot + theme_classic(base_size=18)
+dataFPoutlierssmall_flexmix_plot
+
+# save the plot 
+ggsave(file="dataFPoutlierssmall_flexmix_plot.jpg", dataFPoutlierssmall_flexmix_plot, height=8,width=11)
+
+# rootogram of posterior class probabilities
+# Peak at prob. 1 = mixture component is well seperated from the other components
+# No peak at 1 and/or signiﬁcant mass in the middle of the unit interval indicates overlap with other components.
+jpeg("flexmix_dataFPoutlierssmall_binomial.jpg")
+plot(flexmix_dataFPoutlierssmall_binomial,sub="flexmix_dataFPoutlierssmall_binomial")
+dev.off()
