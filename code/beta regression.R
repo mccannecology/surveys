@@ -281,7 +281,15 @@ summary(betareg_dataONEperpond_logit_vardisp)
 AIC(betareg_dataONEperpond_logit_vardisp) 
 # works 
 
-# add plot 
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataONEperpond$FPcover_max ~ dataONEperpond$TOTP_avg,main="dataONEperpond - logit link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),betareg_dataONEperpond_logit_vardisp$fitted,type="p",col="red")
+
+# plot the variable dispersion
+plot(predict(betareg_dataONEperpond_logit_vardisp, type="precision") ~ subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
 
 ####################### 
 # Beta regression     #
@@ -295,7 +303,15 @@ summary(betareg_dataFP_logit_vardisp)
 AIC(betareg_dataFP_logit_vardisp) 
 # works
 
-# add plot 
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataFP$FPcover_max ~ dataFP$TOTP_avg,main="dataFP - logit link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),betareg_dataFP_logit_vardisp$fitted,type="p",col="red")
+
+# plot the variable dispersion
+plot(predict(betareg_dataFP_logit_vardisp, type="precision") ~ subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
 
 ####################### 
 # Beta regression     #
@@ -309,7 +325,15 @@ summary(betareg_dataFPsmall_logit_vardisp)
 AIC(betareg_dataFPsmall_logit_vardisp) 
 # works
 
-# add plot 
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataFPsmall$FPcover_max ~ dataFPsmall$TOTP_avg,main="dataFPsmall - logit link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFPsmall$TOTP_avg, dataFPsmall$TOTP_avg >0),betareg_dataFPsmall_logit_vardisp$fitted,type="p",col="red")
+
+# plot the variable dispersion
+plot(predict(betareg_dataFPsmall_logit_vardisp, type="precision") ~ subset(dataFPsmall$TOTP_avg, dataFPsmall$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
 
 ####################### 
 # Beta regression     #
@@ -323,7 +347,15 @@ summary(betareg_dataFPoutliers_logit_vardisp)
 AIC(betareg_dataFPoutliers_logit_vardisp) 
 # works
 
-# add plot 
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataFPoutliers$FPcover_max ~ dataFPoutliers$TOTP_avg,main="dataFPoutliers - logit link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFPoutliers$TOTP_avg, dataFPoutliers$TOTP_avg >0),betareg_dataFPoutliers_logit_vardisp$fitted,type="p",col="red")
+
+# plot the variable dispersion
+plot(predict(betareg_dataFPoutliers_logit_vardisp, type="precision") ~ subset(dataFPoutliers$TOTP_avg, dataFPoutliers$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
 
 ####################### 
 # Beta regression     #
@@ -337,7 +369,63 @@ summary(betareg_dataFPoutlierssmall_logit_vardisp)
 AIC(betareg_dataFPoutlierssmall_logit_vardisp) 
 # works
 
-# add plot 
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataFPoutlierssmall$FPcover_max ~ dataFPoutlierssmall$TOTP_avg,main="dataFPoutlierssmall - logit link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFPoutlierssmall$TOTP_avg, dataFPoutlierssmall$TOTP_avg >0),betareg_dataFPoutlierssmall_logit_vardisp$fitted,type="p",col="red")
+
+# plot the variable dispersion
+plot(predict(betareg_dataFPoutlierssmall_logit_vardisp, type="precision") ~ subset(dataFPoutlierssmall$TOTP_avg, dataFPoutlierssmall$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
+
+
+
+####################### 
+# Beta regression     #
+# dataONEperpond      #
+# link: loglog        #
+# linkphi:identity    #
+# Variable dispersion #
+#######################
+formula <- FPcover_max ~ TOTP_avg | TOTP_avg
+betareg_dataONEperpond_loglog_linkphi_identity_vardisp <- betareg(formula, data=dataONEperpond, link="loglog",link.phi="identity")
+summary(betareg_dataONEperpond_loglog_linkphi_identity_vardisp) 
+AIC(betareg_dataONEperpond_loglog_linkphi_identity_vardisp) 
+# works 
+
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataONEperpond$FPcover_max ~ dataONEperpond$TOTP_avg,main="dataONEperpond - logloglink",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),betareg_dataONEperpond_loglog_linkphi_identity_vardisp$fitted,type="p",col="red")
+
+# plot the variable dispersion
+plot(predict(betareg_dataONEperpond_loglog_linkphi_identity_vardisp, type="precision") ~ subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
+
+####################### 
+# Beta regression     #
+# dataONEperpond      #
+# link: loglog        #
+# linkphi:sqrt        #
+# Variable dispersion #
+#######################
+formula <- FPcover_max ~ TOTP_avg | TOTP_avg
+betareg_dataONEperpond_loglog_sqrt_identity_vardisp <- betareg(formula, data=dataONEperpond, link="loglog",link.phi="sqrt")
+summary(betareg_dataONEperpond_loglog_sqrt_identity_vardisp) 
+AIC(betareg_dataONEperpond_loglog_sqrt_identity_vardisp) 
+# works 
+
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataONEperpond$FPcover_max ~ dataONEperpond$TOTP_avg,main="dataONEperpond - logloglink",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),betareg_dataONEperpond_loglog_sqrt_identity_vardisp$fitted,type="p",col="red")
+
+# plot the variable dispersion
+plot(predict(betareg_dataONEperpond_loglog_sqrt_identity_vardisp, type="precision") ~ subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
 
 ####################### 
 # Beta regression     #
@@ -526,6 +614,21 @@ AIC(betareg_mix_dataFPoutlierssmall_logit)
 
 
 
+
+
+
+
+
+
+
+
+#####################
+###########################################
+######################################################################################
+###########################################
+######################################################################################
+###########################################
+#####################
 
 
 
