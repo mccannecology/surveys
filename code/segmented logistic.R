@@ -10,8 +10,340 @@
 library(ggplot2)
 library(segmented)
 
-# plot it 
-ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max)) + geom_point()
+#################################
+# segmented logistic regression #
+# dataONEperpond                #
+# link = logit                  #
+# via iterative searching       #
+#################################
+breaks <- dataONEperpond$TOTP_avg[which(dataONEperpond$TOTP_avg >= 0.00001 & dataONEperpond$TOTP_avg <= 0.5)]    # create a vector to hold potential breakpoints 
+
+mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
+
+for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
+  piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family=binomial(link=logit), data=dataONEperpond)
+  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
+}
+
+mse <- as.numeric(mse) # converts list to numeric 
+breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
+breakpoint # returns the breakpoint 
+
+# re-run the glm() using this breakpoint 
+segmented_dataONEperpond_binomial_logit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataONEperpond)
+summary(segmented_dataONEperpond_binomial_logit)     
+-2*logLik(segmented_dataONEperpond_binomial_logit)[1]+2*5
+breakpoint
+
+# Add new variables to the data frame 
+# used to plot the segmented data in ggplot2
+dataONEperpond$breakpoint <- ifelse(dataONEperpond$TOTP_avg <= breakpoint, "below", "above")
+
+rm(breaks,mse,breakpoint,piecewise) # clean up your workspace 
+
+#################################
+# segmented logistic regression #
+# dataFP                        #
+# link = logit                  #
+# via iterative searching       #
+#################################
+breaks <- dataFP$TOTP_avg[which(dataFP$TOTP_avg >= 0.00001 & dataFP$TOTP_avg <= 0.5)]    # create a vector to hold potential breakpoints 
+
+mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
+
+for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
+  piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family=binomial(link=logit), data=dataFP)
+  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
+}
+
+mse <- as.numeric(mse) # converts list to numeric 
+breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
+breakpoint # returns the breakpoint 
+
+# re-run the glm() using this breakpoint 
+segmented_dataFP_binomial_logit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFP)
+summary(segmented_dataFP_binomial_logit)     
+-2*logLik(segmented_dataFP_binomial_logit)[1]+2*5
+breakpoint
+
+# Add new variables to the data frame 
+# used to plot the segmented data in ggplot2
+dataFP$breakpoint <- ifelse(dataFP$TOTP_avg <= breakpoint, "below", "above")
+
+rm(breaks,mse,breakpoint,piecewise) # clean up your workspace 
+
+#################################
+# segmented logistic regression #
+# dataFPsmall                   #
+# link = logit                  #
+# via iterative searching       #
+#################################
+breaks <- dataFPsmall$TOTP_avg[which(dataFPsmall$TOTP_avg >= 0.00001 & dataFPsmall$TOTP_avg <= 0.5)]    # create a vector to hold potential breakpoints 
+
+mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
+
+for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
+  piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family=binomial(link=logit), data=dataFPsmall)
+  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
+}
+
+mse <- as.numeric(mse) # converts list to numeric 
+breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
+breakpoint # returns the breakpoint 
+
+# re-run the glm() using this breakpoint 
+segmented_dataFPsmall_binomial_logit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFPsmall)
+summary(segmented_dataFPsmall_binomial_logit)     
+-2*logLik(segmented_dataFPsmall_binomial_logit)[1]+2*5
+breakpoint
+
+# Add new variables to the data frame 
+# used to plot the segmented data in ggplot2
+dataFPsmall$breakpoint <- ifelse(dataFPsmall$TOTP_avg <= breakpoint, "below", "above")
+
+rm(breaks,mse,breakpoint,piecewise) # clean up your workspace
+
+#################################
+# segmented logistic regression #
+# dataFPoutliers                #
+# link = logit                  #
+# via iterative searching       #
+#################################
+breaks <- dataFPoutliers$TOTP_avg[which(dataFPoutliers$TOTP_avg >= 0.00001 & dataFPoutliers$TOTP_avg <= 0.5)]    # create a vector to hold potential breakpoints 
+
+mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
+
+for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
+  piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family=binomial(link=logit), data=dataFPoutliers)
+  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
+}
+
+mse <- as.numeric(mse) # converts list to numeric 
+breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
+breakpoint # returns the breakpoint 
+
+# re-run the glm() using this breakpoint 
+segmented_dataFPoutliers_binomial_logit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFPoutliers)
+summary(segmented_dataFPoutliers_binomial_logit)     
+-2*logLik(segmented_dataFPoutliers_binomial_logit)[1]+2*5
+breakpoint
+
+# Add new variables to the data frame 
+# used to plot the segmented data in ggplot2
+dataFPoutliers$breakpoint <- ifelse(dataFPoutliers$TOTP_avg <= breakpoint, "below", "above")
+
+rm(breaks,mse,breakpoint,piecewise) # clean up your workspace
+
+#################################
+# segmented logistic regression #
+# dataFPoutlierssmall           #
+# link = logit                  #
+# via iterative searching       #
+#################################
+breaks <- dataFPoutlierssmall$TOTP_avg[which(dataFPoutlierssmall$TOTP_avg >= 0.00001 & dataFPoutlierssmall$TOTP_avg <= 0.5)]    # create a vector to hold potential breakpoints 
+
+mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
+
+for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
+  piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family=binomial(link=logit), data=dataFPoutlierssmall)
+  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
+}
+
+mse <- as.numeric(mse) # converts list to numeric 
+breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
+breakpoint # returns the breakpoint 
+
+# re-run the glm() using this breakpoint 
+segmented_dataFPoutlierssmall_binomial_logit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFPoutlierssmall)
+summary(segmented_dataFPoutlierssmall_binomial_logit)     
+-2*logLik(segmented_dataFPoutlierssmall_binomial_logit)[1]+2*5
+breakpoint
+
+# Add new variables to the data frame 
+# used to plot the segmented data in ggplot2
+dataFPoutlierssmall$breakpoint <- ifelse(dataFPoutlierssmall$TOTP_avg <= breakpoint, "below", "above")
+
+rm(breaks,mse,breakpoint,piecewise) # clean up your workspace
+
+#################################
+# segmented logistic regression #
+# dataONEperpond                #
+# link = probit                  #
+# via iterative searching       #
+#################################
+breaks <- dataONEperpond$TOTP_avg[which(dataONEperpond$TOTP_avg >= 0.00001 & dataONEperpond$TOTP_avg <= 0.5)]    # create a vector to hold potential breakpoints 
+
+mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
+
+for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
+  piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family=binomial(link=probit), data=dataONEperpond)
+  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
+}
+
+mse <- as.numeric(mse) # converts list to numeric 
+breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
+breakpoint # returns the breakpoint 
+
+# re-run the glm() using this breakpoint 
+segmented_dataONEperpond_binomial_probit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=probit), data=dataONEperpond)
+summary(segmented_dataONEperpond_binomial_probit)     
+-2*logLik(segmented_dataONEperpond_binomial_probit)[1]+2*5
+breakpoint
+
+# Add new variables to the data frame 
+# used to plot the segmented data in ggplot2
+dataONEperpond$breakpoint <- ifelse(dataONEperpond$TOTP_avg <= breakpoint, "below", "above")
+
+rm(breaks,mse,breakpoint,piecewise) # clean up your workspace 
+
+#################################
+# segmented logistic regression #
+# dataFP                        #
+# link = probit                  #
+# via iterative searching       #
+#################################
+breaks <- dataFP$TOTP_avg[which(dataFP$TOTP_avg >= 0.00001 & dataFP$TOTP_avg <= 0.5)]    # create a vector to hold potential breakpoints 
+
+mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
+
+for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
+  piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family=binomial(link=probit), data=dataFP)
+  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
+}
+
+mse <- as.numeric(mse) # converts list to numeric 
+breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
+breakpoint # returns the breakpoint 
+
+# re-run the glm() using this breakpoint 
+segmented_dataFP_binomial_probit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=probit), data=dataFP)
+summary(segmented_dataFP_binomial_probit)     
+-2*logLik(segmented_dataFP_binomial_probit)[1]+2*5
+breakpoint
+
+# Add new variables to the data frame 
+# used to plot the segmented data in ggplot2
+dataFP$breakpoint <- ifelse(dataFP$TOTP_avg <= breakpoint, "below", "above")
+
+rm(breaks,mse,breakpoint,piecewise) # clean up your workspace 
+
+#################################
+# segmented logistic regression #
+# dataFPsmall                   #
+# link = probit                  #
+# via iterative searching       #
+#################################
+breaks <- dataFPsmall$TOTP_avg[which(dataFPsmall$TOTP_avg >= 0.00001 & dataFPsmall$TOTP_avg <= 0.5)]    # create a vector to hold potential breakpoints 
+
+mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
+
+for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
+  piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family=binomial(link=probit), data=dataFPsmall)
+  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
+}
+
+mse <- as.numeric(mse) # converts list to numeric 
+breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
+breakpoint # returns the breakpoint 
+
+# re-run the glm() using this breakpoint 
+segmented_dataFPsmall_binomial_probit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=probit), data=dataFPsmall)
+summary(segmented_dataFPsmall_binomial_probit)     
+-2*logLik(segmented_dataFPsmall_binomial_probit)[1]+2*5
+breakpoint
+
+# Add new variables to the data frame 
+# used to plot the segmented data in ggplot2
+dataFPsmall$breakpoint <- ifelse(dataFPsmall$TOTP_avg <= breakpoint, "below", "above")
+
+rm(breaks,mse,breakpoint,piecewise) # clean up your workspace
+
+#################################
+# segmented logistic regression #
+# dataFPoutliers                #
+# link = probit                  #
+# via iterative searching       #
+#################################
+breaks <- dataFPoutliers$TOTP_avg[which(dataFPoutliers$TOTP_avg >= 0.00001 & dataFPoutliers$TOTP_avg <= 0.5)]    # create a vector to hold potential breakpoints 
+
+mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
+
+for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
+  piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family=binomial(link=probit), data=dataFPoutliers)
+  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
+}
+
+mse <- as.numeric(mse) # converts list to numeric 
+breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
+breakpoint # returns the breakpoint 
+
+# re-run the glm() using this breakpoint 
+segmented_dataFPoutliers_binomial_probit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=probit), data=dataFPoutliers)
+summary(segmented_dataFPoutliers_binomial_probit)     
+-2*logLik(segmented_dataFPoutliers_binomial_probit)[1]+2*5
+breakpoint
+
+# Add new variables to the data frame 
+# used to plot the segmented data in ggplot2
+dataFPoutliers$breakpoint <- ifelse(dataFPoutliers$TOTP_avg <= breakpoint, "below", "above")
+
+rm(breaks,mse,breakpoint,piecewise) # clean up your workspace
+
+#################################
+# segmented logistic regression #
+# dataFPoutlierssmall           #
+# link = probit                  #
+# via iterative searching       #
+#################################
+breaks <- dataFPoutlierssmall$TOTP_avg[which(dataFPoutlierssmall$TOTP_avg >= 0.00001 & dataFPoutlierssmall$TOTP_avg <= 0.5)]    # create a vector to hold potential breakpoints 
+
+mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
+
+for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
+  piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family=binomial(link=probit), data=dataFPoutlierssmall)
+  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
+}
+
+mse <- as.numeric(mse) # converts list to numeric 
+breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
+breakpoint # returns the breakpoint 
+
+# re-run the glm() using this breakpoint 
+segmented_dataFPoutlierssmall_binomial_probit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=probit), data=dataFPoutlierssmall)
+summary(segmented_dataFPoutlierssmall_binomial_probit)     
+-2*logLik(segmented_dataFPoutlierssmall_binomial_probit)[1]+2*5
+breakpoint
+
+# Add new variables to the data frame 
+# used to plot the segmented data in ggplot2
+dataFPoutlierssmall$breakpoint <- ifelse(dataFPoutlierssmall$TOTP_avg <= breakpoint, "below", "above")
+
+rm(breaks,mse,breakpoint,piecewise) # clean up your workspace
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################################ OLD STUFF #################################################3
 
 #################################
 # segmented logistic regression #
