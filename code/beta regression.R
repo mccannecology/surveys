@@ -77,6 +77,10 @@ AIC(betareg_dataFPsmall_logit)
 plot(dataFPsmall$FPcover_max ~ dataFPsmall$TOTP_avg,main="dataFPsmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
 lines(subset(dataFPsmall$TOTP_avg, dataFPsmall$TOTP_avg >0),betareg_dataFPsmall_logit$fitted,type="p",col="red")
 
+# plot the dispersion
+# not a very interesting plot
+plot(predict(betareg_dataFPsmall_logit, type="precision") ~ subset(dataFPsmall$TOTP_avg, dataFPsmall$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
+
 ####################### 
 # Beta regression     #
 # dataFPoutliers      #
@@ -378,8 +382,6 @@ lines(subset(dataFPoutlierssmall$TOTP_avg, dataFPoutlierssmall$TOTP_avg >0),beta
 
 # plot the variable dispersion
 plot(predict(betareg_dataFPoutlierssmall_logit_vardisp, type="precision") ~ subset(dataFPoutlierssmall$TOTP_avg, dataFPoutlierssmall$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
-
-
 
 ####################### 
 # Beta regression     #
