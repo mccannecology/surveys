@@ -87,6 +87,7 @@ b1
 ################
 # use "segmented logistic.R" first 
 # generates your breakpoint 
+# breakpoint02 is used below and is defined in the segmented logistic script 
 
 b2 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
 b2 <- b2 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint02)))
