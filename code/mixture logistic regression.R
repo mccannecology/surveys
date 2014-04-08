@@ -3,7 +3,7 @@
 # Latent class mixture model  regression   #
 ############################################
 
-library("flexmix")
+library(flexmix)
 library(ggplot2)
 
 # re-format data so it is in the form: col 1 is no. successes and col 2 is no. failures
