@@ -8,6 +8,9 @@ library(betareg)
 
 # Get rid of any 0s and 1s in the dependent (Y) variable
 # Transformation suggested by: Smithson M, Verkuilen J (2006). Psychological Methods, 11(1), 54–71
+#
+# IMPORTANT: Re-import these data sets when you are done with beta regression analysis 
+#
 dataONEperpond$FPcover_max[dataONEperpond$FPcover_max == 1] <- (1*(length(dataONEperpond$FPcover_max)-1)+0.5)/(length(dataONEperpond$FPcover_max))
 dataONEperpond$FPcover_max[dataONEperpond$FPcover_max == 0] <- (0*(length(dataONEperpond$FPcover_max)-1)+0.5)/(length(dataONEperpond$FPcover_max))
 
@@ -549,8 +552,9 @@ plot(predict(betareg_dataFPoutlierssmall_loglog_vardisp, type="precision") ~ sub
 formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataONEperpond_logit <- betamix(formula, link="logit", data=dataONEperpond, k = 2, nstart = 100)
 summary(betareg_mix_dataONEperpond_logit) 
+logLik(betareg_mix_dataONEperpond_logit) 
 AIC(betareg_mix_dataONEperpond_logit) 
-# one cluster 
+# two clusters 
 
 # add plot 
 
@@ -564,6 +568,7 @@ AIC(betareg_mix_dataONEperpond_logit)
 formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFP_logit <- betamix(formula, link="logit", data=dataFP, k = 2, nstart = 100)
 summary(betareg_mix_dataFP_logit) 
+logLik(betareg_mix_dataFP_logit) 
 AIC(betareg_mix_dataFP_logit) 
 # two clusters 
 
@@ -579,6 +584,7 @@ AIC(betareg_mix_dataFP_logit)
 formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFPsmall_logit <- betamix(formula, link="logit", data=dataFPsmall, k = 2, nstart = 100)
 summary(betareg_mix_dataFPsmall_logit) 
+logLik(betareg_mix_dataFPsmall_logit) 
 AIC(betareg_mix_dataFPsmall_logit) 
 # one cluster
 
@@ -594,6 +600,7 @@ AIC(betareg_mix_dataFPsmall_logit)
 formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFPoutliers_logit <- betamix(formula, link="logit", data=dataFPoutliers, k = 2, nstart = 100)
 summary(betareg_mix_dataFPoutliers_logit) 
+logLik(betareg_mix_dataFPoutliers_logit) 
 AIC(betareg_mix_dataFPoutliers_logit) 
 # two clusters
 
@@ -609,8 +616,88 @@ AIC(betareg_mix_dataFPoutliers_logit)
 formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFPoutlierssmall_logit <- betamix(formula, link="logit", data=dataFPoutlierssmall, k = 2, nstart = 100)
 summary(betareg_mix_dataFPoutlierssmall_logit) 
+logLik(betareg_mix_dataFPoutlierssmall_logit) 
 AIC(betareg_mix_dataFPoutlierssmall_logit) 
 # one cluster
+
+# add plot 
+
+####################### 
+# Beta regression     #
+# Mixed model         #
+# dataONEperpond      #
+# link: loglog        #
+# Constant dispersion #
+#######################
+formula <- FPcover_max ~ TOTP_avg
+betareg_mix_dataONEperpond_loglog <- betamix(formula, link="loglog", data=dataONEperpond, k = 2, nstart = 100)
+summary(betareg_mix_dataONEperpond_loglog) 
+logLik(betareg_mix_dataONEperpond_loglog) 
+AIC(betareg_mix_dataONEperpond_loglog) 
+# one cluster
+
+# add plot 
+
+####################### 
+# Beta regression     #
+# Mixed model         #
+# dataFP              #
+# link: loglog        #
+# Constant dispersion #
+#######################
+formula <- FPcover_max ~ TOTP_avg
+betareg_mix_dataFP_loglog <- betamix(formula, link="loglog", data=dataFP, k = 2, nstart = 100)
+summary(betareg_mix_dataFP_loglog) 
+logLik(betareg_mix_dataFP_loglog) 
+AIC(betareg_mix_dataFP_loglog) 
+# two clusters 
+
+# add plot 
+
+####################### 
+# Beta regression     #
+# Mixed model         #
+# dataFPsmall         #
+# link: loglog        #
+# Constant dispersion #
+#######################
+formula <- FPcover_max ~ TOTP_avg
+betareg_mix_dataFPsmall_loglog <- betamix(formula, link="loglog", data=dataFPsmall, k = 2, nstart = 100)
+summary(betareg_mix_dataFPsmall_loglog) 
+logLik(betareg_mix_dataFPsmall_loglog) 
+AIC(betareg_mix_dataFPsmall_loglog) 
+# two cluster
+
+# add plot 
+
+####################### 
+# Beta regression     #
+# Mixed model         #
+# dataFPoutliers      #
+# link: loglog        #
+# Constant dispersion #
+#######################
+formula <- FPcover_max ~ TOTP_avg
+betareg_mix_dataFPoutliers_loglog <- betamix(formula, link="loglog", data=dataFPoutliers, k = 2, nstart = 100)
+summary(betareg_mix_dataFPoutliers_loglog) 
+logLik(betareg_mix_dataFPoutliers_loglog) 
+AIC(betareg_mix_dataFPoutliers_loglog) 
+
+# two clusters
+
+####################### 
+# Beta regression     #
+# Mixed model         #
+# dataFPoutlierssmall #
+# link: loglog        #
+# Constant dispersion #
+#######################
+formula <- FPcover_max ~ TOTP_avg
+betareg_mix_dataFPoutlierssmall_loglog <- betamix(formula, link="loglog", data=dataFPoutlierssmall, k = 2, nstart = 100)
+summary(betareg_mix_dataFPoutlierssmall_loglog) 
+logLik(betareg_mix_dataFPoutlierssmall_loglog) 
+AIC(betareg_mix_dataFPoutlierssmall_loglog) 
+# two clusters
 
 # add plot 
 
@@ -620,53 +707,5 @@ AIC(betareg_mix_dataFPoutlierssmall_logit)
 
 
 
-
-
-
-
-#####################
-###########################################
-######################################################################################
-###########################################
-######################################################################################
-###########################################
-#####################
-
-
-
-##################
-# Compare models #
-##################
-# log-likelihood ratio test (for nested models)
-library(lmtest)
-lrtest(betaregFPsmall_logit, betaregFPsmall_vardisp)
-# this doesn't look like it really improves things - p = 0.2089
-
-# compare AIC values
-AIC(betaregFPsmall_logit, betaregFPsmall_loglog,betaregFPsmall_logit_vardisp,betaregFPsmall_loglog_vardisp)
-
-#############################
-# Retrieve estimated values #
-#############################
-library(sandwich)
-estfun(betaregFPsmall_logit_vardisp)
-# I can do this for all of the other models too 
-
-# extract predicted response variables from beta regression  
-predict(betaregFPsmall_logit_vardisp, type="response")
-
-# extract predicted response variables from mixture beta regression  
-predict(betareg_mix_FPsmalloutliers_loglog_3clusters)
-# this may not work properly 
-
-##########################################
-# Fluctuation test for structural change # 
-##########################################
-# test whether parameters are stable over range of observations
-
-library(strucchange)
-plot(gefp(FPcover_max ~ 1, fit=betareg, data=dataFPsmall), aggregate=FALSE)
-
-# I'm not sure that this worked 
 
 
