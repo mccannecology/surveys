@@ -556,7 +556,29 @@ logLik(betareg_mix_dataONEperpond_logit)
 AIC(betareg_mix_dataONEperpond_logit) 
 # two clusters 
 
-# add plot 
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataONEperpond$beta_logit_cluster <- rep(NA, nrow(dataONEperpond))
+dataONEperpond_TOTP <- subset(dataONEperpond, dataONEperpond$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataONEperpond_noTOTP <- subset(dataONEperpond, is.na(dataONEperpond$TOTP_avg)) # and waterbodies w/o TOTP
+dataONEperpond_TOTP$beta_logit_cluster<-clusters(betareg_mix_dataONEperpond_logit) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataONEperpond <- merge(dataONEperpond_TOTP,dataONEperpond_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataONEperpond_TOTP,dataONEperpond_noTOTP)
+
+# plot 
+dataONEperpond_beta_logit_cluster_plot <- ggplot(dataONEperpond,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_cluster),shape=factor(beta_logit_cluster))) + geom_point(size=3) 
+dataONEperpond_beta_logit_cluster_plot <- dataONEperpond_beta_logit_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_cluster))) 
+dataONEperpond_beta_logit_cluster_plot <- dataONEperpond_beta_logit_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataONEperpond_beta_logit_cluster_plot <- dataONEperpond_beta_logit_cluster_plot + ggtitle("dataONEperpond - logit link")
+dataONEperpond_beta_logit_cluster_plot <- dataONEperpond_beta_logit_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataONEperpond_beta_logit_cluster_plot <- dataONEperpond_beta_logit_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataONEperpond_beta_logit_cluster_plot <- dataONEperpond_beta_logit_cluster_plot + theme_classic(base_size=18)
+dataONEperpond_beta_logit_cluster_plot
+
+# save the plot 
+ggsave(file="dataONEperpond_beta_logit_cluster_plot.jpg", dataONEperpond_beta_logit_cluster_plot, height=8,width=11)
 
 ####################### 
 # Beta regression     #
@@ -572,7 +594,29 @@ logLik(betareg_mix_dataFP_logit)
 AIC(betareg_mix_dataFP_logit) 
 # two clusters 
 
-# add plot 
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFP$beta_logit_cluster <- rep(NA, nrow(dataFP))
+dataFP_TOTP <- subset(dataFP, dataFP$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFP_noTOTP <- subset(dataFP, is.na(dataFP$TOTP_avg)) # and waterbodies w/o TOTP
+dataFP_TOTP$beta_logit_cluster<-clusters(betareg_mix_dataFP_logit) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFP <- merge(dataFP_TOTP,dataFP_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFP_TOTP,dataFP_noTOTP)
+
+# plot 
+dataFP_beta_logit_cluster_plot <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_cluster),shape=factor(beta_logit_cluster))) + geom_point(size=3) 
+dataFP_beta_logit_cluster_plot <- dataFP_beta_logit_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_cluster))) 
+dataFP_beta_logit_cluster_plot <- dataFP_beta_logit_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFP_beta_logit_cluster_plot <- dataFP_beta_logit_cluster_plot + ggtitle("dataFP - logit link")
+dataFP_beta_logit_cluster_plot <- dataFP_beta_logit_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFP_beta_logit_cluster_plot <- dataFP_beta_logit_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFP_beta_logit_cluster_plot <- dataFP_beta_logit_cluster_plot + theme_classic(base_size=18)
+dataFP_beta_logit_cluster_plot
+
+# save the plot 
+ggsave(file="dataFP_beta_logit_cluster_plot.jpg", dataFP_beta_logit_cluster_plot, height=8,width=11)
 
 ####################### 
 # Beta regression     #
@@ -588,7 +632,29 @@ logLik(betareg_mix_dataFPsmall_logit)
 AIC(betareg_mix_dataFPsmall_logit) 
 # one cluster
 
-# add plot 
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFPsmall$beta_logit_cluster <- rep(NA, nrow(dataFPsmall))
+dataFPsmall_TOTP <- subset(dataFPsmall, dataFPsmall$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFPsmall_noTOTP <- subset(dataFPsmall, is.na(dataFPsmall$TOTP_avg)) # and waterbodies w/o TOTP
+dataFPsmall_TOTP$beta_logit_cluster<-clusters(betareg_mix_dataFPsmall_logit) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFPsmall <- merge(dataFPsmall_TOTP,dataFPsmall_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFPsmall_TOTP,dataFPsmall_noTOTP)
+
+# plot 
+dataFPsmall_beta_logit_cluster_plot <- ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_cluster),shape=factor(beta_logit_cluster))) + geom_point(size=3) 
+dataFPsmall_beta_logit_cluster_plot <- dataFPsmall_beta_logit_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_cluster))) 
+dataFPsmall_beta_logit_cluster_plot <- dataFPsmall_beta_logit_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFPsmall_beta_logit_cluster_plot <- dataFPsmall_beta_logit_cluster_plot + ggtitle("dataFPsmall - logit link")
+dataFPsmall_beta_logit_cluster_plot <- dataFPsmall_beta_logit_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFPsmall_beta_logit_cluster_plot <- dataFPsmall_beta_logit_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFPsmall_beta_logit_cluster_plot <- dataFPsmall_beta_logit_cluster_plot + theme_classic(base_size=18)
+dataFPsmall_beta_logit_cluster_plot
+
+# save the plot 
+ggsave(file="dataFPsmall_beta_logit_cluster_plot.jpg", dataFPsmall_beta_logit_cluster_plot, height=8,width=11)
 
 ####################### 
 # Beta regression     #
@@ -604,7 +670,29 @@ logLik(betareg_mix_dataFPoutliers_logit)
 AIC(betareg_mix_dataFPoutliers_logit) 
 # two clusters
 
-# add plot 
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFPoutliers$beta_logit_cluster <- rep(NA, nrow(dataFPoutliers))
+dataFPoutliers_TOTP <- subset(dataFPoutliers, dataFPoutliers$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFPoutliers_noTOTP <- subset(dataFPoutliers, is.na(dataFPoutliers$TOTP_avg)) # and waterbodies w/o TOTP
+dataFPoutliers_TOTP$beta_logit_cluster<-clusters(betareg_mix_dataFPoutliers_logit) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFPoutliers <- merge(dataFPoutliers_TOTP,dataFPoutliers_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFPoutliers_TOTP,dataFPoutliers_noTOTP)
+
+# plot 
+dataFPoutliers_beta_logit_cluster_plot <- ggplot(dataFPoutliers,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_cluster),shape=factor(beta_logit_cluster))) + geom_point(size=3) 
+dataFPoutliers_beta_logit_cluster_plot <- dataFPoutliers_beta_logit_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_cluster))) 
+dataFPoutliers_beta_logit_cluster_plot <- dataFPoutliers_beta_logit_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFPoutliers_beta_logit_cluster_plot <- dataFPoutliers_beta_logit_cluster_plot + ggtitle("dataFPoutliers - logit link")
+dataFPoutliers_beta_logit_cluster_plot <- dataFPoutliers_beta_logit_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFPoutliers_beta_logit_cluster_plot <- dataFPoutliers_beta_logit_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFPoutliers_beta_logit_cluster_plot <- dataFPoutliers_beta_logit_cluster_plot + theme_classic(base_size=18)
+dataFPoutliers_beta_logit_cluster_plot
+
+# save the plot 
+ggsave(file="dataFPoutliers_beta_logit_cluster_plot.jpg", dataFPoutliers_beta_logit_cluster_plot, height=8,width=11)
 
 ####################### 
 # Beta regression     #
@@ -620,7 +708,29 @@ logLik(betareg_mix_dataFPoutlierssmall_logit)
 AIC(betareg_mix_dataFPoutlierssmall_logit) 
 # one cluster
 
-# add plot 
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFPoutlierssmall$beta_logit_cluster <- rep(NA, nrow(dataFPoutlierssmall))
+dataFPoutlierssmall_TOTP <- subset(dataFPoutlierssmall, dataFPoutlierssmall$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFPoutlierssmall_noTOTP <- subset(dataFPoutlierssmall, is.na(dataFPoutlierssmall$TOTP_avg)) # and waterbodies w/o TOTP
+dataFPoutlierssmall_TOTP$beta_logit_cluster<-clusters(betareg_mix_dataFPoutlierssmall_logit) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFPoutlierssmall <- merge(dataFPoutlierssmall_TOTP,dataFPoutlierssmall_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFPoutlierssmall_TOTP,dataFPoutlierssmall_noTOTP)
+
+# plot 
+dataFPoutlierssmall_beta_logit_cluster_plot <- ggplot(dataFPoutlierssmall,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_cluster),shape=factor(beta_logit_cluster))) + geom_point(size=3) 
+dataFPoutlierssmall_beta_logit_cluster_plot <- dataFPoutlierssmall_beta_logit_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_cluster))) 
+dataFPoutlierssmall_beta_logit_cluster_plot <- dataFPoutlierssmall_beta_logit_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFPoutlierssmall_beta_logit_cluster_plot <- dataFPoutlierssmall_beta_logit_cluster_plot + ggtitle("dataFPoutlierssmall - logit link")
+dataFPoutlierssmall_beta_logit_cluster_plot <- dataFPoutlierssmall_beta_logit_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFPoutlierssmall_beta_logit_cluster_plot <- dataFPoutlierssmall_beta_logit_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFPoutlierssmall_beta_logit_cluster_plot <- dataFPoutlierssmall_beta_logit_cluster_plot + theme_classic(base_size=18)
+dataFPoutlierssmall_beta_logit_cluster_plot
+
+# save the plot 
+ggsave(file="dataFPoutlierssmall_beta_logit_cluster_plot.jpg", dataFPoutlierssmall_beta_logit_cluster_plot, height=8,width=11)
 
 ####################### 
 # Beta regression     #
@@ -636,7 +746,29 @@ logLik(betareg_mix_dataONEperpond_loglog)
 AIC(betareg_mix_dataONEperpond_loglog) 
 # one cluster
 
-# add plot 
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataONEperpond$beta_loglog_cluster <- rep(NA, nrow(dataONEperpond))
+dataONEperpond_TOTP <- subset(dataONEperpond, dataONEperpond$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataONEperpond_noTOTP <- subset(dataONEperpond, is.na(dataONEperpond$TOTP_avg)) # and waterbodies w/o TOTP
+dataONEperpond_TOTP$beta_loglog_cluster<-clusters(betareg_mix_dataONEperpond_loglog) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataONEperpond <- merge(dataONEperpond_TOTP,dataONEperpond_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataONEperpond_TOTP,dataONEperpond_noTOTP)
+
+# plot 
+dataONEperpond_beta_loglog_cluster_plot <- ggplot(dataONEperpond,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_loglog_cluster),shape=factor(beta_loglog_cluster))) + geom_point(size=3) 
+dataONEperpond_beta_loglog_cluster_plot <- dataONEperpond_beta_loglog_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_loglog_cluster))) 
+dataONEperpond_beta_loglog_cluster_plot <- dataONEperpond_beta_loglog_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataONEperpond_beta_loglog_cluster_plot <- dataONEperpond_beta_loglog_cluster_plot + ggtitle("dataONEperpond - loglog link")
+dataONEperpond_beta_loglog_cluster_plot <- dataONEperpond_beta_loglog_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataONEperpond_beta_loglog_cluster_plot <- dataONEperpond_beta_loglog_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataONEperpond_beta_loglog_cluster_plot <- dataONEperpond_beta_loglog_cluster_plot + theme_classic(base_size=18)
+dataONEperpond_beta_loglog_cluster_plot
+
+# save the plot 
+ggsave(file="dataONEperpond_beta_loglog_cluster_plot.jpg", dataONEperpond_beta_loglog_cluster_plot, height=8,width=11)
 
 ####################### 
 # Beta regression     #
@@ -652,7 +784,29 @@ logLik(betareg_mix_dataFP_loglog)
 AIC(betareg_mix_dataFP_loglog) 
 # two clusters 
 
-# add plot 
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFP$beta_loglog_cluster <- rep(NA, nrow(dataFP))
+dataFP_TOTP <- subset(dataFP, dataFP$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFP_noTOTP <- subset(dataFP, is.na(dataFP$TOTP_avg)) # and waterbodies w/o TOTP
+dataFP_TOTP$beta_loglog_cluster<-clusters(betareg_mix_dataFP_loglog) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFP <- merge(dataFP_TOTP,dataFP_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFP_TOTP,dataFP_noTOTP)
+
+# plot 
+dataFP_beta_loglog_cluster_plot <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_loglog_cluster),shape=factor(beta_loglog_cluster))) + geom_point(size=3) 
+dataFP_beta_loglog_cluster_plot <- dataFP_beta_loglog_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_loglog_cluster))) 
+dataFP_beta_loglog_cluster_plot <- dataFP_beta_loglog_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFP_beta_loglog_cluster_plot <- dataFP_beta_loglog_cluster_plot + ggtitle("dataFP - loglog link")
+dataFP_beta_loglog_cluster_plot <- dataFP_beta_loglog_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFP_beta_loglog_cluster_plot <- dataFP_beta_loglog_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFP_beta_loglog_cluster_plot <- dataFP_beta_loglog_cluster_plot + theme_classic(base_size=18)
+dataFP_beta_loglog_cluster_plot
+
+# save the plot 
+ggsave(file="dataFP_beta_loglog_cluster_plot.jpg", dataFP_beta_loglog_cluster_plot, height=8,width=11)
 
 ####################### 
 # Beta regression     #
@@ -666,9 +820,31 @@ betareg_mix_dataFPsmall_loglog <- betamix(formula, link="loglog", data=dataFPsma
 summary(betareg_mix_dataFPsmall_loglog) 
 logLik(betareg_mix_dataFPsmall_loglog) 
 AIC(betareg_mix_dataFPsmall_loglog) 
-# two cluster
+# one cluster
 
-# add plot 
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFPsmall$beta_loglog_cluster <- rep(NA, nrow(dataFPsmall))
+dataFPsmall_TOTP <- subset(dataFPsmall, dataFPsmall$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFPsmall_noTOTP <- subset(dataFPsmall, is.na(dataFPsmall$TOTP_avg)) # and waterbodies w/o TOTP
+dataFPsmall_TOTP$beta_loglog_cluster<-clusters(betareg_mix_dataFPsmall_loglog) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFPsmall <- merge(dataFPsmall_TOTP,dataFPsmall_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFPsmall_TOTP,dataFPsmall_noTOTP)
+
+# plot 
+dataFPsmall_beta_loglog_cluster_plot <- ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_loglog_cluster),shape=factor(beta_loglog_cluster))) + geom_point(size=3) 
+dataFPsmall_beta_loglog_cluster_plot <- dataFPsmall_beta_loglog_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_loglog_cluster))) 
+dataFPsmall_beta_loglog_cluster_plot <- dataFPsmall_beta_loglog_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFPsmall_beta_loglog_cluster_plot <- dataFPsmall_beta_loglog_cluster_plot + ggtitle("dataFPsmall - loglog link")
+dataFPsmall_beta_loglog_cluster_plot <- dataFPsmall_beta_loglog_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFPsmall_beta_loglog_cluster_plot <- dataFPsmall_beta_loglog_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFPsmall_beta_loglog_cluster_plot <- dataFPsmall_beta_loglog_cluster_plot + theme_classic(base_size=18)
+dataFPsmall_beta_loglog_cluster_plot
+
+# save the plot 
+ggsave(file="dataFPsmall_beta_loglog_cluster_plot.jpg", dataFPsmall_beta_loglog_cluster_plot, height=8,width=11)
 
 ####################### 
 # Beta regression     #
@@ -682,8 +858,31 @@ betareg_mix_dataFPoutliers_loglog <- betamix(formula, link="loglog", data=dataFP
 summary(betareg_mix_dataFPoutliers_loglog) 
 logLik(betareg_mix_dataFPoutliers_loglog) 
 AIC(betareg_mix_dataFPoutliers_loglog) 
-
 # two clusters
+
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFPoutliers$beta_loglog_cluster <- rep(NA, nrow(dataFPoutliers))
+dataFPoutliers_TOTP <- subset(dataFPoutliers, dataFPoutliers$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFPoutliers_noTOTP <- subset(dataFPoutliers, is.na(dataFPoutliers$TOTP_avg)) # and waterbodies w/o TOTP
+dataFPoutliers_TOTP$beta_loglog_cluster<-clusters(betareg_mix_dataFPoutliers_loglog) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFPoutliers <- merge(dataFPoutliers_TOTP,dataFPoutliers_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFPoutliers_TOTP,dataFPoutliers_noTOTP)
+
+# plot 
+dataFPoutliers_beta_loglog_cluster_plot <- ggplot(dataFPoutliers,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_loglog_cluster),shape=factor(beta_loglog_cluster))) + geom_point(size=3) 
+dataFPoutliers_beta_loglog_cluster_plot <- dataFPoutliers_beta_loglog_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_loglog_cluster))) 
+dataFPoutliers_beta_loglog_cluster_plot <- dataFPoutliers_beta_loglog_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFPoutliers_beta_loglog_cluster_plot <- dataFPoutliers_beta_loglog_cluster_plot + ggtitle("dataFPoutliers - loglog link")
+dataFPoutliers_beta_loglog_cluster_plot <- dataFPoutliers_beta_loglog_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFPoutliers_beta_loglog_cluster_plot <- dataFPoutliers_beta_loglog_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFPoutliers_beta_loglog_cluster_plot <- dataFPoutliers_beta_loglog_cluster_plot + theme_classic(base_size=18)
+dataFPoutliers_beta_loglog_cluster_plot
+
+# save the plot 
+ggsave(file="dataFPoutliers_beta_loglog_cluster_plot.jpg", dataFPoutliers_beta_loglog_cluster_plot, height=8,width=11)
 
 ####################### 
 # Beta regression     #
@@ -699,8 +898,29 @@ logLik(betareg_mix_dataFPoutlierssmall_loglog)
 AIC(betareg_mix_dataFPoutlierssmall_loglog) 
 # two clusters
 
-# add plot 
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFPoutlierssmall$beta_loglog_cluster <- rep(NA, nrow(dataFPoutlierssmall))
+dataFPoutlierssmall_TOTP <- subset(dataFPoutlierssmall, dataFPoutlierssmall$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFPoutlierssmall_noTOTP <- subset(dataFPoutlierssmall, is.na(dataFPoutlierssmall$TOTP_avg)) # and waterbodies w/o TOTP
+dataFPoutlierssmall_TOTP$beta_loglog_cluster<-clusters(betareg_mix_dataFPoutlierssmall_loglog) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFPoutlierssmall <- merge(dataFPoutlierssmall_TOTP,dataFPoutlierssmall_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFPoutlierssmall_TOTP,dataFPoutlierssmall_noTOTP)
 
+# plot 
+dataFPoutlierssmall_beta_loglog_cluster_plot <- ggplot(dataFPoutlierssmall,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_loglog_cluster),shape=factor(beta_loglog_cluster))) + geom_point(size=3) 
+dataFPoutlierssmall_beta_loglog_cluster_plot <- dataFPoutlierssmall_beta_loglog_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_loglog_cluster))) 
+dataFPoutlierssmall_beta_loglog_cluster_plot <- dataFPoutlierssmall_beta_loglog_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFPoutlierssmall_beta_loglog_cluster_plot <- dataFPoutlierssmall_beta_loglog_cluster_plot + ggtitle("dataFPoutlierssmall - loglog link")
+dataFPoutlierssmall_beta_loglog_cluster_plot <- dataFPoutlierssmall_beta_loglog_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFPoutlierssmall_beta_loglog_cluster_plot <- dataFPoutlierssmall_beta_loglog_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFPoutlierssmall_beta_loglog_cluster_plot <- dataFPoutlierssmall_beta_loglog_cluster_plot + theme_classic(base_size=18)
+dataFPoutlierssmall_beta_loglog_cluster_plot
+
+# save the plot 
+ggsave(file="dataFPoutlierssmall_beta_loglog_cluster_plot.jpg", dataFPoutlierssmall_beta_loglog_cluster_plot, height=8,width=11)
 
 
 
