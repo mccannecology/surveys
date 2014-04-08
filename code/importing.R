@@ -54,6 +54,14 @@ dataONEperpond <- subset(dataONEperpond, year != "2004")
 write.csv(dataONEperpond, file = "oneperpond.csv", row.names = FALSE)
 
 #############################################################################################################
+# REMOVING "OUTLIER"
+# get rid of Private Pond (5) Lower/West - TOTP_avg ~ 1.4 mg/L & FPcover_max ~ 1
+# get rid of Scriner Pond - TOTP_avg ~ 0.5 mg /L & FPcover_max ~ 0.71 
+#############################################################################################################
+dataONEperpondoutliers <- subset(dataONEperpond, waterbody != "Scribner Pond")
+dataONEperpondoutliers <- subset(dataONEperpondoutliers, waterbody != "Private Pond (5) Lower/West")
+
+#############################################################################################################
 # GETTING A "FLOATING PLANTS PRESENT" FILE / DATAFRAME
 # only deal with ponds that have floating plants present 
 #############################################################################################################
