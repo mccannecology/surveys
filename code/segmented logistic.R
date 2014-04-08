@@ -63,7 +63,8 @@ breakpoint # returns the breakpoint
 # re-run the glm() using this breakpoint 
 segmented_dataFP_binomial_logit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFP)
 summary(segmented_dataFP_binomial_logit)     
--2*logLik(segmented_dataFP_binomial_logit)[1]+2*5
+AIC(segmented_dataFP_binomial_logit) # gives you the incorrect AIC - does not account for estimating the breakpoint parameter 
+-2*logLik(segmented_dataFP_binomial_logit)[1]+2*5 # calculate the actual AIC for this model 
 breakpoint
 
 # Add new variables to the data frame 
@@ -94,7 +95,8 @@ breakpoint # returns the breakpoint
 # re-run the glm() using this breakpoint 
 segmented_dataFPsmall_binomial_logit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFPsmall)
 summary(segmented_dataFPsmall_binomial_logit)     
--2*logLik(segmented_dataFPsmall_binomial_logit)[1]+2*5
+AIC(segmented_dataFPsmall_binomial_logit) # gives you the incorrect AIC - does not account for estimating the breakpoint parameter 
+-2*logLik(segmented_dataFPsmall_binomial_logit)[1]+2*5 # calculate the actual AIC for this model 
 breakpoint
 
 # Add new variables to the data frame 
@@ -125,7 +127,8 @@ breakpoint # returns the breakpoint
 # re-run the glm() using this breakpoint 
 segmented_dataFPoutliers_binomial_logit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFPoutliers)
 summary(segmented_dataFPoutliers_binomial_logit)     
--2*logLik(segmented_dataFPoutliers_binomial_logit)[1]+2*5
+AIC(segmented_dataFPoutliers_binomial_logit) # gives you the incorrect AIC - does not account for estimating the breakpoint parameter 
+-2*logLik(segmented_dataFPoutliers_binomial_logit)[1]+2*5 # calculate the actual AIC for this model 
 breakpoint
 
 # Add new variables to the data frame 
@@ -156,7 +159,8 @@ breakpoint # returns the breakpoint
 # re-run the glm() using this breakpoint 
 segmented_dataFPoutlierssmall_binomial_logit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFPoutlierssmall)
 summary(segmented_dataFPoutlierssmall_binomial_logit)     
--2*logLik(segmented_dataFPoutlierssmall_binomial_logit)[1]+2*5
+AIC(segmented_dataFPoutlierssmall_binomial_logit) # gives you the incorrect AIC - does not account for estimating the breakpoint parameter 
+-2*logLik(segmented_dataFPoutlierssmall_binomial_logit)[1]+2*5 # calculate the actual AIC for this model 
 breakpoint
 
 # Add new variables to the data frame 
@@ -187,7 +191,8 @@ breakpoint # returns the breakpoint
 # re-run the glm() using this breakpoint 
 segmented_dataONEperpond_binomial_probit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=probit), data=dataONEperpond)
 summary(segmented_dataONEperpond_binomial_probit)     
--2*logLik(segmented_dataONEperpond_binomial_probit)[1]+2*5
+AIC(segmented_dataONEperpond_binomial_probit) # gives you the incorrect AIC - does not account for estimating the breakpoint parameter 
+-2*logLik(segmented_dataONEperpond_binomial_probit)[1]+2*5 # calculate the actual AIC for this model
 breakpoint
 
 # Add new variables to the data frame 
@@ -218,7 +223,8 @@ breakpoint # returns the breakpoint
 # re-run the glm() using this breakpoint 
 segmented_dataFP_binomial_probit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=probit), data=dataFP)
 summary(segmented_dataFP_binomial_probit)     
--2*logLik(segmented_dataFP_binomial_probit)[1]+2*5
+AIC(segmented_dataFP_binomial_probit) # gives you the incorrect AIC - does not account for estimating the breakpoint parameter 
+-2*logLik(segmented_dataFP_binomial_probit)[1]+2*5 # calculate the actual AIC for this model
 breakpoint
 
 # Add new variables to the data frame 
@@ -249,7 +255,8 @@ breakpoint # returns the breakpoint
 # re-run the glm() using this breakpoint 
 segmented_dataFPsmall_binomial_probit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=probit), data=dataFPsmall)
 summary(segmented_dataFPsmall_binomial_probit)     
--2*logLik(segmented_dataFPsmall_binomial_probit)[1]+2*5
+AIC(segmented_dataFPsmall_binomial_probit) # gives you the incorrect AIC - does not account for estimating the breakpoint parameter 
+-2*logLik(segmented_dataFPsmall_binomial_probit)[1]+2*5 # calculate the actual AIC for this model
 breakpoint
 
 # Add new variables to the data frame 
@@ -280,7 +287,8 @@ breakpoint # returns the breakpoint
 # re-run the glm() using this breakpoint 
 segmented_dataFPoutliers_binomial_probit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=probit), data=dataFPoutliers)
 summary(segmented_dataFPoutliers_binomial_probit)     
--2*logLik(segmented_dataFPoutliers_binomial_probit)[1]+2*5
+AIC(segmented_dataFPoutliers_binomial_probit) # gives you the incorrect AIC - does not account for estimating the breakpoint parameter 
+-2*logLik(segmented_dataFPoutliers_binomial_probit)[1]+2*5 # calculate the actual AIC for this model
 breakpoint
 
 # Add new variables to the data frame 
@@ -311,7 +319,8 @@ breakpoint # returns the breakpoint
 # re-run the glm() using this breakpoint 
 segmented_dataFPoutlierssmall_binomial_probit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=probit), data=dataFPoutlierssmall)
 summary(segmented_dataFPoutlierssmall_binomial_probit)     
--2*logLik(segmented_dataFPoutlierssmall_binomial_probit)[1]+2*5
+AIC(segmented_dataFPoutlierssmall_binomial_probit) # gives you the incorrect AIC - does not account for estimating the breakpoint parameter 
+-2*logLik(segmented_dataFPoutlierssmall_binomial_probit)[1]+2*5 # calculate the actual AIC for this model
 breakpoint
 
 # Add new variables to the data frame 
