@@ -1,10 +1,11 @@
 ############################################
 # ANALYSIS OF CT & LI DUCKWEED SURVEY DATA #
 # Beta regression                          #
+# With package gamlss                      #
 #                                          #
-# Created by MJM 3/20/2014                 #
+# Created by MJM 4/10/2014                 #
 ############################################
-library(betareg)
+library(gamlss)
 
 # Get rid of any 0s and 1s in the dependent (Y) variable
 # Transformation suggested by: Smithson M, Verkuilen J (2006). Psychological Methods, 11(1), 54–71
@@ -33,6 +34,53 @@ plot(dataFP$FPcover_max ~ dataFP$TOTP_avg,main="dataFP",xlab="Total P (mg/L)",yl
 plot(dataFPsmall$FPcover_max ~ dataFPsmall$TOTP_avg,main="dataFPsmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
 plot(dataFPoutliers$FPcover_max ~ dataFPoutliers$TOTP_avg,main="dataFPoutliers",xlab="Total P (mg/L)",ylab="FP cover",log="x")
 plot(dataFPoutlierssmall$FPcover_max ~ dataFPoutlierssmall$TOTP_avg,main="dataFPoutlierssmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+
+####################### 
+# Beta regression     #
+# dataONEperpond      #
+# link: logit         #
+# Variable dispersion #
+#######################
+head(dataONEperpond)
+
+# re-format data so it has no NAs 
+dataONEperpond_gamlss <- cbind(dataONEperpond$FPcover_max,dataONEperpond$TOTP_avg)
+dataONEperpond_gamlss <- as.data.frame(dataONEperpond_gamlss) # convert to a data frame 
+dataONEperpond_gamlss <- dataONEperpond_gamlss[complete.cases(dataONEperpond_gamlss),]# remove any NAs
+names(dataONEperpond_gamlss) <- c("FPcover_max","TOTP_avg")
+head(dataONEperpond_gamlss)
+dataONEperpond_gamlss
+
+gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_flexmix, family=BE)
+
+
+####################### 
+# Beta regression     #
+# dataFP              #
+# link: logit         #
+# Variable dispersion #
+#######################
+head(dataFP)
+
+# re-format data so it has no NAs 
+dataFP_gamlss <- cbind(dataFP$FPcover_max,dataFP$TOTP_avg)
+dataFP_gamlss <- as.data.frame(dataFP_gamlss) # convert to a data frame 
+dataFP_gamlss <- dataFP_gamlss[complete.cases(dataFP_gamlss),]# remove any NAs
+names(dataFP_gamlss) <- c("FPcover_max","TOTP_avg")
+head(dataFP_gamlss)
+dataFP_gamlss
+
+gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataFP_flexmix, family=BE)
+
+
+
+
+
+
+
+
+
+########################### OLD STUFF BELOW #####################
 
 ####################### 
 # Beta regression     #
@@ -302,92 +350,8 @@ lines(subset(dataFPoutlierssmall$TOTP_avg, dataFPoutlierssmall$TOTP_avg >0),beta
 # dataONEperpond      #
 # link: logit         #
 # Variable dispersion #
-# non-linear precision#
 #######################
-# these two formulas should  be equivalent 
-formula <- FPcover_max ~ TOTP_avg | TOTP_avg + I(TOTP_avg^2)
-formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
-
-# both return the following warnings: 
-# Error in chol.default(K) : the leading minor of order 3 is not positive definite
-# In addition: Warning message: In sqrt(wpp) : NaNs produced
-# Error in chol.default(K) :the leading minor of order 3 is not positive definite
-# In addition: Warning messages:
-# 1: In betareg.fit(X, Y, Z, weights, offset, link, link.phi, type, control) : failed to invert the information matrix: iteration stopped prematurely
-# 2: In sqrt(wpp) : NaNs produced
-
-# this sounds like there is a problem with the Choleski Decomposition 
-# the factorization of a real symmmetric positive-definite square matrix 
-
-betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="logit") 
-summary(betareg_dataONEperpond_logit_vardisp_quadratic)
-
-# try using this data set that does not include NAs 
-dataONEperpond_gamlss
-
-
-####################### 
-# Beta regression     #
-# dataONEperpond      #
-# link: logit         #
-# Variable dispersion #
-# non-linear precision#
-#######################
-# try using this data set that does not include NAs 
-dataONEperpond_gamlss
-
-# these two formulas should  be equivalent 
-formula <- FPcover_max ~ TOTP_avg | TOTP_avg + I(TOTP_avg^2)
-formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
-
-# both return the following warnings: 
-# Error in chol.default(K) : the leading minor of order 3 is not positive definite
-# In addition: Warning message: In sqrt(wpp) : NaNs produced
-# Error in chol.default(K) :the leading minor of order 3 is not positive definite
-# In addition: Warning messages:
-# 1: In betareg.fit(X, Y, Z, weights, offset, link, link.phi, type, control) : failed to invert the information matrix: iteration stopped prematurely
-# 2: In sqrt(wpp) : NaNs produced
-
-# this sounds like there is a problem with the Choleski Decomposition 
-# the factorization of a real symmmetric positive-definite square matrix 
-
-betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="logit") 
-summary(betareg_dataONEperpond_logit_vardisp_quadratic)
-
-####################### 
-# Beta regression     #
-# dataFP              #
-# link: logit         #
-# Variable dispersion #
-# non-linear precision#
-#######################
-head(dataFP_gamlss)
-
-# these two formulas should  be equivalent 
-formula <- FPcover_max ~ TOTP_avg | TOTP_avg + I(TOTP_avg^2)
-formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
-
-betareg_dataFP_logit_vardisp_quadratic <- betareg(formula, data=dataFP_gamlss, link="logit") 
-summary(betareg_dataFP_logit_vardisp_quadratic)
-
-# both return the following warnings: 
-# Error in chol.default(K) : the leading minor of order 3 is not positive definite
-# In addition: Warning message: In sqrt(wpp) : NaNs produced
-# Error in chol.default(K) :the leading minor of order 3 is not positive definite
-# In addition: Warning messages:
-# 1: In betareg.fit(X, Y, Z, weights, offset, link, link.phi, type, control) : failed to invert the information matrix: iteration stopped prematurely
-# 2: In sqrt(wpp) : NaNs produced
-
-# this sounds like there is a problem with the Choleski Decomposition 
-# the factorization of a real symmmetric positive-definite square matrix 
-
-####################### 
-# Beta regression     #
-# dataONEperpond      #
-# link: logit         #
-# Variable dispersion #
-#######################
-formula <-  ~ TOTP_avg | TOTP_avg
+formula <- FPcover_max ~ TOTP_avg | TOTP_avg
 betareg_dataONEperpond_logit_vardisp <- betareg(formula, data=dataONEperpond, link="logit")
 summary(betareg_dataONEperpond_logit_vardisp) 
 AIC(betareg_dataONEperpond_logit_vardisp) 
