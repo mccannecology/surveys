@@ -64,6 +64,27 @@ AIC(betareg_dataFP_logit)
 plot(dataFP$FPcover_max ~ dataFP$TOTP_avg,main="dataFP",xlab="Total P (mg/L)",ylab="FP cover",log="x")
 lines(subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),betareg_dataFP_logit$fitted,type="p",col="red")
 
+temp01<-betareg_dataFP_logit$fitted
+temp<-cbind(subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),betareg_dataFP_logit$fitted)
+
+# plot betareg_dataFP_logit with ggplot2 
+dataFP_beta_logit <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=3) 
+dataFP_beta_logit <- dataFP_beta_logit + geom_abline(aes(x=subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),y=betareg_dataFP_logit$fitted))
+dataFP_beta_logit
+
+#### problems with adding the second line - probably because I am trying to override the aesthetics 
+
+dataFP_beta_logit <- dataFP_beta_logit + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFP_beta_logit <- dataFP_beta_logit + ggtitle("dataONEperpondoutliers - logit link")
+dataFP_beta_logit <- dataFP_beta_logit + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFP_beta_logit <- dataFP_beta_logit + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFP_beta_logit <- dataFP_beta_logit + theme_classic(base_size=18)
+dataFP_beta_logit
+
+
+
 ####################### 
 # Beta regression     #
 # dataFPsmall         #
