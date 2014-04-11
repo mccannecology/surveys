@@ -304,10 +304,17 @@ lines(subset(dataFPoutlierssmall$TOTP_avg, dataFPoutlierssmall$TOTP_avg >0),beta
 # Variable dispersion #
 # non-linear precision#
 #######################
+# try using this data set that does not include NAs 
+dataONEperpond_gamlss
+
 # these two formulas should  be equivalent 
 formula <- FPcover_max ~ TOTP_avg | TOTP_avg + I(TOTP_avg^2)
 formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
 
+betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="logit") 
+betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="logit",type="ML") 
+betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="logit",type="BC") 
+betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="logit",type="BR") 
 # both return the following warnings: 
 # Error in chol.default(K) : the leading minor of order 3 is not positive definite
 # In addition: Warning message: In sqrt(wpp) : NaNs produced
@@ -316,42 +323,11 @@ formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
 # 1: In betareg.fit(X, Y, Z, weights, offset, link, link.phi, type, control) : failed to invert the information matrix: iteration stopped prematurely
 # 2: In sqrt(wpp) : NaNs produced
 
-# this sounds like there is a problem with the Choleski Decomposition 
-# the factorization of a real symmmetric positive-definite square matrix 
-
-betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="logit") 
-summary(betareg_dataONEperpond_logit_vardisp_quadratic)
-
-# try using this data set that does not include NAs 
-dataONEperpond_gamlss
-
-
-####################### 
-# Beta regression     #
-# dataONEperpond      #
-# link: logit         #
-# Variable dispersion #
-# non-linear precision#
-#######################
-# try using this data set that does not include NAs 
-dataONEperpond_gamlss
-
-# these two formulas should  be equivalent 
-formula <- FPcover_max ~ TOTP_avg | TOTP_avg + I(TOTP_avg^2)
-formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
-
-# both return the following warnings: 
-# Error in chol.default(K) : the leading minor of order 3 is not positive definite
-# In addition: Warning message: In sqrt(wpp) : NaNs produced
-# Error in chol.default(K) :the leading minor of order 3 is not positive definite
-# In addition: Warning messages:
-# 1: In betareg.fit(X, Y, Z, weights, offset, link, link.phi, type, control) : failed to invert the information matrix: iteration stopped prematurely
-# 2: In sqrt(wpp) : NaNs produced
-
-# this sounds like there is a problem with the Choleski Decomposition 
-# the factorization of a real symmmetric positive-definite square matrix 
-
-betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="logit") 
+#  this works 
+# link = cauchit
+# fsmaxit: maximal number of iterations (default = 200)
+# fstol: convergence tolerance (default = 1e-8)
+betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="cauchit",fsmaxit=300,fstol=1e-8) 
 summary(betareg_dataONEperpond_logit_vardisp_quadratic)
 
 ####################### 
@@ -368,9 +344,8 @@ formula <- FPcover_max ~ TOTP_avg | TOTP_avg + I(TOTP_avg^2)
 formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
 
 betareg_dataFP_logit_vardisp_quadratic <- betareg(formula, data=dataFP_gamlss, link="logit") 
-summary(betareg_dataFP_logit_vardisp_quadratic)
-
-# both return the following warnings: 
+betareg_dataFP_logit_vardisp_quadratic <- betareg(formula, data=dataFP_gamlss, link="loglog") 
+betareg_dataFP_logit_vardisp_quadratic <- betareg(formula, data=dataFP_gamlss, link="probit") 
 # Error in chol.default(K) : the leading minor of order 3 is not positive definite
 # In addition: Warning message: In sqrt(wpp) : NaNs produced
 # Error in chol.default(K) :the leading minor of order 3 is not positive definite
@@ -378,8 +353,11 @@ summary(betareg_dataFP_logit_vardisp_quadratic)
 # 1: In betareg.fit(X, Y, Z, weights, offset, link, link.phi, type, control) : failed to invert the information matrix: iteration stopped prematurely
 # 2: In sqrt(wpp) : NaNs produced
 
-# this sounds like there is a problem with the Choleski Decomposition 
-# the factorization of a real symmmetric positive-definite square matrix 
+betareg_dataFP_logit_vardisp_quadratic <- betareg(formula, data=dataFP_gamlss, link="cauchit") 
+# Warning message: In betareg.fit(X, Y, Z, weights, offset, link, link.phi, type, control) : optimization failed to converge
+
+summary(betareg_dataFP_logit_vardisp_quadratic)
+
 
 ####################### 
 # Beta regression     #
