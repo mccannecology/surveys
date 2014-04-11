@@ -297,66 +297,169 @@ AIC(betareg_dataFPoutlierssmall_loglog)
 plot(dataFPoutlierssmall$FPcover_max ~ dataFPoutlierssmall$TOTP_avg,main="dataFPoutlierssmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
 lines(subset(dataFPoutlierssmall$TOTP_avg, dataFPoutlierssmall$TOTP_avg >0),betareg_dataFPoutlierssmall_loglog$fitted,type="p",col="red")
 
-####################### 
-# Beta regression     #
-# dataONEperpond      #
-# link: logit         #
-# Variable dispersion #
-# non-linear precision#
-#######################
+######################## 
+# Beta regression      #
+# dataONEperpond       #
+# link: cauchit        #
+# Variable dispersion  #
+# quadratic precision  #
+########################
 # try using this data set that does not include NAs 
-dataONEperpond_gamlss
+head(dataONEperpond_gamlss)
 
-# these two formulas should  be equivalent 
-formula <- FPcover_max ~ TOTP_avg | TOTP_avg + I(TOTP_avg^2)
 formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
 
-betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="logit") 
-betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="logit",type="ML") 
-betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="logit",type="BC") 
-betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="logit",type="BR") 
-# both return the following warnings: 
-# Error in chol.default(K) : the leading minor of order 3 is not positive definite
-# In addition: Warning message: In sqrt(wpp) : NaNs produced
-# Error in chol.default(K) :the leading minor of order 3 is not positive definite
-# In addition: Warning messages:
-# 1: In betareg.fit(X, Y, Z, weights, offset, link, link.phi, type, control) : failed to invert the information matrix: iteration stopped prematurely
-# 2: In sqrt(wpp) : NaNs produced
+# fsmaxit: maximal number of iterations (default = 200) & fstol: convergence tolerance (default = 1e-8)
+betareg_dataONEperpond_cauchit_quaddisp <- betareg(formula, data=dataONEperpond_gamlss, link="cauchit",fsmaxit=300,fstol=1e-8) 
+summary(betareg_dataONEperpond_cauchit_quaddisp)
+AIC(betareg_dataONEperpond_cauchit_quaddisp)
 
-#  this works 
-# link = cauchit
-# fsmaxit: maximal number of iterations (default = 200)
-# fstol: convergence tolerance (default = 1e-8)
-betareg_dataONEperpond_logit_vardisp_quadratic <- betareg(formula, data=dataONEperpond_gamlss, link="cauchit",fsmaxit=300,fstol=1e-8) 
-summary(betareg_dataONEperpond_logit_vardisp_quadratic)
+# arrange the plots 
+par(mfrow=c(2,1))
 
-####################### 
-# Beta regression     #
-# dataFP              #
-# link: logit         #
-# Variable dispersion #
-# non-linear precision#
-#######################
-head(dataFP_gamlss)
+# plot fitted model 
+plot(dataONEperpond_gamlss$FPcover_max ~ dataONEperpond_gamlss$TOTP_avg,main="dataONEperpond_gamlss - cauchit link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataONEperpond_gamlss$TOTP_avg, dataONEperpond_gamlss$TOTP_avg >0),betareg_dataONEperpond_cauchit_quaddisp$fitted,type="p",col="red")
 
-# these two formulas should  be equivalent 
-formula <- FPcover_max ~ TOTP_avg | TOTP_avg + I(TOTP_avg^2)
+# plot the precision
+plot(predict(betareg_dataONEperpond_cauchit_quaddisp, type="precision") ~ subset(dataONEperpond_gamlss$TOTP_avg, dataONEperpond_gamlss$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
+
+##########################
+# Beta regression        #
+# dataONEperpondoultiers #
+# link: cauchit          #
+# Variable dispersion    #
+# non-linear precision   #
+##########################
+# use the data set that does not include NAs 
+dataONEperpondoutliers_gamlss
+
 formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
 
-betareg_dataFP_logit_vardisp_quadratic <- betareg(formula, data=dataFP_gamlss, link="logit") 
-betareg_dataFP_logit_vardisp_quadratic <- betareg(formula, data=dataFP_gamlss, link="loglog") 
-betareg_dataFP_logit_vardisp_quadratic <- betareg(formula, data=dataFP_gamlss, link="probit") 
-# Error in chol.default(K) : the leading minor of order 3 is not positive definite
-# In addition: Warning message: In sqrt(wpp) : NaNs produced
-# Error in chol.default(K) :the leading minor of order 3 is not positive definite
-# In addition: Warning messages:
-# 1: In betareg.fit(X, Y, Z, weights, offset, link, link.phi, type, control) : failed to invert the information matrix: iteration stopped prematurely
-# 2: In sqrt(wpp) : NaNs produced
+# fsmaxit: maximal number of iterations (default = 200) & fstol: convergence tolerance (default = 1e-8)
+betareg_dataONEperpondoutliers_cauchit_vardisp_quadratic <- betareg(formula, data=dataONEperpondoutliers_gamlss, link="cauchit",fsmaxit=300,fstol=1e-8) 
+summary(betareg_dataONEperpondoutliers_cauchit_vardisp_quadratic)
+AIC(betareg_dataONEperpondoutliers_cauchit_vardisp_quadratic)
 
-betareg_dataFP_logit_vardisp_quadratic <- betareg(formula, data=dataFP_gamlss, link="cauchit") 
-# Warning message: In betareg.fit(X, Y, Z, weights, offset, link, link.phi, type, control) : optimization failed to converge
+# arrange the plots 
+par(mfrow=c(2,1))
 
-summary(betareg_dataFP_logit_vardisp_quadratic)
+# plot fitted model 
+plot(dataONEperpondoutliers_gamlss$FPcover_max ~ dataONEperpondoutliers_gamlss$TOTP_avg,main="dataONEperpondoutliers_gamlss - cauchit link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataONEperpondoutliers_gamlss$TOTP_avg, dataONEperpondoutliers_gamlss$TOTP_avg >0),betareg_dataONEperpondoutliers_cauchit_vardisp_quadratic$fitted,type="p",col="red")
+
+# plot the precision
+plot(predict(betareg_dataONEperpondoutliers_cauchit_vardisp_quadratic, type="precision") ~ subset(dataONEperpondoutliers_gamlss$TOTP_avg, dataONEperpondoutliers_gamlss$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
+
+##########################
+# Beta regression        #
+# dataFP                 #
+# link: cauchit          #
+# Variable dispersion    #
+# non-linear precision   #
+##########################
+# use the data set that does not include NAs 
+dataFP_gamlss
+
+formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
+
+# fsmaxit: maximal number of iterations (default = 200) & fstol: convergence tolerance (default = 1e-8)
+betareg_dataFP_cauchit_quaddisp <- betareg(formula, data=dataFP_gamlss, link="cauchit",fsmaxit=300,fstol=1) 
+summary(betareg_dataFP_cauchit_quaddisp)
+AIC(betareg_dataFP_cauchit_quaddisp)
+
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataFP_gamlss$FPcover_max ~ dataFP_gamlss$TOTP_avg,main="dataFP_gamlss - cauchit link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFP_gamlss$TOTP_avg, dataFP_gamlss$TOTP_avg >0),betareg_dataFP_cauchit_quaddisp$fitted,type="p",col="red")
+
+# plot the precision
+plot(predict(betareg_dataFP_cauchit_quaddisp, type="precision") ~ subset(dataFP_gamlss$TOTP_avg, dataFP_gamlss$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
+
+##########################
+# Beta regression        #
+# dataFPoutliers         #
+# link: cauchit          #
+# Variable dispersion    #
+# non-linear precision   #
+##########################
+# use the data set that does not include NAs 
+dataFPoutliers_gamlss
+
+formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
+
+# fsmaxit: maximal number of iterations (default = 200) & fstol: convergence tolerance (default = 1e-8)
+betareg_dataFPoutliers_cauchit_quaddisp <- betareg(formula, data=dataFPoutliers_gamlss, link="cauchit",fsmaxit=400,fstol=1) 
+summary(betareg_dataFPoutliers_cauchit_quaddisp)
+AIC(betareg_dataFPoutliers_cauchit_quaddisp)
+
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataFPoutliers_gamlss$FPcover_max ~ dataFPoutliers_gamlss$TOTP_avg,main="dataFPoutliers_gamlss - cauchit link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFPoutliers_gamlss$TOTP_avg, dataFPoutliers_gamlss$TOTP_avg >0),betareg_dataFPoutliers_cauchit_quaddisp$fitted,type="p",col="red")
+
+# plot the precision
+plot(predict(betareg_dataFPoutliers_cauchit_quaddisp, type="precision") ~ subset(dataFPoutliers_gamlss$TOTP_avg, dataFPoutliers_gamlss$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
+
+##########################
+# Beta regression        #
+# dataFPsmall            #
+# link: cauchit          #
+# Variable dispersion    #
+# non-linear precision   #
+##########################
+# use the data set that does not include NAs 
+dataFPsmall_gamlss
+
+formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
+
+# fsmaxit: maximal number of iterations (default = 200) & fstol: convergence tolerance (default = 1e-8)
+betareg_dataFPsmall_cauchit_quaddisp <- betareg(formula, data=dataFPsmall_gamlss, link="cauchit",fsmaxit=200,fstol=1e-8) 
+summary(betareg_dataFPsmall_cauchit_quaddisp)
+AIC(betareg_dataFPsmall_cauchit_quaddisp)
+
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataFPsmall_gamlss$FPcover_max ~ dataFPsmall_gamlss$TOTP_avg,main="dataFPsmall_gamlss - cauchit link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFPsmall_gamlss$TOTP_avg, dataFPsmall_gamlss$TOTP_avg >0),betareg_dataFPsmall_cauchit_quaddisp$fitted,type="p",col="red")
+
+# plot the precision
+plot(predict(betareg_dataFPsmall_cauchit_quaddisp, type="precision") ~ subset(dataFPsmall_gamlss$TOTP_avg, dataFPsmall_gamlss$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
+
+##########################
+# Beta regression        #
+# dataFPoutlierssmall    #
+# link: cauchit          #
+# Variable dispersion    #
+# non-linear precision   #
+##########################
+# use the data set that does not include NAs 
+dataFPoutlierssmall_gamlss
+
+formula <- FPcover_max ~ TOTP_avg | poly(TOTP_avg,2)
+
+# fsmaxit: maximal number of iterations (default = 200) & fstol: convergence tolerance (default = 1e-8)
+betareg_dataFPoutlierssmall_cauchit_quaddisp <- betareg(formula, data=dataFPoutlierssmall_gamlss, link="cauchit",fsmaxit=200,fstol=1e-8) 
+summary(betareg_dataFPoutlierssmall_cauchit_quaddisp)
+AIC(betareg_dataFPoutlierssmall_cauchit_quaddisp)
+
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataFPoutlierssmall_gamlss$FPcover_max ~ dataFPoutlierssmall_gamlss$TOTP_avg,main="dataFPoutlierssmall_gamlss - cauchit link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataFPoutlierssmall_gamlss$TOTP_avg, dataFPoutlierssmall_gamlss$TOTP_avg >0),betareg_dataFPoutlierssmall_cauchit_quaddisp$fitted,type="p",col="red")
+
+# plot the precision
+plot(predict(betareg_dataFPoutlierssmall_cauchit_quaddisp, type="precision") ~ subset(dataFPoutlierssmall_gamlss$TOTP_avg, dataFPoutlierssmall_gamlss$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
+
+
 
 
 ####################### 
