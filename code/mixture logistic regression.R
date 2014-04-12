@@ -17,6 +17,13 @@ colnames(dataONEperpond_flexmix) <- c("FPcover_max","NotFP","TOTP_avg") # rename
 dataONEperpond_flexmix <- as.data.frame(dataONEperpond_flexmix) # convert to a data frame 
 dataONEperpond_flexmix <- dataONEperpond_flexmix[complete.cases(dataONEperpond_flexmix),]# remove any NAs
 
+# Testing the effect of the input on the model results 
+# Increasing the max number that corresponds to FPcover increases the AIC 
+dataONEperpond_flexmix <- cbind(ceiling(dataONEperpond$FPcover_max*1000),(1000-(ceiling(dataONEperpond$FPcover_max*100))),dataONEperpond$TOTP_avg)
+colnames(dataONEperpond_flexmix) <- c("FPcover_max","NotFP","TOTP_avg") # rename columns 
+dataONEperpond_flexmix <- as.data.frame(dataONEperpond_flexmix) # convert to a data frame 
+dataONEperpond_flexmix <- dataONEperpond_flexmix[complete.cases(dataONEperpond_flexmix),]# remove any NAs
+
 dataFP_flexmix <- cbind(ceiling(dataFP$FPcover_max*100),(100-(ceiling(dataFP$FPcover_max*100))),dataFP$TOTP_avg)
 colnames(dataFP_flexmix) <- c("FPcover_max","NotFP","TOTP_avg")
 dataFP_flexmix <- as.data.frame(dataFP_flexmix) # convert to a data frame 
