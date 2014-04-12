@@ -5,6 +5,9 @@
 # link: logit         #
 # Variable dispersion #
 #######################
+
+# this analysis was not successfully completed - MJM 4/12/2014
+
 breakpoint01 <- 0.01850
 breakpoint02 <- 0.20850
 
