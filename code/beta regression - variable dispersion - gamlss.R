@@ -13,8 +13,8 @@ library(gamlss)
 dataONEperpond$FPcover_max[dataONEperpond$FPcover_max == 1] <- (1*(length(dataONEperpond$FPcover_max)-1)+0.5)/(length(dataONEperpond$FPcover_max))
 dataONEperpond$FPcover_max[dataONEperpond$FPcover_max == 0] <- (0*(length(dataONEperpond$FPcover_max)-1)+0.5)/(length(dataONEperpond$FPcover_max))
 
-dataONEperpondoutliers$FPcover_max[dataONEperpond$FPcover_max == 1] <- (1*(length(dataONEperpond$FPcover_max)-1)+0.5)/(length(dataONEperpond$FPcover_max))
-dataONEperpondoutliers$FPcover_max[dataONEperpond$FPcover_max == 0] <- (0*(length(dataONEperpond$FPcover_max)-1)+0.5)/(length(dataONEperpond$FPcover_max))
+dataONEperpondoutliers$FPcover_max[dataONEperpondoutliers$FPcover_max == 1] <- (1*(length(dataONEperpondoutliers$FPcover_max)-1)+0.5)/(length(dataONEperpondoutliers$FPcover_max))
+dataONEperpondoutliers$FPcover_max[dataONEperpondoutliers$FPcover_max == 0] <- (0*(length(dataONEperpondoutliers$FPcover_max)-1)+0.5)/(length(dataONEperpondoutliers$FPcover_max))
 
 dataFP$FPcover_max[dataFP$FPcover_max == 1] <- (1*(length(dataFP$FPcover_max)-1)+0.5)/(length(dataFP$FPcover_max))
 dataFP$FPcover_max[dataFP$FPcover_max == 0] <- (0*(length(dataFP$FPcover_max)-1)+0.5)/(length(dataFP$FPcover_max))
@@ -80,7 +80,7 @@ head(dataONEperpondoutliers_gamlss)
 dataONEperpondoutliers_gamlss
 
 # run the betaregression
-betareg_dataONEperpondoutliers_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_gamlss, family=BE)
+betareg_dataONEperpondoutliers_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpondoutliers_gamlss, family=BE)
 summary(betareg_dataONEperpondoutliers_gamlss_logit_vardisp)
 logLik(betareg_dataONEperpondoutliers_gamlss_logit_vardisp)
 
@@ -102,7 +102,7 @@ head(dataFP_gamlss)
 dataFP_gamlss
 
 # run the betaregression
-betareg_dataFP_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_gamlss, family=BE)
+betareg_dataFP_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataFP_gamlss, family=BE)
 summary(betareg_dataFP_gamlss_logit_vardisp)
 logLik(betareg_dataFP_gamlss_logit_vardisp)
 
@@ -124,7 +124,7 @@ head(dataFPoutliers_gamlss)
 dataFPoutliers_gamlss
 
 # run the betaregression
-betareg_dataFPoutliers_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_gamlss, family=BE)
+betareg_dataFPoutliers_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataFPoutliers_gamlss, family=BE)
 summary(betareg_dataFPoutliers_gamlss_logit_vardisp)
 logLik(betareg_dataFPoutliers_gamlss_logit_vardisp)
 
@@ -146,7 +146,7 @@ head(dataFPsmall_gamlss)
 dataFPsmall_gamlss
 
 # run the betaregression
-betareg_dataFPsmall_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_gamlss, family=BE)
+betareg_dataFPsmall_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataFPsmall_gamlss, family=BE)
 summary(betareg_dataFPsmall_gamlss_logit_vardisp)
 logLik(betareg_dataFPsmall_gamlss_logit_vardisp)
 
@@ -168,7 +168,7 @@ head(dataFPoutlierssmall_gamlss)
 dataFPoutlierssmall_gamlss
 
 # run the betaregression
-betareg_dataFPoutlierssmall_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_gamlss, family=BE)
+betareg_dataFPoutlierssmall_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataFPoutlierssmall_gamlss, family=BE)
 summary(betareg_dataFPoutlierssmall_gamlss_logit_vardisp)
 logLik(betareg_dataFPoutlierssmall_gamlss_logit_vardisp)
 
