@@ -13,6 +13,9 @@ library(gamlss)
 dataONEperpond$FPcover_max[dataONEperpond$FPcover_max == 1] <- (1*(length(dataONEperpond$FPcover_max)-1)+0.5)/(length(dataONEperpond$FPcover_max))
 dataONEperpond$FPcover_max[dataONEperpond$FPcover_max == 0] <- (0*(length(dataONEperpond$FPcover_max)-1)+0.5)/(length(dataONEperpond$FPcover_max))
 
+dataONEperpondoutliers$FPcover_max[dataONEperpond$FPcover_max == 1] <- (1*(length(dataONEperpond$FPcover_max)-1)+0.5)/(length(dataONEperpond$FPcover_max))
+dataONEperpondoutliers$FPcover_max[dataONEperpond$FPcover_max == 0] <- (0*(length(dataONEperpond$FPcover_max)-1)+0.5)/(length(dataONEperpond$FPcover_max))
+
 dataFP$FPcover_max[dataFP$FPcover_max == 1] <- (1*(length(dataFP$FPcover_max)-1)+0.5)/(length(dataFP$FPcover_max))
 dataFP$FPcover_max[dataFP$FPcover_max == 0] <- (0*(length(dataFP$FPcover_max)-1)+0.5)/(length(dataFP$FPcover_max))
 
@@ -28,7 +31,6 @@ dataFPoutliers$FPcover_max[dataFPoutliers$FPcover_max == 0] <- (0*(length(dataFP
 dataFPoutlierssmall$FPcover_max[dataFPoutlierssmall$FPcover_max == 1] <- (1*(length(dataFPoutlierssmall$FPcover_max)-1)+0.5)/(length(dataFPoutlierssmall$FPcover_max))
 dataFPoutlierssmall$FPcover_max[dataFPoutlierssmall$FPcover_max == 0] <- (0*(length(dataFPoutlierssmall$FPcover_max)-1)+0.5)/(length(dataFPoutlierssmall$FPcover_max))
 
-
 # Plot the different data sets
 # Use these later for adding fitted models 
 plot(dataONEperpond$FPcover_max ~ dataONEperpond$TOTP_avg,main="dataONEperpond",xlab="Total P (mg/L)",ylab="FP cover",log="x")
@@ -41,7 +43,8 @@ plot(dataFPoutlierssmall$FPcover_max ~ dataFPoutlierssmall$TOTP_avg,main="dataFP
 ####################### 
 # Beta regression     #
 # dataONEperpond      #
-# link: logit         #
+# mean link: logit    #
+# phi.link: logit     #
 # Variable dispersion #
 #######################
 head(dataONEperpond)
@@ -54,12 +57,16 @@ names(dataONEperpond_gamlss) <- c("FPcover_max","TOTP_avg")
 head(dataONEperpond_gamlss)
 dataONEperpond_gamlss
 
-gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_gamlss, family=BE)
+# run the betaregression
+betareg_dataONEperpond_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_gamlss, family=BE)
+summary(betareg_dataONEperpond_gamlss_logit_vardisp)
+logLik(betareg_dataONEperpond_gamlss_logit_vardisp)
 
 ########################## 
 # Beta regression        #
 # dataONEperpondoutliers #
-# link: logit            #
+# mean link: logit       #
+# phi.link: logit        #
 # Variable dispersion    #
 ##########################
 head(dataONEperpondoutliers)
@@ -72,13 +79,16 @@ names(dataONEperpondoutliers_gamlss) <- c("FPcover_max","TOTP_avg")
 head(dataONEperpondoutliers_gamlss)
 dataONEperpondoutliers_gamlss
 
-gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpondoutliers_gamlss, family=BE)
-
+# run the betaregression
+betareg_dataONEperpondoutliers_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_gamlss, family=BE)
+summary(betareg_dataONEperpondoutliers_gamlss_logit_vardisp)
+logLik(betareg_dataONEperpondoutliers_gamlss_logit_vardisp)
 
 ####################### 
 # Beta regression     #
 # dataFP              #
-# link: logit         #
+# mean link: logit    #
+# phi.link: logit     #
 # Variable dispersion #
 #######################
 head(dataFP)
@@ -91,13 +101,16 @@ names(dataFP_gamlss) <- c("FPcover_max","TOTP_avg")
 head(dataFP_gamlss)
 dataFP_gamlss
 
-gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataFP_flexmix, family=BE)
-
+# run the betaregression
+betareg_dataFP_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_gamlss, family=BE)
+summary(betareg_dataFP_gamlss_logit_vardisp)
+logLik(betareg_dataFP_gamlss_logit_vardisp)
 
 ####################### 
 # Beta regression     #
 # dataFPoutliers      #
-# link: logit         #
+# mean link: logit    #
+# phi.link: logit     #
 # Variable dispersion #
 #######################
 head(dataFPoutliers)
@@ -110,12 +123,16 @@ names(dataFPoutliers_gamlss) <- c("FPcover_max","TOTP_avg")
 head(dataFPoutliers_gamlss)
 dataFPoutliers_gamlss
 
-gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataFPoutliers_gamlss, family=BE)
+# run the betaregression
+betareg_dataFPoutliers_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_gamlss, family=BE)
+summary(betareg_dataFPoutliers_gamlss_logit_vardisp)
+logLik(betareg_dataFPoutliers_gamlss_logit_vardisp)
 
 ####################### 
 # Beta regression     #
 # dataFPsmall         #
-# link: logit         #
+# mean link: logit    #
+# phi.link: logit     #
 # Variable dispersion #
 #######################
 head(dataFPsmall)
@@ -128,12 +145,16 @@ names(dataFPsmall_gamlss) <- c("FPcover_max","TOTP_avg")
 head(dataFPsmall_gamlss)
 dataFPsmall_gamlss
 
-gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataFPsmall_gamlss, family=BE)
+# run the betaregression
+betareg_dataFPsmall_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_gamlss, family=BE)
+summary(betareg_dataFPsmall_gamlss_logit_vardisp)
+logLik(betareg_dataFPsmall_gamlss_logit_vardisp)
 
 ####################### 
 # Beta regression     #
 # dataFPoutlierssmall #
-# link: logit         #
+# mean link: logit    #
+# phi.link: logit     #
 # Variable dispersion #
 #######################
 head(dataFPoutlierssmall)
@@ -146,7 +167,8 @@ names(dataFPoutlierssmall_gamlss) <- c("FPcover_max","TOTP_avg")
 head(dataFPoutlierssmall_gamlss)
 dataFPoutlierssmall_gamlss
 
-gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataFPoutlierssmall_gamlss, family=BE)
-
-
+# run the betaregression
+betareg_dataFPoutlierssmall_gamlss_logit_vardisp <- gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ TOTP_avg, data=dataONEperpond_gamlss, family=BE)
+summary(betareg_dataFPoutlierssmall_gamlss_logit_vardisp)
+logLik(betareg_dataFPoutlierssmall_gamlss_logit_vardisp)
 
