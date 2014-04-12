@@ -37,13 +37,13 @@ plot(dataFPsmall$FPcover_max ~ dataFPsmall$TOTP_avg,main="dataFPsmall",xlab="Tot
 plot(dataFPoutliers$FPcover_max ~ dataFPoutliers$TOTP_avg,main="dataFPoutliers",xlab="Total P (mg/L)",ylab="FP cover",log="x")
 plot(dataFPoutlierssmall$FPcover_max ~ dataFPoutlierssmall$TOTP_avg,main="dataFPoutlierssmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
 
-####################### 
-# Beta regression     #
-# Mixed model         #
+########################## 
+# Beta regression        #
+# Mixed model            #
 # dataONEperpondoutliers #
-# link: logit         #
-# Constant dispersion #
-#######################
+# link: logit            #
+# Constant dispersion    #
+##########################  
 formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataONEperpondoutliers_logit <- betamix(formula, link="logit", data=dataONEperpondoutliers, k = 2, nstart = 100)
 summary(betareg_mix_dataONEperpondoutliers_logit) 
@@ -302,6 +302,43 @@ dataONEperpond_beta_loglog_cluster_plot
 
 # save the plot 
 ggsave(file="dataONEperpond_beta_loglog_cluster_plot.jpg", dataONEperpond_beta_loglog_cluster_plot, height=8,width=11)
+
+########################## 
+# Beta regression        #
+# Mixed model            #
+# dataONEperpondoutliers #
+# link: loglog           #
+# Constant dispersion    #
+##########################
+formula <- FPcover_max ~ TOTP_avg
+betareg_mix_dataONEperpondoutliers_loglog <- betamix(formula, link="loglog", data=dataONEperpondoutliers, k = 2, nstart = 100)
+summary(betareg_mix_dataONEperpondoutliers_loglog) 
+logLik(betareg_mix_dataONEperpondoutliers_loglog) 
+AIC(betareg_mix_dataONEperpondoutliers_loglog) 
+
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataONEperpondoutliers$beta_loglog_cluster <- rep(NA, nrow(dataONEperpondoutliers))
+dataONEperpondoutliers_TOTP <- subset(dataONEperpondoutliers, dataONEperpondoutliers$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataONEperpondoutliers_noTOTP <- subset(dataONEperpondoutliers, is.na(dataONEperpondoutliers$TOTP_avg)) # and waterbodies w/o TOTP
+dataONEperpondoutliers_TOTP$beta_loglog_cluster<-clusters(betareg_mix_dataONEperpondoutliers_loglog) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataONEperpondoutliers <- merge(dataONEperpondoutliers_TOTP,dataONEperpondoutliers_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataONEperpondoutliers_TOTP,dataONEperpondoutliers_noTOTP)
+
+# plot 
+dataONEperpondoutliers_beta_loglog_cluster_plot <- ggplot(dataONEperpondoutliers,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_loglog_cluster),shape=factor(beta_loglog_cluster))) + geom_point(size=3) 
+dataONEperpondoutliers_beta_loglog_cluster_plot <- dataONEperpondoutliers_beta_loglog_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_loglog_cluster))) 
+dataONEperpondoutliers_beta_loglog_cluster_plot <- dataONEperpondoutliers_beta_loglog_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataONEperpondoutliers_beta_loglog_cluster_plot <- dataONEperpondoutliers_beta_loglog_cluster_plot + ggtitle("dataONEperpondoutliers - loglog link")
+dataONEperpondoutliers_beta_loglog_cluster_plot <- dataONEperpondoutliers_beta_loglog_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataONEperpondoutliers_beta_loglog_cluster_plot <- dataONEperpondoutliers_beta_loglog_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataONEperpondoutliers_beta_loglog_cluster_plot <- dataONEperpondoutliers_beta_loglog_cluster_plot + theme_classic(base_size=18)
+dataONEperpondoutliers_beta_loglog_cluster_plot
+
+# save the plot 
+ggsave(file="dataONEperpondoutliers_beta_loglog_cluster_plot.jpg", dataONEperpondoutliers_beta_loglog_cluster_plot, height=8,width=11)
 
 ####################### 
 # Beta regression     #

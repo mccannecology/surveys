@@ -43,7 +43,7 @@ plot(dataFPoutlierssmall$FPcover_max ~ dataFPoutlierssmall$TOTP_avg,main="dataFP
 # link: logit         #
 # Variable dispersion #
 #######################
-formula <-  ~ TOTP_avg | TOTP_avg
+formula <-FPcover_max ~ TOTP_avg | TOTP_avg
 betareg_dataONEperpond_logit_vardisp <- betareg(formula, data=dataONEperpond, link="logit")
 summary(betareg_dataONEperpond_logit_vardisp) 
 AIC(betareg_dataONEperpond_logit_vardisp) 
@@ -58,6 +58,28 @@ lines(subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),betareg_dataON
 
 # plot the variable dispersion
 plot(predict(betareg_dataONEperpond_logit_vardisp, type="precision") ~ subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
+
+##########################
+# Beta regression        #
+# dataONEperpondoutliers #
+# link: logit            #
+# Variable dispersion    #
+##########################
+formula <-  FPcover_max ~ TOTP_avg | TOTP_avg
+betareg_dataONEperpondoutliers_logit_vardisp <- betareg(formula, data=dataONEperpondoutliers, link="logit")
+summary(betareg_dataONEperpondoutliers_logit_vardisp) 
+AIC(betareg_dataONEperpondoutliers_logit_vardisp) 
+# works 
+
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataONEperpondoutliers$FPcover_max ~ dataONEperpondoutliers$TOTP_avg,main="dataONEperpondoutliers - logit link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataONEperpondoutliers$TOTP_avg, dataONEperpondoutliers$TOTP_avg >0),betareg_dataONEperpondoutliers_logit_vardisp$fitted,type="p",col="red")
+
+# plot the variable dispersion
+plot(predict(betareg_dataONEperpondoutliers_logit_vardisp, type="precision") ~ subset(dataONEperpondoutliers$TOTP_avg, dataONEperpondoutliers$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
 
 ####################### 
 # Beta regression     #
@@ -169,6 +191,28 @@ lines(subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),betareg_dataON
 
 # plot the variable dispersion
 plot(predict(betareg_dataONEperpond_loglog_linkphi_identity_vardisp, type="precision") ~ subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
+
+##########################
+# Beta regression        #
+# dataONEperpondoutliers #
+# link: loglog           #
+# Variable dispersion    #
+##########################
+formula <-  FPcover_max ~ TOTP_avg | TOTP_avg
+betareg_dataONEperpondoutliers_loglog_vardisp <- betareg(formula, data=dataONEperpondoutliers, link="loglog")
+summary(betareg_dataONEperpondoutliers_loglog_vardisp) 
+AIC(betareg_dataONEperpondoutliers_loglog_vardisp) 
+# works 
+
+# arrange the plots 
+par(mfrow=c(2,1))
+
+# plot fitted model 
+plot(dataONEperpondoutliers$FPcover_max ~ dataONEperpondoutliers$TOTP_avg,main="dataONEperpondoutliers - loglog link",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataONEperpondoutliers$TOTP_avg, dataONEperpondoutliers$TOTP_avg >0),betareg_dataONEperpondoutliers_loglog_vardisp$fitted,type="p",col="red")
+
+# plot the variable dispersion
+plot(predict(betareg_dataONEperpondoutliers_loglog_vardisp, type="precision") ~ subset(dataONEperpondoutliers$TOTP_avg, dataONEperpondoutliers$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
 
 ####################### 
 # Beta regression     #
