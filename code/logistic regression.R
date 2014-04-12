@@ -8,6 +8,22 @@
 
 library(ggplot2)
 
+##########################
+# Logistic Regression    #
+# dataONEperpondoutliers #
+# family: binomial       #
+# link: logit            #
+##########################
+formula <- FPcover_max ~ TOTP_avg
+glm_dataONEperpondoutliers_binomial_logit <- glm(formula, data=dataONEperpondoutliers, family=binomial(link=logit))
+summary(glm_dataONEperpondoutliers_binomial_logit)
+logLik(glm_dataONEperpondoutliers_binomial_logit)
+AIC(glm_dataONEperpondoutliers_binomial_logit)
+
+# plot fitted model 
+plot(dataONEperpondoutliers$FPcover_max ~ dataONEperpondoutliers$TOTP_avg,main="dataONEperpondoutliers",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataONEperpondoutliers$TOTP_avg, dataONEperpondoutliers$TOTP_avg >0),glm_dataONEperpondoutliers_binomial_logit$fitted,type="p",col="red")
+
 ####################### 
 # Logistic Regression #
 # dataONEperpond      #
@@ -90,6 +106,24 @@ AIC(glm_dataFPoutlierssmall_binomial_logit)
 # plot fitted model 
 plot(dataFPoutlierssmall$FPcover_max ~ dataFPoutlierssmall$TOTP_avg,main="dataFPoutlierssmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
 lines(subset(dataFPoutlierssmall$TOTP_avg, dataFPoutlierssmall$TOTP_avg >0),glm_dataFPoutlierssmall_binomial_logit$fitted,type="p",col="red")
+
+# add ggplot
+
+########################## 
+# Logistic Regression    #
+# dataONEperpondoutliers #
+# family: binomial       #
+# link: probit           #
+##########################
+formula <- FPcover_max ~ TOTP_avg
+glm_dataONEperpondoutliers_binomial_probit <- glm(formula, data=dataONEperpondoutliers, family=binomial(link=probit))
+summary(glm_dataONEperpondoutliers_binomial_probit)
+logLik(glm_dataONEperpondoutliers_binomial_probit)
+AIC(glm_dataONEperpondoutliers_binomial_probit)
+
+# plot fitted model 
+plot(dataONEperpondoutliers$FPcover_max ~ dataONEperpondoutliers$TOTP_avg,main="dataONEperpondoutliers",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(subset(dataONEperpondoutliers$TOTP_avg, dataONEperpondoutliers$TOTP_avg >0),glm_dataONEperpondoutliers_binomial_probit$fitted,type="p",col="red")
 
 # add ggplot
 

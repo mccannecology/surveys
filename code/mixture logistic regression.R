@@ -7,6 +7,11 @@ library(flexmix)
 library(ggplot2)
 
 # re-format data so it is in the form: col 1 is no. successes and col 2 is no. failures
+dataONEperpondoutliers_flexmix <- cbind(ceiling(dataONEperpondoutliers$FPcover_max*100),(100-(ceiling(dataONEperpondoutliers$FPcover_max*100))),dataONEperpondoutliers$TOTP_avg)
+colnames(dataONEperpondoutliers_flexmix) <- c("FPcover_max","NotFP","TOTP_avg") # rename columns 
+dataONEperpondoutliers_flexmix <- as.data.frame(dataONEperpondoutliers_flexmix) # convert to a data frame 
+dataONEperpondoutliers_flexmix <- dataONEperpondoutliers_flexmix[complete.cases(dataONEperpondoutliers_flexmix),]# remove any NAs
+
 dataONEperpond_flexmix <- cbind(ceiling(dataONEperpond$FPcover_max*100),(100-(ceiling(dataONEperpond$FPcover_max*100))),dataONEperpond$TOTP_avg)
 colnames(dataONEperpond_flexmix) <- c("FPcover_max","NotFP","TOTP_avg") # rename columns 
 dataONEperpond_flexmix <- as.data.frame(dataONEperpond_flexmix) # convert to a data frame 
@@ -31,6 +36,42 @@ dataFPoutlierssmall_flexmix <- cbind(ceiling(dataFPoutlierssmall$FPcover_max*100
 colnames(dataFPoutlierssmall_flexmix) <- c("FPcover_max","NotFP","TOTP_avg")
 dataFPoutlierssmall_flexmix <- as.data.frame(dataFPoutlierssmall_flexmix) # convert to a data frame 
 dataFPoutlierssmall_flexmix <- dataFPoutlierssmall_flexmix[complete.cases(dataFPoutlierssmall_flexmix),]# remove any NAs
+
+################################## 
+# Latent Mixture                 #
+# dataONEperpondoutliers_flexmix #
+# family: binomial               #
+##################################
+flexmix_dataONEperpondoutliers_binomial <- flexmix(cbind(FPcover_max,NotFP) ~ TOTP_avg, data=dataONEperpondoutliers_flexmix, k=2, model=FLXMRglm(family="binomial"))
+flexmix_dataONEperpondoutliers_binomial
+summary(flexmix_dataONEperpondoutliers_binomial)
+logLik(flexmix_dataONEperpondoutliers_binomial)
+parameters(flexmix_dataONEperpondoutliers_binomial,component=1) # logistic regression coefficients - component 1
+parameters(flexmix_dataONEperpondoutliers_binomial,component=2) # logistic regression coefficients - component 2
+dataONEperpondoutliers_flexmix$cluster<-clusters(flexmix_dataONEperpondoutliers_binomial) # add cluster identities to your original data.frame 
+dataONEperpondoutliers_flexmix[,1:2] <- dataONEperpondoutliers_flexmix[,1:2]/100 # convert 0-100 back to 0-1
+
+# plot 
+dataONEperpondoutliers_flexmix_plot <- ggplot(dataONEperpondoutliers_flexmix,aes(x=TOTP_avg,y=FPcover_max,shape=factor(cluster))) + geom_point(size=3) 
+dataONEperpondoutliers_flexmix_plot <- dataONEperpondoutliers_flexmix_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(cluster))) 
+dataONEperpondoutliers_flexmix_plot <- dataONEperpondoutliers_flexmix_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataONEperpondoutliers_flexmix_plot <- dataONEperpondoutliers_flexmix_plot + ggtitle("dataONEperpondoutliers")
+dataONEperpondoutliers_flexmix_plot <- dataONEperpondoutliers_flexmix_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataONEperpondoutliers_flexmix_plot <- dataONEperpondoutliers_flexmix_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataONEperpondoutliers_flexmix_plot <- dataONEperpondoutliers_flexmix_plot + theme_classic(base_size=18)
+dataONEperpondoutliers_flexmix_plot
+
+# save the plot 
+ggsave(file="dataONEperpondoutliers_flexmix_plot.jpg", dataONEperpondoutliers_flexmix_plot, height=8,width=11)
+
+# rootogram of posterior class probabilities
+# Peak at prob. 1 = mixture component is well seperated from the other components
+# No peak at 1 and/or signiﬁcant mass in the middle of the unit interval indicates overlap with other components.
+jpeg("flexmix_dataONEperpondoutliers_binomial.jpg")
+plot(flexmix_dataONEperpondoutliers_binomial,sub="flexmix_dataONEperpondoutliers_binomial")
+dev.off()
 
 ########################## 
 # Latent Mixture         #
