@@ -69,13 +69,45 @@ names(dataONEperpond_gamlss) <- c("FPcover_max","TOTP_avg")
 head(dataONEperpond_gamlss)
 dataONEperpond_gamlss
 
+
+
+gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ vc(TOTP_avg), data=dataONEperpond_gamlss, family=BE)
+# Error in eval(expr, envir, enclos) : could not find function "vc"
+
+gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ cs(TOTP_avg), data=dataONEperpond_gamlss, family=BE)
+# Error in RS() : The global deviance is increasing 
+
+gamlss(FPcover_max ~ TOTP_avg, sigma.formula = fp(FPcover_maxx ~ TOTP_avg), data=dataONEperpond_gamlss, family=BE)
+# Error in array(x, c(length(x), 1L), if (!is.null(names(x))) list(names(x),  : invalid first argument
+                                                                   
+gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ fp(TOTP_avg), data=dataONEperpond_gamlss, family=BE)
+# Error in gamlss.fp(data[["fp(TOTP_avg)"]], z, w, 2) : object 'powerbest' not found
+
+gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ poly(TOTP_avg,2), data=dataONEperpond_gamlss, family=BE(mu.link="identity",sigma.link="identity"))
+# Error in dBE(y, mu, sigma, log = TRUE) : mu must be between 0 and 1 
+
+gamlss(FPcover_max ~ TOTP_avg, sigma.formula = TOTP_avg ~ poly(TOTP_avg,2), data=dataONEperpond_gamlss, family=BE)
+#Error in RS() : The global deviance is increasing 
+# Try different steps for the parameters or the model maybe inappropriate
+# In addition: Warning message:
+# In glim.fit(f = sigma.object, X = sigma.X, y = y, w = w, fv = sigma,  :
+# The deviance has increased in an inner iteration for sigma
+# If persist, try different steps or model maybe inappropriate
+
+gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ poly(TOTP_avg,2), data=dataONEperpond_gamlss, family=BE(mu.link="log",sigma.link="log"))
+# Error in dBE(y, mu, sigma, log = TRUE) : mu must be between 0 and 1 
+
+gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ poly(TOTP_avg,2), data=dataONEperpond_gamlss, family=BE(mu.link="logit",sigma.link="logit"))
+# Error in RS() : The global deviance is increasing 
+# Try different steps for the parameters or the model maybe inappropriate
+# In addition: Warning message:
+# In glim.fit(f = sigma.object, X = sigma.X, y = y, w = w, fv = sigma,  :
+# The deviance has increased in an inner iteration for sigma
+# If persist, try different steps or model maybe inappropriate
+
 gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ poly(TOTP_avg,2), data=dataONEperpond_gamlss, family=BE)
 # Error in RS() : The global deviance is increasing 
 # Try different steps for the parameters or the model maybe inappropriate
-# In addition: 
-# Warning message: In glim.fit(f = sigma.object, X = sigma.X, y = y, w = w, fv = sigma,  :
-# The deviance has increased in an inner iteration for sigma
-# If persist, try different steps or model maybe inappropriate
 
 gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ pb(TOTP_avg), data=dataONEperpond_gamlss, family=BE)
 # Error in RS() : The global deviance is increasing 
