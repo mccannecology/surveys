@@ -116,6 +116,49 @@ ggsave(file="dataONEperpond_beta_logit_cluster_plot.jpg", dataONEperpond_beta_lo
 ####################### 
 # Beta regression     #
 # Mixed model         #
+# w/ fixed components #
+# dataONEperpond      #
+# link: logit         #
+# Constant dispersion #
+#######################
+# An alternate version where I specify an "extra component" for low FP ponds and have n=3 clusters 
+
+formula <- FPcover_max ~ TOTP_avg
+betareg_mix_dataONEperpond_logit_extcomp <- betamix(formula, link="logit", data=dataONEperpond, k = 3, nstart = 100, 
+                                                    extra_components = extraComponent(type="uniform",coef=0.01, delta=0.01))
+
+betareg_mix_dataONEperpond_logit_extcomp
+summary(betareg_mix_dataONEperpond_logit_extcomp) 
+logLik(betareg_mix_dataONEperpond_logit_extcomp) 
+AIC(betareg_mix_dataONEperpond_logit_extcomp) 
+
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataONEperpond$beta_logit_3clusters <- rep(NA, nrow(dataONEperpond))
+dataONEperpond_TOTP <- subset(dataONEperpond, dataONEperpond$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataONEperpond_noTOTP <- subset(dataONEperpond, is.na(dataONEperpond$TOTP_avg)) # and waterbodies w/o TOTP
+dataONEperpond_TOTP$beta_logit_3clusters<-clusters(betareg_mix_dataONEperpond_logit_extcomp) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataONEperpond <- merge(dataONEperpond_TOTP,dataONEperpond_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataONEperpond_TOTP,dataONEperpond_noTOTP)
+
+# plot 
+dataONEperpond_logit_extcomp_cluster_plot <- ggplot(dataONEperpond,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_3clusters),shape=factor(beta_logit_3clusters))) + geom_point(size=3) 
+dataONEperpond_logit_extcomp_cluster_plot <- dataONEperpond_logit_extcomp_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_3clusters))) 
+dataONEperpond_logit_extcomp_cluster_plot <- dataONEperpond_logit_extcomp_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataONEperpond_logit_extcomp_cluster_plot <- dataONEperpond_logit_extcomp_cluster_plot + ggtitle("dataONEperpond - logit link")
+dataONEperpond_logit_extcomp_cluster_plot <- dataONEperpond_logit_extcomp_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataONEperpond_logit_extcomp_cluster_plot <- dataONEperpond_logit_extcomp_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataONEperpond_logit_extcomp_cluster_plot <- dataONEperpond_logit_extcomp_cluster_plot + theme_classic(base_size=18)
+dataONEperpond_logit_extcomp_cluster_plot
+
+# save the plot 
+ggsave(file="dataONEperpond_logit_extcomp_cluster_plot.jpg", dataONEperpond_logit_extcomp_cluster_plot, height=8,width=11)
+
+####################### 
+# Beta regression     #
+# Mixed model         #
 # dataFP              #
 # link: logit         #
 # Constant dispersion #
@@ -150,6 +193,50 @@ dataFP_beta_logit_cluster_plot
 
 # save the plot 
 ggsave(file="dataFP_beta_logit_cluster_plot.jpg", dataFP_beta_logit_cluster_plot, height=8,width=11)
+ 
+####################### 
+# Beta regression     #
+# Mixed model         #
+# w/ fixed components #
+# dataFP              #
+# link: logit         #
+# Constant dispersion #
+#######################
+# An alternate version where I specify an "extra component" for low FP ponds and have n=3 clusters 
+
+formula <- FPcover_max ~ TOTP_avg
+betareg_mix_dataFP_logit_extcomp <- betamix(formula, link="logit", data=dataFP, k = 3, nstart = 100, 
+                                                    extra_components = extraComponent(type="uniform",coef=0.01, delta=0.01))
+
+betareg_mix_dataFP_logit_extcomp
+summary(betareg_mix_dataFP_logit_extcomp) 
+clusters(betareg_mix_dataFP_logit_extcomp) 
+logLik(betareg_mix_dataFP_logit_extcomp) 
+AIC(betareg_mix_dataFP_logit_extcomp) 
+
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFP$beta_logit_3clusters <- rep(NA, nrow(dataFP))
+dataFP_TOTP <- subset(dataFP, dataFP$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFP_noTOTP <- subset(dataFP, is.na(dataFP$TOTP_avg)) # and waterbodies w/o TOTP
+dataFP_TOTP$beta_logit_3clusters<-clusters(betareg_mix_dataFP_logit_extcomp) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFP <- merge(dataFP_TOTP,dataFP_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFP_TOTP,dataFP_noTOTP)
+
+# plot 
+dataFP_logit_extcomp_cluster_plot <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_3clusters),shape=factor(beta_logit_3clusters))) + geom_point(size=3) 
+dataFP_logit_extcomp_cluster_plot <- dataFP_logit_extcomp_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_3clusters))) 
+dataFP_logit_extcomp_cluster_plot <- dataFP_logit_extcomp_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFP_logit_extcomp_cluster_plot <- dataFP_logit_extcomp_cluster_plot + ggtitle("dataFP - logit link")
+dataFP_logit_extcomp_cluster_plot <- dataFP_logit_extcomp_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFP_logit_extcomp_cluster_plot <- dataFP_logit_extcomp_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFP_logit_extcomp_cluster_plot <- dataFP_logit_extcomp_cluster_plot + theme_classic(base_size=18)
+dataFP_logit_extcomp_cluster_plot
+
+# save the plot 
+ggsave(file="dataFP_logit_extcomp_cluster_plot.jpg", dataFP_logit_extcomp_cluster_plot, height=8,width=11)
 
 ####################### 
 # Beta regression     #
@@ -226,6 +313,50 @@ dataFPoutliers_beta_logit_cluster_plot
 
 # save the plot 
 ggsave(file="dataFPoutliers_beta_logit_cluster_plot.jpg", dataFPoutliers_beta_logit_cluster_plot, height=8,width=11)
+
+####################### 
+# Beta regression     #
+# Mixed model         #
+# w/ fixed components #
+# dataFPoutliers      #
+# link: logit         #
+# Constant dispersion #
+#######################
+# An alternate version where I specify an "extra component" for low FP ponds and have n=3 clusters 
+
+formula <- FPcover_max ~ TOTP_avg
+betareg_mix_dataFPoutliers_logit_extcomp <- betamix(formula, link="logit", data=dataFPoutliers, k = 3, nstart = 100, 
+                                            extra_components = extraComponent(type="uniform",coef=0.01, delta=0.01))
+
+betareg_mix_dataFPoutliers_logit_extcomp
+summary(betareg_mix_dataFPoutliers_logit_extcomp) 
+logLik(betareg_mix_dataFPoutliers_logit_extcomp) 
+AIC(betareg_mix_dataFPoutliers_logit_extcomp) 
+
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFPoutliers$beta_logit_3clusters <- rep(NA, nrow(dataFPoutliers))
+dataFPoutliers_TOTP <- subset(dataFPoutliers, dataFPoutliers$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFPoutliers_noTOTP <- subset(dataFPoutliers, is.na(dataFPoutliers$TOTP_avg)) # and waterbodies w/o TOTP
+dataFPoutliers_TOTP$beta_logit_3clusters<-clusters(betareg_mix_dataFPoutliers_logit_extcomp) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFPoutliers <- merge(dataFPoutliers_TOTP,dataFPoutliers_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFPoutliers_TOTP,dataFPoutliers_noTOTP)
+
+# plot 
+dataFPoutliers_logit_extcomp_cluster_plot <- ggplot(dataFPoutliers,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_3clusters),shape=factor(beta_logit_3clusters))) + geom_point(size=3) 
+dataFPoutliers_logit_extcomp_cluster_plot <- dataFPoutliers_logit_extcomp_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_3clusters))) 
+dataFPoutliers_logit_extcomp_cluster_plot <- dataFPoutliers_logit_extcomp_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFPoutliers_logit_extcomp_cluster_plot <- dataFPoutliers_logit_extcomp_cluster_plot + ggtitle("dataFPoutliers - logit link")
+dataFPoutliers_logit_extcomp_cluster_plot <- dataFPoutliers_logit_extcomp_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFPoutliers_logit_extcomp_cluster_plot <- dataFPoutliers_logit_extcomp_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFPoutliers_logit_extcomp_cluster_plot <- dataFPoutliers_logit_extcomp_cluster_plot + theme_classic(base_size=18)
+dataFPoutliers_logit_extcomp_cluster_plot
+
+# save the plot 
+ggsave(file="dataFPoutliers_logit_extcomp_cluster_plot.jpg", dataFPoutliers_logit_extcomp_cluster_plot, height=8,width=11)
+
 
 ####################### 
 # Beta regression     #
