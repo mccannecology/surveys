@@ -38,6 +38,20 @@ plot(dataFPsmall$FPcover_max ~ dataFPsmall$TOTP_avg,main="dataFPsmall",xlab="Tot
 plot(dataFPoutliers$FPcover_max ~ dataFPoutliers$TOTP_avg,main="dataFPoutliers",xlab="Total P (mg/L)",ylab="FP cover",log="x")
 plot(dataFPoutlierssmall$FPcover_max ~ dataFPoutlierssmall$TOTP_avg,main="dataFPoutlierssmall",xlab="Total P (mg/L)",ylab="FP cover",log="x")
 
+##########################################
+# Parameters of gamlss beta distribution #
+# mu & sigma != mu & phi of betareg      #
+# Sigma is (0,1) - unlike phi            # 
+##########################################
+# Try 
+hist(rBE(100, mu=.3, sigma=.001))
+hist(rBE(100, mu=.3, sigma=.9))
+
+# or 
+plot(function(y) dBE(y, mu=.1 ,sigma=.5), 0.001, .999)
+plot(function(y) dBE(y, mu=.5 ,sigma=.5), 0.001, .999)
+plot(function(y) dBE(y, mu=.5 ,sigma=.2), 0.001, .999)
+
 ####################### 
 # Beta regression     #
 # dataONEperpond      #
@@ -67,3 +81,42 @@ gamlss(FPcover_max ~ TOTP_avg, sigma.formula = ~ pb(TOTP_avg), data=dataONEperpo
 # Error in RS() : The global deviance is increasing 
 # Try different steps for the parameters or the model maybe inappropriate
 
+########################## 
+# Beta regression        #
+# dataONEperpondoutliers #
+# link: logit            #
+# Variable dispersion    #
+# quadratic dispersion   #
+##########################
+
+########################## 
+# Beta regression        #
+# dataFP                 #
+# link: logit            #
+# Variable dispersion    #
+# quadratic dispersion   #
+##########################
+
+########################## 
+# Beta regression        #
+# dataFPoutliers         #
+# link: logit            #
+# Variable dispersion    #
+# quadratic dispersion   #
+##########################
+
+########################## 
+# Beta regression        #
+# dataFPsmall            #
+# link: logit            #
+# Variable dispersion    #
+# quadratic dispersion   #
+##########################
+
+########################## 
+# Beta regression        #
+# dataFPsmalloutliers    #
+# link: logit            #
+# Variable dispersion    #
+# quadratic dispersion   #
+##########################
