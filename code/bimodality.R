@@ -41,7 +41,7 @@ dip.test(dataONEperpond$FPcover_max) # Compute Hartigans' dip statistic Dn, and 
 # alternative hypothesis: non-unimodal, i.e., at least bimodal
 
 dip.test(dataFP$FPcover_max) # Compute Hartigans' dip statistic Dn, and  P-value for  test for unimodality, by interpolating tabulated quantiles of sqrt(nDn)
-# D = 0.0722, p-value = 0.0004742
+# D = 0.0707, p-value = 0.0006063
 # alternative hypothesis: non-unimodal, i.e., at least bimodal
 
 dip.test(dataFPsmall$FPcover_max) # Compute Hartigans' dip statistic Dn, and  P-value for  test for unimodality, by interpolating tabulated quantiles of sqrt(nDn)
@@ -68,23 +68,23 @@ cl.res02 <- kmeans(dataFP$FPcover_max, 2, centers=c(min(dataFP$FPcover_max), max
 n02 <- length(dataFP$FPcover_max)
 # variance reduction score = within cluster SS / total sum of squares
 # value ranges 0 to 1; low score "indicates an informative split"
-vrs02 <- (sum(cl.res02$withinss) / (n02-1)) / var(dataFP$FPcover_max) # 0.09097248
+vrs02 <- (sum(cl.res02$withinss) / (n02-1)) / var(dataFP$FPcover_max) # 0.09008887
 # weighted variance reduction score
 # variance reduction independent of cluster sizes
 # vale ranges 0 or greater; "low score reflects bimodality"
-wvrs02 <- (sum(cl.res02$withinss / cl.res02$size) / 2) / ( ((n02-1)/n02) * var(dataFP$FPcover_max)) # 0.1201015
+wvrs02 <- (sum(cl.res02$withinss / cl.res02$size) / 2) / ( ((n02-1)/n02) * var(dataFP$FPcover_max)) # 0.1194556
 groups02 <- cl.res02$cluster
 
-# dataFP - waterbodies with floating plants 
+# dataFPsmall - waterbodies with floating plants 
 cl.res03 <- kmeans(dataFPsmall$FPcover_max, 2, centers=c(min(dataFPsmall$FPcover_max), max(dataFPsmall$FPcover_max)))
 n03 <- length(dataFPsmall$FPcover_max)
 # variance reduction score = within cluster SS / total sum of squares
 # value ranges 0 to 1; low score "indicates an informative split"
-vrs03 <- (sum(cl.res03$withinss) / (n03-1)) / var(dataFPsmall$FPcover_max) # 0.09097248
+vrs03 <- (sum(cl.res03$withinss) / (n03-1)) / var(dataFPsmall$FPcover_max) # 0.1099593
 # weighted variance reduction score
 # variance reduction independent of cluster sizes
 # vale ranges 0 or greater; "low score reflects bimodality"
-wvrs03 <- (sum(cl.res03$withinss / cl.res03$size) / 2) / ( ((n03-1)/n03) * var(dataFPsmall$FPcover_max)) # 0.1201015
+wvrs03 <- (sum(cl.res03$withinss / cl.res03$size) / 2) / ( ((n03-1)/n03) * var(dataFPsmall$FPcover_max)) # 0.1082916
 groups03 <- cl.res03$cluster
 
 ###############################################################################################
