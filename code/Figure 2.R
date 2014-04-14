@@ -8,6 +8,7 @@
 setwd("C:/Users/Mike/Desktop/Dropbox/CT & LI  Duckweed Surveys/Survey Analysis All") 
 
 library(ggplot2)
+library(gridExtra)
 
 ###############
 #             #
@@ -47,7 +48,7 @@ Fig02 <- arrangeGrob(Fig02a,Fig02b,ncol=1,nrow=2) #grid.arrange does not work wi
 Fig02
 ggsave(file="Figure 02.pdf", Fig02, height=11,width=8)
 ggsave(file="Figure 02.png", Fig02, height=11,width=8)
-ggsave(file="Figure 02.jpg", Fig02, height=11,width=8)
+ggsave(file="Figure 02.jpg", Fig02, height=10,width=5)
 
 
 
