@@ -11,7 +11,7 @@ library(ggplot2)
 library(gridExtra)
 
 # make a new variable on the data frame - convert proportion to precentage FP cover 
-dataFP$FPcover_max_percent <- dataFP$FPcover_max*100 
+dataFPsmall$FPcover_max_percent <- dataFPsmall$FPcover_max*100 
 
 ################
 # Fig. 1a      #
@@ -67,24 +67,11 @@ a3
 # EMPIRICAL    #
 # "LINEAR"     #
 # (LOGISTIC)   #
-################
-# black & White 
-b1 <- ggplot(data=dataFP, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
-b1 <- b1 + stat_smooth(method=glm, family=binomial, se=F, colour="black")
-b1 <- b1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b1 <- b1 + geom_text(aes(x=0.0075,y=1,label="d)"),size=7)
-b1 <- b1 + scale_x_log10() 
-y_breaks <- seq(0,1,0.25)
-y_labels <- as.character(y_breaks*100)
-b1 <- b1 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-b1 <- b1 + theme_classic(base_size=18)
-b1 
-
-# with color 
-b1 <- ggplot(data=dataFP, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
+################ 
+b1 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
 b1 <- b1 + stat_smooth(method=glm, family=binomial, se=F)
 b1 <- b1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b1 <- b1 + geom_text(aes(x=0.0075,y=1,label="d)"),size=7)
+b1 <- b1 + geom_text(aes(x=0.015,y=1,label="d)"),size=7)
 b1 <- b1 + scale_x_log10() 
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
@@ -100,29 +87,13 @@ b1
 ################
 # use "segmented logistic.R" first 
 # generates your breakpoint 
-# breakpoint is used below and is defined in the segmented logistic script 
+# breakpoint02 is used below and is defined in the segmented logistic script 
 
-# with color 
-b2 <- ggplot(data=dataFP, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
-b2 <- b2 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint)))
+b2 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
+b2 <- b2 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint02)))
 b2 <- b2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b2 <- b2 + geom_text(aes(x=0.0075,y=1,label="e)"),size=7)
-b2 <- b2 + geom_vline(xintercept=breakpoint,colour="red",size=1,linetype="longdash") # add vertical line @ threshold value
-b2 <- b2 + scale_x_log10()
-b2 <- b2 + theme(legend.position="none")
-y_breaks <- seq(0,1,0.25)
-y_labels <- as.character(y_breaks*100)
-b2 <- b2 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-b2 <- b2 + theme_classic(base_size=18) + theme(legend.position="none")
-b2 <- b2 + theme(axis.title.y=element_blank())
-b2
-
-# black and white 
-b2 <- ggplot(data=dataFP, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
-b2 <- b2 + stat_smooth(method=glm, family=binomial, se=F, colour="black", aes(fill=factor(breakpoint)))
-b2 <- b2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b2 <- b2 + geom_text(aes(x=0.0075,y=1,label="e)"),size=7)
-b2 <- b2 + geom_vline(xintercept=breakpoint,colour="grey50",size=1,linetype="longdash") # add vertical line @ threshold value
+b2 <- b2 + geom_text(aes(x=0.015,y=1,label="e)"),size=7)
+b2 <- b2 + geom_vline(xintercept=breakpoint02,colour="red",size=1,linetype="longdash") # add vertical line @ threshold value 
 b2 <- b2 + scale_x_log10()
 b2 <- b2 + theme(legend.position="none")
 y_breaks <- seq(0,1,0.25)
@@ -138,42 +109,20 @@ b2
 # OVERLAPPING  #
 # ALT. STATES  #
 ################
-# this figure got generated in the "beta regression - mixture.R" script 
-dataFP_logit_extcomp_cluster_plot
-
-# With color 
-b3 <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_3clusters))) + stat_smooth(method=glm, family=binomial, se=F) + geom_point(size=2) 
-b3 <- b3 + scale_shape_manual(values=c(1,19),name="Cluster")
+b3 <- ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
+b3 <- b3 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(third))) 
 b3 <- b3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b3 <- b3 + geom_text(aes(x=0.0075,y=1,label="f)"),size=7)
+b3 <- b3 + geom_text(aes(x=0.015,y=1,label="f)"),size=7)
 b3 <- b3 + scale_x_log10()
+b3 <- b3 + theme(legend.position="none")
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
 b3 <- b3 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
 b3 <- b3 + geom_vline(xintercept=0.01972,colour="red",size=1,linetype="longdash") # add vertical line @ lower threshold value 
 b3 <- b3 + geom_vline(xintercept=0.2085,colour="red",size=1,linetype="longdash") # add vertical line @ upper threshold value 
-b3 <- b3 + theme_classic(base_size=18)
-b3 <- b3 + theme(legend.position=c(0.85,0.3))
+b3 <- b3 + theme_classic(base_size=18) + theme(legend.position="none")
 b3 <- b3 + theme(axis.title.y=element_blank())
 b3 
-
-# black and white 
-b3 <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_3clusters))) + stat_smooth(method=glm, family=binomial, se=F, colour="black") + geom_point(size=2) 
-b3 <- b3 + scale_shape_manual(values=c(1,19),name="Cluster")
-b3 <- b3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b3 <- b3 + geom_text(aes(x=0.0075,y=1,label="f)"),size=7)
-b3 <- b3 + scale_x_log10()
-y_breaks <- seq(0,1,0.25)
-y_labels <- as.character(y_breaks*100)
-b3 <- b3 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-b3 <- b3 + geom_vline(xintercept=0.01972,colour="grey50",size=1,linetype="longdash") # add vertical line @ lower threshold value 
-b3 <- b3 + geom_vline(xintercept=0.2085,colour="grey50",size=1,linetype="longdash") # add vertical line @ upper threshold value 
-b3 <- b3 + theme_classic(base_size=18)
-b3 <- b3 + theme(legend.position=c(0.85,0.3))
-b3 <- b3 + theme(axis.title.y=element_blank())
-b3 
-
-
 
 ###################
 # ARRANGING PLOTS #
@@ -182,4 +131,3 @@ Fig01 <- arrangeGrob(a1,a2,a3,b1,b2,b3,ncol=3,nrow=2) #grid.arrange does not wor
 Fig01
 ggsave(file="Figure 01.pdf", Fig01, height=8,width=11)
 ggsave(file="Figure 01.png", Fig01, height=8,width=11)
-ggsave(file="Figure 01.jpg", Fig01, height=8,width=11)
