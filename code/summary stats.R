@@ -15,13 +15,13 @@ summary(subset(dataONEperpond, dataONEperpond$data_source == "CAES" | dataONEper
 summary(dataONEperpond$date) # problem with this: some surveys have already been combined 
 summary(data$date) 
 
-# number of waterbodies (dataONEperpond) from CAES - #183
+# number of waterbodies (dataONEperpond) from CAES - #184
 nrow(subset(dataONEperpond, dataONEperpond$data_source == "CAES" |dataONEperpond$data_source == "CAES/MJM"))
 
 # number of waterbodies (dataONEperpond) from me - #21
 nrow(subset(dataONEperpond, dataONEperpond$data_source == "MJM"))
 
-# number of waterbodies without floating plants 
+# number of waterbodies without floating plants - #106
 nrow(dataONEperpond) - nrow(dataFP)
 
 # number of waterbodies (dataONEperpond) with FP cover> 66.666%
@@ -44,6 +44,11 @@ nrow(subset(dataONEperpond, dataONEperpond$FP_species_richness == 0))
 
 # largest waterbody with FP cover > 66.66% (dataONEperpond)
 summary(subset(dataONEperpond, dataONEperpond$FPcover_max >= 0.66666))
+
+# 20 waterbodies in dataFP Were based on a combination of surveys 
+combineddataFP <- subset(dataFP, dataFP$year == "comb")
+combineddataFP$waterbody 
+nrow(combineddataFP)
 
 # 20 waterbodies in dataFPsmall Were based on a combination of surveys 
 combineddataFPsmall <- subset(dataFPsmall, dataFPsmall$year == "comb")
