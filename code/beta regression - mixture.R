@@ -169,19 +169,30 @@ summary(betareg_mix_dataFP_logit)
 logLik(betareg_mix_dataFP_logit) 
 AIC(betareg_mix_dataFP_logit) 
 # two clusters 
+clusters(betareg_mix_dataFP_logit) 
 
 # add cluster assignments to the original data frame 
 # need to deal with the fact that there are 6 missing values of TotP
-dataFP$beta_logit_cluster <- rep(NA, nrow(dataFP))
+dataFP$beta_logit_3clusters <- rep(NA, nrow(dataFP))
 dataFP_TOTP <- subset(dataFP, dataFP$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
 dataFP_noTOTP <- subset(dataFP, is.na(dataFP$TOTP_avg)) # and waterbodies w/o TOTP
-dataFP_TOTP$beta_logit_cluster<-clusters(betareg_mix_dataFP_logit) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFP_TOTP$beta_logit_3clusters<-clusters(betareg_mix_dataFP_logit) # add cluster identities to the data.frame of waterbodies w/ TOTP
 dataFP <- merge(dataFP_TOTP,dataFP_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
 rm(dataFP_TOTP,dataFP_noTOTP)
 
+# Problem with my orginal method for adding cluster assignments 
+clusters <- clusters(betareg_mix_dataFP_logit)
+which(is.na(dataFP$TOTP_avg)) # retuns the indices of that are NA for total P 
+# insert NAs into this in the correct spots
+clusters <- c(clusters[1:5],NA,clusters[6:65],NA,clusters[66:74],NA,clusters[75:length(clusters)])
+# check that it put them in the right spots 
+which(is.na(c(clusters[1:5],NA,clusters[6:65],NA,clusters[66:74],NA,clusters[75:length(clusters)])))
+which(is.na(clusters))
+clusters
+
 # plot 
-dataFP_beta_logit_cluster_plot <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_cluster),shape=factor(beta_logit_cluster))) + geom_point(size=3) 
-dataFP_beta_logit_cluster_plot <- dataFP_beta_logit_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_cluster))) 
+dataFP_beta_logit_cluster_plot <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,colour=factor(clusters),shape=factor(clusters))) + geom_point(size=3) 
+dataFP_beta_logit_cluster_plot <- dataFP_beta_logit_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(clusters))) 
 dataFP_beta_logit_cluster_plot <- dataFP_beta_logit_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
 dataFP_beta_logit_cluster_plot <- dataFP_beta_logit_cluster_plot + ggtitle("dataFP - logit link")
 dataFP_beta_logit_cluster_plot <- dataFP_beta_logit_cluster_plot + scale_x_log10()
@@ -253,6 +264,13 @@ ggsave(file="dataFP_beta_logit_cluster_prior_cluster_plot.jpg", dataFP_beta_logi
 # create the matrix for initial cluster probabilities 
 dataFP$prior_cluster1_prob <- dataFP$FPcover_max
 dataFP$prior_cluster2_prob <- 1-dataFP$FPcover_max
+
+# This is the one problematic outlier that keeps getting assigned to the not-FP-regime cluster
+dataFP$FPcover_max[64]
+dataFP$TOTP_avg[64]
+# Give that point a 0 % prob. of being in not-FP-regime cluster 
+dataFP$prior_cluster1_prob[64] <- 1
+dataFP$prior_cluster2_prob[64] <- 0
 
 formula <- FPcover_max ~ TOTP_avg
 betareg_mix_dataFP_logit_priorclust2 <- betamix(formula, link="logit", data=dataFP, k = 2, nstart = 100, cluster=cbind(dataFP$prior_cluster1_prob,dataFP$prior_cluster2_prob))
