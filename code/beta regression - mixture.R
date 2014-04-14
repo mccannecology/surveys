@@ -194,6 +194,97 @@ dataFP_beta_logit_cluster_plot
 # save the plot 
 ggsave(file="dataFP_beta_logit_cluster_plot.jpg", dataFP_beta_logit_cluster_plot, height=8,width=11)
  
+######################## 
+# Beta regression      #
+# Mixed model          #
+# dataFP               #
+# initial cluster prob #
+# link: logit          #
+# Constant dispersion  #
+########################
+# create the vector for initial cluster assingments 
+# if FP cover max >= 50, assign to cluster 1
+# if FP cover max < 50, assign to cluster 2 
+dataFP$prior_cluster[dataFP$FPcover_max>=0.50]<-1
+dataFP$prior_cluster[dataFP$FPcover_max<0.50]<-2
+dataFP$prior_cluster <- as.integer(dataFP$prior_cluster)
+class(dataFP$prior_cluster)
+
+formula <- FPcover_max ~ TOTP_avg
+betareg_mix_dataFP_logit_priorclust <- betamix(formula, link="logit", data=dataFP, k = 2, nstart = 100, cluster=dataFP$prior_cluster)
+betareg_mix_dataFP_logit_priorclust
+summary(betareg_mix_dataFP_logit_priorclust) 
+logLik(betareg_mix_dataFP_logit_priorclust) 
+AIC(betareg_mix_dataFP_logit_priorclust) 
+
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFP$beta_logit_cluster_prior_cluster <- rep(NA, nrow(dataFP))
+dataFP_TOTP <- subset(dataFP, dataFP$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFP_noTOTP <- subset(dataFP, is.na(dataFP$TOTP_avg)) # and waterbodies w/o TOTP
+dataFP_TOTP$beta_logit_cluster_prior_cluster<-clusters(betareg_mix_dataFP_logit_priorclust) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFP <- merge(dataFP_TOTP,dataFP_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFP_TOTP,dataFP_noTOTP)
+
+# plot 
+dataFP_beta_logit_cluster_prior_cluster_plot <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_cluster_prior_cluster),shape=factor(beta_logit_cluster_prior_cluster))) + geom_point(size=3) 
+dataFP_beta_logit_cluster_prior_cluster_plot <- dataFP_beta_logit_cluster_prior_cluster_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_cluster_prior_cluster))) 
+dataFP_beta_logit_cluster_prior_cluster_plot <- dataFP_beta_logit_cluster_prior_cluster_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFP_beta_logit_cluster_prior_cluster_plot <- dataFP_beta_logit_cluster_prior_cluster_plot + ggtitle("dataFP - logit link")
+dataFP_beta_logit_cluster_prior_cluster_plot <- dataFP_beta_logit_cluster_prior_cluster_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFP_beta_logit_cluster_prior_cluster_plot <- dataFP_beta_logit_cluster_prior_cluster_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFP_beta_logit_cluster_prior_cluster_plot <- dataFP_beta_logit_cluster_prior_cluster_plot + theme_classic(base_size=18)
+dataFP_beta_logit_cluster_prior_cluster_plot
+
+# save the plot 
+ggsave(file="dataFP_beta_logit_cluster_prior_cluster_plot.jpg", dataFP_beta_logit_cluster_prior_cluster_plot, height=8,width=11)
+
+######################## 
+# Beta regression      #
+# Mixed model          #
+# dataFP               #
+# initial cluster prob #
+# link: logit          #
+# Constant dispersion  #
+# version 2            #
+########################
+# create the matrix for initial cluster probabilities 
+dataFP$prior_cluster1_prob <- dataFP$FPcover_max
+dataFP$prior_cluster2_prob <- 1-dataFP$FPcover_max
+
+formula <- FPcover_max ~ TOTP_avg
+betareg_mix_dataFP_logit_priorclust2 <- betamix(formula, link="logit", data=dataFP, k = 2, nstart = 100, cluster=cbind(dataFP$prior_cluster1_prob,dataFP$prior_cluster2_prob))
+betareg_mix_dataFP_logit_priorclust2
+summary(betareg_mix_dataFP_logit_priorclust2) 
+logLik(betareg_mix_dataFP_logit_priorclust2) 
+AIC(betareg_mix_dataFP_logit_priorclust2) 
+
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFP$beta_logit_cluster_prior_clusterv2 <- rep(NA, nrow(dataFP))
+dataFP_TOTP <- subset(dataFP, dataFP$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFP_noTOTP <- subset(dataFP, is.na(dataFP$TOTP_avg)) # and waterbodies w/o TOTP
+dataFP_TOTP$beta_logit_cluster_prior_clusterv2<-clusters(betareg_mix_dataFP_logit_priorclust2) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFP <- merge(dataFP_TOTP,dataFP_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFP_TOTP,dataFP_noTOTP)
+
+# plot 
+dataFP_beta_logit_cluster_prior_clusterv2_plot <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_cluster_prior_clusterv2),shape=factor(beta_logit_cluster_prior_clusterv2))) + geom_point(size=3) 
+dataFP_beta_logit_cluster_prior_clusterv2_plot <- dataFP_beta_logit_cluster_prior_clusterv2_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_cluster_prior_clusterv2))) 
+dataFP_beta_logit_cluster_prior_clusterv2_plot <- dataFP_beta_logit_cluster_prior_clusterv2_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFP_beta_logit_cluster_prior_clusterv2_plot <- dataFP_beta_logit_cluster_prior_clusterv2_plot + ggtitle("dataFP - logit link")
+dataFP_beta_logit_cluster_prior_clusterv2_plot <- dataFP_beta_logit_cluster_prior_clusterv2_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFP_beta_logit_cluster_prior_clusterv2_plot <- dataFP_beta_logit_cluster_prior_clusterv2_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFP_beta_logit_cluster_prior_clusterv2_plot <- dataFP_beta_logit_cluster_prior_clusterv2_plot + theme_classic(base_size=18)
+dataFP_beta_logit_cluster_prior_clusterv2_plot
+
+# save the plot 
+ggsave(file="dataFP_beta_logit_cluster_plot.jpg", dataFP_beta_logit_cluster_plot, height=8,width=11)
+
 ####################### 
 # Beta regression     #
 # Mixed model         #
@@ -518,7 +609,6 @@ logLik(betareg_mix_dataFPoutliers_logit)
 AIC(betareg_mix_dataFPoutliers_logit) 
 # two clusters
 
-# add cluster assignments to the original data frame 
 # need to deal with the fact that there are 6 missing values of TotP
 dataFPoutliers$beta_logit_cluster <- rep(NA, nrow(dataFPoutliers))
 dataFPoutliers_TOTP <- subset(dataFPoutliers, dataFPoutliers$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
