@@ -206,6 +206,16 @@ G <- G + labs(title = "Ponds <5 ha w/ Floating Plants (n=54)")
 G <- G + scale_x_log10()
 G
 
+
+dataFP$size[dataFP$surfacearea_ha<=5] <- "<5ha"
+dataFP$size[dataFP$surfacearea_ha>5] <- ">5ha"
+
+G2 <- ggplot(data=dataFP,aes(x=TOTP_avg, y=FPcover_max)) + geom_point(aes(colour=size),size=4)
+G2 <- G2 + labs(title = "Ponds w/ Floating Plants (n=99)")
+G2 <- G2 + scale_x_log10()
+G2
+
+
 # scatterplot: FPcover_max ~ log(TOTP_avg) - small FP ponds 
 # Error bars for FP cover
 # I still need to check if these are the right error bars to use 
