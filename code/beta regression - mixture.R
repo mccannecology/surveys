@@ -362,6 +362,10 @@ dataFP_beta_logit_cluster_prior_clusterv3_plot <- dataFP_beta_logit_cluster_prio
 dataFP_beta_logit_cluster_prior_clusterv3_plot <- dataFP_beta_logit_cluster_prior_clusterv3_plot + theme_classic(base_size=18)
 dataFP_beta_logit_cluster_prior_clusterv3_plot
 
+# Get the means of each cluster 
+mean(subset(dataFP$FPcover_max, dataFP$beta_logit_cluster_prior_clusterv3 == 1))
+mean(subset(dataFP$FPcover_max, dataFP$beta_logit_cluster_prior_clusterv3 == 2))
+
 # save the plot 
 ggsave(file="dataFP_beta_logit_cluster_prior_clusterv3_plot.jpg", dataFP_beta_logit_cluster_prior_clusterv3_plot, height=8,width=11)
 
