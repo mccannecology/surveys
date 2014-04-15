@@ -139,10 +139,10 @@ b2
 # ALT. STATES  #
 ################
 # this figure got generated in the "beta regression - mixture.R" script 
-dataFP_logit_extcomp_cluster_plot
+dataFP_beta_logit_cluster_prior_clusterv3_plot
 
 # With color 
-b3 <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_3clusters))) + stat_smooth(method=glm, family=binomial, se=F) + geom_point(size=2) 
+b3 <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_clusterv3))) + stat_smooth(method=glm, family=binomial, se=F) + geom_point(size=2) 
 b3 <- b3 + scale_shape_manual(values=c(1,19),name="Cluster")
 b3 <- b3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
 b3 <- b3 + geom_text(aes(x=0.0075,y=1,label="f)"),size=7)
@@ -158,7 +158,7 @@ b3 <- b3 + theme(axis.title.y=element_blank())
 b3 
 
 # black and white 
-b3 <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_3clusters))) + stat_smooth(method=glm, family=binomial, se=F, colour="black") + geom_point(size=2) 
+b3 <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_clusterv3))) + stat_smooth(method=glm, family=binomial, se=F, colour="black") + geom_point(size=2) 
 b3 <- b3 + scale_shape_manual(values=c(1,19),name="Cluster")
 b3 <- b3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
 b3 <- b3 + geom_text(aes(x=0.0075,y=1,label="f)"),size=7)
