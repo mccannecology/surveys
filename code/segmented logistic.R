@@ -94,7 +94,8 @@ breakpoint # returns the breakpoint
 
 # re-run the glm() using this breakpoint 
 segmented_dataFP_binomial_logit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFP)
-summary(segmented_dataFP_binomial_logit)     
+summary(segmented_dataFP_binomial_logit)  
+logLik(segmented_dataFP_binomial_logit)
 AIC(segmented_dataFP_binomial_logit) # gives you the incorrect AIC - does not account for estimating the breakpoint parameter 
 -2*logLik(segmented_dataFP_binomial_logit)[1]+2*5 # calculate the actual AIC for this model 
 breakpoint

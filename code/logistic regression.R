@@ -50,6 +50,7 @@ lines(subset(dataONEperpond$TOTP_avg, dataONEperpond$TOTP_avg >0),glm_dataONEper
 formula <- FPcover_max ~ TOTP_avg
 glm_dataFP_binomial_logit <- glm(formula, data=dataFP, family=binomial(link=logit))
 summary(glm_dataFP_binomial_logit)
+logLik(glm_dataFP_binomial_logit)
 AIC(glm_dataFP_binomial_logit)
 
 # plot fitted model 
