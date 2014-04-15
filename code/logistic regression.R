@@ -68,6 +68,7 @@ lines(subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),glm_dataFP_binomial_logit$fitt
 formula <- FPcover_max ~ TOTP_avg
 glm_dataFPsmall_binomial_logit <- glm(formula, data=dataFPsmall, family=binomial(link=logit))
 summary(glm_dataFPsmall_binomial_logit)
+logLik(glm_dataFPsmall_binomial_logit)
 AIC(glm_dataFPsmall_binomial_logit)
 
 # plot fitted model 

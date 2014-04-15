@@ -68,16 +68,17 @@ a3
 # "LINEAR"     #
 # (LOGISTIC)   #
 ################ 
-b1 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
-b1 <- b1 + stat_smooth(method=glm, family=binomial, se=F)
-b1 <- b1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b1 <- b1 + geom_text(aes(x=0.015,y=1,label="d)"),size=7)
-b1 <- b1 + scale_x_log10() 
+# colour
+b1append <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
+b1append <- b1append + stat_smooth(method=glm, family=binomial, se=F)
+b1append <- b1append + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
+b1append <- b1append + geom_text(aes(x=0.0075,y=1,label="a)"),size=7)
+b1append <- b1append + scale_x_log10() 
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
-b1 <- b1 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-b1 <- b1 + theme_classic(base_size=18)
-b1 
+b1append <- b1append + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+b1append <- b1append + theme_classic(base_size=18)
+b1append 
 
 ################
 # Fig. 1e      #
@@ -87,21 +88,22 @@ b1
 ################
 # use "segmented logistic.R" first 
 # generates your breakpoint 
-# breakpoint02 is used below and is defined in the segmented logistic script 
+# breakpoint is used below and is defined in the segmented logistic script 
 
-b2 <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
-b2 <- b2 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint02)))
-b2 <- b2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b2 <- b2 + geom_text(aes(x=0.015,y=1,label="e)"),size=7)
-b2 <- b2 + geom_vline(xintercept=breakpoint02,colour="red",size=1,linetype="longdash") # add vertical line @ threshold value 
-b2 <- b2 + scale_x_log10()
-b2 <- b2 + theme(legend.position="none")
+# colour
+b2append <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
+b2append <- b2append + stat_smooth(method=glm, family=binomial, se=F, aes(fill=factor(breakpoint)))
+b2append <- b2append + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
+b2append <- b2append + geom_text(aes(x=0.0075,y=1,label="b)"),size=7)
+b2append <- b2append + geom_vline(xintercept=breakpoint,colour="red",size=1,linetype="longdash") # add vertical line @ threshold value
+b2append <- b2append + scale_x_log10()
+b2append <- b2append + theme(legend.position="none")
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
-b2 <- b2 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-b2 <- b2 + theme_classic(base_size=18) + theme(legend.position="none")
-b2 <- b2 + theme(axis.title.y=element_blank())
-b2
+b2append <- b2append + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+b2append <- b2append + theme_classic(base_size=18) + theme(legend.position="none")
+b2append <- b2append + theme(axis.title.y=element_blank())
+b2append
 
 ################
 # Fig. 1f      #
@@ -109,25 +111,28 @@ b2
 # OVERLAPPING  #
 # ALT. STATES  #
 ################
-b3 <- ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max)) + geom_point() 
-b3 <- b3 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(third))) 
-b3 <- b3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b3 <- b3 + geom_text(aes(x=0.015,y=1,label="f)"),size=7)
-b3 <- b3 + scale_x_log10()
-b3 <- b3 + theme(legend.position="none")
+
+# colour
+b3append <- ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_clusterv3))) + stat_smooth(method=glm, family=binomial, se=F) + geom_point(size=2) 
+b3append <- b3append + scale_shape_manual(values=c(1,19),name="Cluster")
+b3append <- b3append + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
+b3append <- b3append + geom_text(aes(x=0.0075,y=1,label="c)"),size=7)
+b3append <- b3append + scale_x_log10()
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
-b3 <- b3 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-b3 <- b3 + geom_vline(xintercept=0.01972,colour="red",size=1,linetype="longdash") # add vertical line @ lower threshold value 
-b3 <- b3 + geom_vline(xintercept=0.2085,colour="red",size=1,linetype="longdash") # add vertical line @ upper threshold value 
-b3 <- b3 + theme_classic(base_size=18) + theme(legend.position="none")
-b3 <- b3 + theme(axis.title.y=element_blank())
-b3 
+b3append <- b3append + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+b3append <- b3append + geom_vline(xintercept=0.01972,colour="red",size=1,linetype="longdash") # add vertical line @ lower threshold value 
+b3append <- b3append + geom_vline(xintercept=0.2085,colour="red",size=1,linetype="longdash") # add vertical line @ upper threshold value 
+b3append <- b3append + theme_classic(base_size=18)
+b3append <- b3append + theme(legend.position=c(0.85,0.3))
+b3append <- b3append + theme(axis.title.y=element_blank())
+b3append 
 
 ###################
 # ARRANGING PLOTS #
 ###################
-Fig01 <- arrangeGrob(a1,a2,a3,b1,b2,b3,ncol=3,nrow=2) #grid.arrange does not work with ggsave()
-Fig01
-ggsave(file="Figure 01.pdf", Fig01, height=8,width=11)
-ggsave(file="Figure 01.png", Fig01, height=8,width=11)
+Fig01append <- arrangeGrob(b1append,b2append,b3append,ncol=3,nrow=1) #grid.arrange does not work with ggsave()
+Fig01append
+ggsave(file="Fig01appendix.pdf", Fig01append, height=8,width=11)
+ggsave(file="Fig01appendix.png", Fig01append, height=8,width=11)
+ggsave(file="Fig01appendix.jpg", Fig01append, height=8,width=11)

@@ -365,10 +365,6 @@ dataFP_beta_logit_cluster_prior_clusterv3_plot
 # save the plot 
 ggsave(file="dataFP_beta_logit_cluster_prior_clusterv3_plot.jpg", dataFP_beta_logit_cluster_prior_clusterv3_plot, height=8,width=11)
 
-
-
-
-
 ####################### 
 # Beta regression     #
 # Mixed model         #
@@ -494,6 +490,64 @@ dataFPsmall_beta_logit_cluster_plot
 
 # save the plot 
 ggsave(file="dataFPsmall_beta_logit_cluster_plot.jpg", dataFPsmall_beta_logit_cluster_plot, height=8,width=11)
+
+######################## 
+# Beta regression      #
+# Mixed model          #
+# dataFPsmall          #
+# initial cluster prob #
+# link: logit          #
+# Constant dispersion  #
+# version 3            #
+########################
+# create the matrix for initial cluster probabilities 
+dataFPsmall$prior_cluster1_probv3 <- sqrt(dataFPsmall$FPcover_max)
+dataFPsmall$prior_cluster2_probv3 <- 1-sqrt(dataFPsmall$FPcover_max)
+
+# This is the one problematic outlier that keeps getting assigned to the not-FP-regime cluster
+dataFPsmall$FPcover_max[33]
+dataFPsmall$TOTP_avg[33]
+
+# Give that point a 0 % prob. of being in not-FP-regime cluster 
+dataFPsmall$prior_cluster1_probv3[33] <- 1
+dataFPsmall$prior_cluster2_probv3[33] <- 0
+
+# These are the initial cluster probabilities 
+dataFPsmall$prior_cluster1_probv3 
+dataFPsmall$prior_cluster2_probv3
+
+formula <- FPcover_max ~ TOTP_avg
+betareg_mix_dataFPsmall_logit_priorclust3 <- betamix(formula, link="logit", data=dataFPsmall, k = 2, nstart = 100, cluster=cbind(dataFPsmall$prior_cluster1_probv3,dataFPsmall$prior_cluster2_probv3))
+betareg_mix_dataFPsmall_logit_priorclust3
+summary(betareg_mix_dataFPsmall_logit_priorclust3) 
+logLik(betareg_mix_dataFPsmall_logit_priorclust3) 
+AIC(betareg_mix_dataFPsmall_logit_priorclust3) 
+clusters(betareg_mix_dataFPsmall_logit_priorclust3) 
+
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFPsmall$beta_logit_cluster_prior_clusterv3 <- rep(NA, nrow(dataFPsmall))
+dataFPsmall_TOTP <- subset(dataFPsmall, dataFPsmall$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFPsmall_noTOTP <- subset(dataFPsmall, is.na(dataFPsmall$TOTP_avg)) # and waterbodies w/o TOTP
+dataFPsmall_TOTP$beta_logit_cluster_prior_clusterv3<-clusters(betareg_mix_dataFPsmall_logit_priorclust3) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFPsmall <- merge(dataFPsmall_TOTP,dataFPsmall_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFPsmall_TOTP,dataFPsmall_noTOTP)
+
+# plot 
+dataFPsmall_beta_logit_cluster_prior_clusterv3_plot <- ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_cluster_prior_clusterv3),shape=factor(beta_logit_cluster_prior_clusterv3))) + geom_point(size=3) 
+dataFPsmall_beta_logit_cluster_prior_clusterv3_plot <- dataFPsmall_beta_logit_cluster_prior_clusterv3_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_cluster_prior_clusterv3))) 
+dataFPsmall_beta_logit_cluster_prior_clusterv3_plot <- dataFPsmall_beta_logit_cluster_prior_clusterv3_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFPsmall_beta_logit_cluster_prior_clusterv3_plot <- dataFPsmall_beta_logit_cluster_prior_clusterv3_plot + ggtitle("dataFPsmall - logit link")
+dataFPsmall_beta_logit_cluster_prior_clusterv3_plot <- dataFPsmall_beta_logit_cluster_prior_clusterv3_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFPsmall_beta_logit_cluster_prior_clusterv3_plot <- dataFPsmall_beta_logit_cluster_prior_clusterv3_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFPsmall_beta_logit_cluster_prior_clusterv3_plot <- dataFPsmall_beta_logit_cluster_prior_clusterv3_plot + theme_classic(base_size=18)
+dataFPsmall_beta_logit_cluster_prior_clusterv3_plot
+
+# save the plot 
+ggsave(file="dataFPsmall_beta_logit_cluster_prior_clusterv3_plot.jpg", dataFPsmall_beta_logit_cluster_prior_clusterv3_plot, height=8,width=11)
+
 
 ####################### 
 # Beta regression     #
