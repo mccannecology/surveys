@@ -176,12 +176,14 @@ for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actua
 mse <- as.numeric(mse) # converts list to numeric 
 breakpoint03<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
 breakpoint03 # 0.03004
+breakpoint<-breakpoint03
+breakpoint
 
 # Add new variables to the data frame just for plotting the segmented data in ggplot2
 # segmented data: TOTP_avg < breakpoint02 and TOTP_avg >= breakpoint03
 dataFP$breakpoint03 <- ifelse(dataFP$TOTP_avg <= breakpoint03, "below", "above")
 
-segmented.glmFPsmallTOTPbinomial_low_est <- glm(FPcover_low_est ~ TOTP_avg*(TOTP_avg<breakpoint03) + TOTP_avg*(TOTP_avg>=breakpoint03), family=binomial, data=dataFP)
+segmented.glmFPsmallTOTPbinomial_low_est <- glm(FPcover_low_est ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFP)
 summary(segmented.glmFPsmallTOTPbinomial_low_est)     
 -2*logLik(segmented.glmFPsmallTOTPbinomial_low_est)[1]+2*5 # calculate the actual AIC for this model 
 rm(breaks,mse,breakpoint03,piecewise) # clean up your workspace 
@@ -308,8 +310,9 @@ breakpoint04 # 0.03004
 # segmented data: TOTP_avg < breakpoint02 and TOTP_avg >= breakpoint02 
 dataFP_noshifts$breakpoint04 <- ifelse(dataFP_noshifts$TOTP_avg <= breakpoint04, "below", "above")
 
-segmented.glmFPsmallTOTPbinomial_noshifts <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint04) + TOTP_avg*(TOTP_avg>=breakpoint04), family=binomial, data=dataFP_noshifts)
+segmented.glmFPsmallTOTPbinomial_noshifts <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFP_noshifts)
 summary(segmented.glmFPsmallTOTPbinomial_noshifts)    
+AIC(segmented.glmFPsmallTOTPbinomial_noshifts)    
 -2*logLik(segmented.glmFPsmallTOTPbinomial_noshifts)[1]+2*5 # calculate the actual AIC for this model 
 rm(breaks,mse,breakpoint03,piecewise) # clean up your workspace 
 
