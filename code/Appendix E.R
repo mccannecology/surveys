@@ -416,19 +416,6 @@ appE_a2 <- appE_a2 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
 appE_a2 <- appE_a2 + theme_classic() + theme(legend.position="none")
 appE_a2
 
-appE_a3 <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
-appE_a3 <- appE_a3 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(third))) 
-appE_a3 <- appE_a3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-appE_a3 <- appE_a3 + geom_text(aes(x=0.01,y=1,label="c)"),size=7)
-appE_a3 <- appE_a3 + scale_x_log10()
-appE_a3 <- appE_a3 + theme(legend.position="none")
-y_breaks <- seq(0,1,0.25)
-y_labels <- as.character(y_breaks*100)
-appE_a3 <- appE_a3 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-appE_a3 <- appE_a3 + geom_vline(xintercept=0.01972,colour="red",size=1,linetype="longdash") # add vertical line @ lower threshold value 
-appE_a3 <- appE_a3 + geom_vline(xintercept=0.2085,colour="red",size=1,linetype="longdash") # add vertical line @ upper threshold value 
-appE_a3 
-
 appE_a3 <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_clusterv3))) + stat_smooth(method=glm, family=binomial, se=F) + geom_point(size=2) 
 appE_a3 <- appE_a3 + scale_shape_manual(values=c(1,19),name="Cluster")
 appE_a3 <- appE_a3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")

@@ -87,6 +87,9 @@ vrs03 <- (sum(cl.res03$withinss) / (n03-1)) / var(dataFPsmall$FPcover_max) # 0.1
 wvrs03 <- (sum(cl.res03$withinss / cl.res03$size) / 2) / ( ((n03-1)/n03) * var(dataFPsmall$FPcover_max)) # 0.1082916
 groups03 <- cl.res03$cluster
 
+vrs03
+wvrs03
+
 ###############################################################################################
 # K-MEANS CLUSTERING - determining optimal number of clusters 
 ###############################################################################################
