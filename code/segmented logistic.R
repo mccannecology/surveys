@@ -420,11 +420,59 @@ rm(breaks,mse,breakpoint,piecewise) # clean up your workspace
 
 
 ############################################ OLD STUFF #################################################3
+#################################
+# segmented logistic regression #
+# with package: segmented       #
+# dataFP                        #
+#################################
+library(segmented)
+
+segmented_glm_dataFP_binomial_logit <- segmented(glm_dataFP_binomial_logit, seg.Z=~TOTP_avg, psi=list(TOTP_avg=c(0.05)), data = dataFP)
+summary(segmented_glm_dataFP_binomial_logit)
+
+# U1.TOTP_avg is not the slop of the second segment 
+# it is the difference in slopes between the 1st and 2nd segments 
+
+# so instead, you need to extract these manually: 
+slope(segmented_glm_dataFP_binomial_logit)
+intercept(segmented_glm_dataFP_binomial_logit)
+
+# You have to manually enter the breakpoint from the summary here 
+breakpoint01 <- 0.019700
+# manually definte slope & intercept for 1st line 
+intercept01 <- -10.040
+slope01 <-  437.500
+# manually definte slope & intercept for 2nd line 
+intercept02 <- -1.548
+slope02 <- 6.265
+
+# define the functions that will be used to plot this on a ggplot2 object
+# Make these functions not return any values if they are outside of the range specified by the breakpoint 
+segment1 <- function(x) ifelse(x<breakpoint, (100 * (exp(intercept01 + slope01*x)) / (1 + exp(intercept01 + slope01*x))), NA)
+segment2 <- function(x) ifelse(x>=breakpoint, (100 * (exp(intercept02 + slope02*x)) / (1 + exp(intercept02 + slope02*x))), NA)
+
+# need a function that plots the SE for this line 
+
+# model fit
+AIC(segmented.glmFPsmallTOTPbinomial)
+
+# Add new variables to the data frame just for plotting the segmented data in ggplot2
+# segmented data: TOTP_avg < breakpoint01 and TOTP_avg >= breakpoint01 
+dataFPsmall$breakpoint01 <- ifelse(dataFPsmall$TOTP_avg <= breakpoint01, "below", "above")
+
+stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint01)))
+
+
+
+
 
 #################################
 # segmented logistic regression #
 # with package: segmented       #
+# data FPsmall                  #
 #################################
+library(segmented)
+
 segmented.glmFPsmallTOTPbinomial <- segmented(glmFPsmallTOTPbinomial, seg.Z=~TOTP_avg, psi=list(TOTP_avg=c(0.05)), data = dataFPsmall)
 summary(segmented.glmFPsmallTOTPbinomial)
 
