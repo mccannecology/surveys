@@ -350,7 +350,19 @@ dataFP_TOTP$beta_logit_cluster_prior_clusterv3<-clusters(betareg_mix_dataFP_logi
 dataFP <- merge(dataFP_TOTP,dataFP_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
 rm(dataFP_TOTP,dataFP_noTOTP)
 
-# plot 
+# plot - with standard errors
+dataFP_beta_logit_cluster_prior_clusterv3_plot <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_cluster_prior_clusterv3),shape=factor(beta_logit_cluster_prior_clusterv3))) + geom_point(size=3) 
+dataFP_beta_logit_cluster_prior_clusterv3_plot <- dataFP_beta_logit_cluster_prior_clusterv3_plot + stat_smooth(method=glm, family=binomial, se=T,aes(fill=factor(beta_logit_cluster_prior_clusterv3))) 
+dataFP_beta_logit_cluster_prior_clusterv3_plot <- dataFP_beta_logit_cluster_prior_clusterv3_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+dataFP_beta_logit_cluster_prior_clusterv3_plot <- dataFP_beta_logit_cluster_prior_clusterv3_plot + ggtitle("dataFP - logit link")
+dataFP_beta_logit_cluster_prior_clusterv3_plot <- dataFP_beta_logit_cluster_prior_clusterv3_plot + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+dataFP_beta_logit_cluster_prior_clusterv3_plot <- dataFP_beta_logit_cluster_prior_clusterv3_plot + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+dataFP_beta_logit_cluster_prior_clusterv3_plot <- dataFP_beta_logit_cluster_prior_clusterv3_plot + theme_classic(base_size=18)
+dataFP_beta_logit_cluster_prior_clusterv3_plot
+
+# plot - without standard errors
 dataFP_beta_logit_cluster_prior_clusterv3_plot <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,colour=factor(beta_logit_cluster_prior_clusterv3),shape=factor(beta_logit_cluster_prior_clusterv3))) + geom_point(size=3) 
 dataFP_beta_logit_cluster_prior_clusterv3_plot <- dataFP_beta_logit_cluster_prior_clusterv3_plot + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(beta_logit_cluster_prior_clusterv3))) 
 dataFP_beta_logit_cluster_prior_clusterv3_plot <- dataFP_beta_logit_cluster_prior_clusterv3_plot + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")

@@ -51,6 +51,8 @@ formula <- FPcover_max ~ TOTP_avg
 glm_dataFP_binomial_logit <- glm(formula, data=dataFP, family=binomial(link=logit))
 summary(glm_dataFP_binomial_logit)
 logLik(glm_dataFP_binomial_logit)
+plot(glm_dataFP_binomial_logit)
+plot(glm_dataFP_binomial_logit$fitted) # plots the residuals
 AIC(glm_dataFP_binomial_logit)
 
 # plot fitted model 

@@ -90,6 +90,7 @@ plot(predict(betareg_dataONEperpondoutliers_logit_vardisp, type="precision") ~ s
 formula <- FPcover_max ~ TOTP_avg | TOTP_avg
 betareg_dataFP_logit_vardisp <- betareg(formula, data=dataFP, link="logit")
 summary(betareg_dataFP_logit_vardisp) 
+plot(betareg_dataFP_logit_vardisp)
 AIC(betareg_dataFP_logit_vardisp) 
 # works
 
