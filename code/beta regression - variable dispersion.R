@@ -104,6 +104,39 @@ lines(subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),betareg_dataFP_logit_vardisp$f
 # plot the variable dispersion
 plot(predict(betareg_dataFP_logit_vardisp, type="precision") ~ subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),xlab="Total P (mg/L)",ylab="Precision (phi)",log="x")
 
+###############################
+# Beta regression             #
+# dataFP                      #
+# link: logit                 #
+# Variable dispersion         #
+# null model                  #
+###############################
+formula <- FPcover_max ~ 1 | 1
+betareg_dataFP_null <- betareg(formula, data=dataFP)
+summary(betareg_dataFP_null) 
+plot(betareg_dataFP_null)
+AIC(betareg_dataFP_null) 
+
+## McFadden’s pseudo-R-squared
+1 - as.vector(logLik(betareg_dataFP_null)/logLik(betareg_dataFP_logit_vardisp))
+
+###############################
+# Beta regression             #
+# dataFP                      #
+# link: logit                 #
+# Variable dispersion         #
+# version 2                   #
+# logit transform FPcover_max #
+###############################
+formula <- log(FPcover_max/(1-FPcover_max)) ~ TOTP_avg | TOTP_avg
+betareg_dataFP_logit_transformed_vardisp <- betareg(formula, data=dataFP, link="logit")
+summary(betareg_dataFP_logit_transformed_vardisp) 
+plot(betareg_dataFP_logit_transformed_vardisp)
+AIC(betareg_dataFP_logit_transformed_vardisp) 
+
+
+
+
 ####################### 
 # Beta regression     #
 # dataFPsmall         #

@@ -59,7 +59,31 @@ AIC(glm_dataFP_binomial_logit)
 plot(dataFP$FPcover_max ~ dataFP$TOTP_avg,main="dataFP",xlab="Total P (mg/L)",ylab="FP cover",log="x")
 lines(subset(dataFP$TOTP_avg, dataFP$TOTP_avg >0),glm_dataFP_binomial_logit$fitted,type="p",col="red")
 
-# add ggplot
+####################### 
+# Logistic Regression #
+# dataFP              #
+# null model          #
+#######################
+formula <- FPcover_max ~ 1
+glm_dataFP_binomial_null <- glm(formula, data=dataFP, family=binomial(link=logit))
+summary(glm_dataFP_binomial_null)
+AIC(glm_dataFP_binomial_null)
+
+## McFadden’s pseudo-R-squared
+1 - as.vector(logLik(glm_dataFP_binomial_null)/logLik(glm_dataONEperpond_binomial_logit))
+
+######################################## 
+# Logistic Regression                  #
+# dataFP                               #
+# manually logit transform FPcover_max #
+# then do a regular linear regression  #
+########################################
+formula <- log(FPcover_max/(1-FPcover_max)) ~ TOTP_avg
+dataFP_logistic_v2 <- lm(formula, data=dataFP)
+summary(dataFP_logistic_v2)
+AIC(dataFP_logistic_v2)
+fitted(dataFP_logistic_v2) # fitted values on the logit scale 
+exp(fitted(dataFP_logistic_v2))/(1+exp(fitted(dataFP_logistic_v2))) # reverse transform the fitted values back to the 0,1 scale 
 
 ####################### 
 # Logistic Regression #

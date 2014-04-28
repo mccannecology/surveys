@@ -381,6 +381,45 @@ mean(subset(dataFP$FPcover_max, dataFP$beta_logit_cluster_prior_clusterv3 == 2))
 # save the plot 
 ggsave(file="dataFP_beta_logit_cluster_prior_clusterv3_plot.jpg", dataFP_beta_logit_cluster_prior_clusterv3_plot, height=8,width=11)
 
+
+######################## 
+# Beta regression      #
+# Mixed model          #
+# dataFP               #
+# initial cluster prob #
+# link: logit          #
+# Constant dispersion  #
+# version 3            #
+# null model           #
+########################
+# create the matrix for initial cluster probabilities 
+dataFP$prior_cluster1_probv3 <- sqrt(dataFP$FPcover_max)
+dataFP$prior_cluster2_probv3 <- 1-sqrt(dataFP$FPcover_max)
+
+# This is the one problematic outlier that keeps getting assigned to the not-FP-regime cluster
+dataFP$FPcover_max[64]
+dataFP$TOTP_avg[64]
+
+# Give that point a 0 % prob. of being in not-FP-regime cluster 
+dataFP$prior_cluster1_probv3[64] <- 1
+dataFP$prior_cluster2_probv3[64] <- 0
+
+# These are the initial cluster probabilities 
+dataFP$prior_cluster1_probv3 
+dataFP$prior_cluster2_probv3
+
+formula <- FPcover_max ~ 1
+betareg_mix_dataFP_logit_priorclust3_null <- betamix(formula, link="logit", data=dataFP, k = 2, nstart = 100, cluster=cbind(dataFP$prior_cluster1_probv3,dataFP$prior_cluster2_probv3))
+betareg_mix_dataFP_logit_priorclust3_null
+summary(betareg_mix_dataFP_logit_priorclust3_null) 
+logLik(betareg_mix_dataFP_logit_priorclust3_null) 
+AIC(betareg_mix_dataFP_logit_priorclust3_null) 
+
+
+## McFadden’s pseudo-R-squared
+1 - as.vector(logLik(betareg_mix_dataFP_logit_priorclust3_null)/logLik(betareg_mix_dataFP_logit_priorclust3))
+
+
 ####################### 
 # Beta regression     #
 # Mixed model         #
