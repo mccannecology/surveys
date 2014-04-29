@@ -31,8 +31,42 @@ lines(dataFP$TOTP_avg,betareg_dataFP_logit_null$fitted,type="p",col="red")
 # Real model: with TOTP included 
 betareg_dataFP_logit <- betareg(FPcover_max ~ TOTP_avg, data=dataFP, link="logit")
 summary(betareg_dataFP_logit)
+betareg_dataFP_logit$fitted
 logLik(betareg_dataFP_logit)
 AIC(betareg_dataFP_logit)
+
+# add the fitted values to my original data set for plotting 
+# will need to work around NAs 
+Fig3data <- cbind(dataFP$TOTP_avg,dataFP$FPcover_max)
+Fig3data <- Fig3data[complete.cases(Fig3data),]
+Fig3data <- cbind(Fig3data,betareg_dataFP_logit$fitted)
+Fig3data <- as.data.frame(Fig3data)
+names(Fig3data) <- c("TOTP_avg","FPcover_max","fitted")
+Fig3data
+
+####################### 
+# Beta regression     #
+# poly(TOTP)          # 
+# dataFP              #
+# link: logit         #
+# Constant dispersion #
+#######################
+# remove missing values 
+# set-up a little temporary data frame for holding things 
+temp <- cbind(dataFP$TOTP_avg, dataFP$FPcover_max)
+temp <- temp[complete.cases(temp),]
+temp <- as.data.frame(temp)
+names(temp) <- c("TOTP_avg","FPcover_max")
+
+# Real model: with TOTP included 
+betareg_dataFP_logit_poly <- betareg(FPcover_max ~ poly(TOTP_avg,degree=3), data=temp, link="logit")
+summary(betareg_dataFP_logit_poly)
+logLik(betareg_dataFP_logit_poly)
+AIC(betareg_dataFP_logit_poly)
+
+# plot it 
+plot(temp$FPcover_max ~ temp$TOTP_avg,main="dataFP",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(temp$TOTP_avg,betareg_dataFP_logit_poly$fitted,type="p",col="red")
 
 ####################### 
 # Beta regression     #
@@ -61,7 +95,6 @@ betareg_dataFP_logit_vardisp <- betareg(formula, data=dataFP, link="logit")
 summary(betareg_dataFP_logit_vardisp) 
 plot(betareg_dataFP_logit_vardisp)
 AIC(betareg_dataFP_logit_vardisp) 
-# works
 
 # arrange the plots 
 par(mfrow=c(2,1))
@@ -77,6 +110,21 @@ plot(predict(betareg_dataFP_logit_vardisp, type="precision") ~ dataFP$TOTP_avg,x
 # Am I better off including TOTP in my model? 
 # McFadden’s pseudo-R-squared
 1 - as.vector(logLik(betareg_dataFP_vardisp_null)/logLik(betareg_dataFP_logit_vardisp))
+
+####################### 
+# Beta regression     #
+# poly(TOTP)          #
+# dataFP              #
+# link: logit         #
+# Variable dispersion #
+#######################
+# Real model: 
+formula <- FPcover_max ~ poly(TOTP_avg,degree=2) | TOTP_avg
+betareg_dataFP_logit_vardisp_poly <- betareg(formula, data=temp, link="logit")
+summary(betareg_dataFP_logit_vardisp_poly) 
+logLik(betareg_dataFP_logit_vardisp_poly) 
+plot(betareg_dataFP_logit_vardisp)
+AIC(betareg_dataFP_logit_vardisp) 
 
 ###################################
 # Beta regression                 #

@@ -24,7 +24,6 @@ a1 <- a1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)") # label axes
 a1 <- a1 + geom_text(aes(x=0.01,y=100,label="a)"),size=7) # add pane label
 a1 <- a1 + theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) # remove x-axis values & ticks
 a1 <- a1 + theme_classic(base_size=18)
-a1 <- a1 + theme(axis.title.x=element_blank()) 
 a1
 
 ################
@@ -40,7 +39,7 @@ a2 <- a2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)") # label axes
 a2 <- a2 + geom_text(aes(x=0.01,y=100,label="b)"),size=7) # add pane label 
 a2 <- a2 + theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) # remove x-axis values & ticks
 a2 <- a2 + theme_classic(base_size=18)
-a2 <- a2 + theme(axis.title.x=element_blank()) + theme(axis.title.y=element_blank())
+a2 <- a2 + theme(axis.title.y=element_blank())
 a2
 
 ################
@@ -58,7 +57,7 @@ a3 <- a3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)") # label axes
 a3 <- a3 + geom_text(aes(x=0.01,y=100,label="c)"),size=7) # add pane label 
 a3 <- a3 + theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) # remove x-axis values & ticks
 a3 <- a3 + theme_classic(base_size=18)
-a3 <- a3 + theme(axis.title.x=element_blank()) + theme(axis.title.y=element_blank())
+a3 <- a3 + theme(axis.title.y=element_blank())
 a3
 
 
@@ -178,8 +177,8 @@ b3
 ###################
 # ARRANGING PLOTS #
 ###################
-Fig01 <- arrangeGrob(a1,a2,a3,b1,b2,b3,ncol=3,nrow=2) #grid.arrange does not work with ggsave()
+Fig01 <- arrangeGrob(a1,a2,a3,ncol=3,nrow=1) #grid.arrange does not work with ggsave()
 Fig01
-ggsave(file="Figure 01.pdf", Fig01, height=8,width=11)
-ggsave(file="Figure 01.png", Fig01, height=8,width=11)
-ggsave(file="Figure 01.jpg", Fig01, height=8,width=11)
+ggsave(file="Figure 01.pdf", Fig01, height=4,width=11)
+ggsave(file="Figure 01.png", Fig01, height=4,width=11)
+ggsave(file="Figure 01.jpg", Fig01, height=4,width=11)
