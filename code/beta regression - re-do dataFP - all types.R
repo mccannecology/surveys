@@ -44,9 +44,38 @@ Fig3data <- as.data.frame(Fig3data)
 names(Fig3data) <- c("TOTP_avg","FPcover_max","fitted")
 Fig3data
 
+# plot it 
+plot(dataFP$FPcover_max ~ dataFP$TOTP_avg,main="dataFP",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(dataFP$TOTP_avg,betareg_dataFP_logit$fitted,type="p",col="red")
+
+
 ####################### 
 # Beta regression     #
-# poly(TOTP)          # 
+# dataFP              #
+# link: logit         #   # I don't understand why the fitted valeus are just a straight, flat line
+# Constant dispersion #
+# logistic FP~P       #
+#######################
+# remove missing values 
+# set-up a little temporary data frame for holding things 
+temp <- cbind(dataFP$TOTP_avg, dataFP$FPcover_max)
+temp <- temp[complete.cases(temp),]
+temp <- as.data.frame(temp)
+names(temp) <- c("TOTP_avg","FPcover_max")
+
+betareg_dataFP_logit_logistic <- betareg(FPcover_max ~ (1/(1+exp(-TOTP_avg))), data=temp, link="identity")
+summary(betareg_dataFP_logit_logistic)
+betareg_dataFP_logit_logistic$fitted
+logLik(betareg_dataFP_logit_logistic)
+AIC(betareg_dataFP_logit_logistic)
+
+# plot it 
+plot(temp$FPcover_max ~ temp$TOTP_avg,main="dataFP",xlab="Total P (mg/L)",ylab="FP cover",log="x")
+lines(temp$TOTP_avg,betareg_dataFP_logit_logistic$fitted,type="p",col="red")
+
+####################### 
+# Beta regression     #
+# poly(TOTP) degree 3 # 
 # dataFP              #
 # link: logit         #
 # Constant dispersion #
