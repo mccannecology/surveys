@@ -232,11 +232,11 @@ dataFP$breakpoint_beta <- ifelse(dataFP$TOTP_avg <= breakpoint, "below", "above"
 rm(breaks,LOGLIKE,breakpoint,piecewise) # clean up your workspace 
 
 
-#########################
-# Structural change     #
-# in beta reg paramters #
-# dataPF                #
-#########################
+##########################
+# Structural change      #
+# in beta reg parameters #
+# dataPF                 #
+##########################
 # this works... but I'm not sure if it tells me anything 
 # Parameters don't cross a red line 
 # in fact, red line is not even present 
@@ -244,8 +244,16 @@ library("strucchange")
 stucchange_beta_dataFP <- gefp(FPcover_max ~ TOTP_avg, fit=betareg, data=dataFP)
 summary(stucchange_beta_dataFP)
 plot(stucchange_beta_dataFP,aggregate=FALSE)
+plot(stucchange_beta_dataFP,aggregate=FALSE,ylim=c(-2,2)) # helps see the boundaries a little better 
+sctest(stucchange_beta_dataFP) # structural change test 
+# p = 0.1542 - fall to reject the null hypothesis - no structural change 
+
+
+
 
 # try see if the parameters are stable across water body surface area 
+# This does not work 
+# Error in psi[index, , drop = FALSE] : subscript out of bounds
 stucchange_beta_dataFP <- gefp(FPcover_max ~ TOTP_avg, fit=betareg, data=dataFP, order.by = dataFP$surfacearea_ha)
 summary(stucchange_beta_dataFP)
 plot(stucchange_beta_dataFP,aggregate=FALSE)

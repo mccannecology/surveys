@@ -21,7 +21,14 @@ summary(segmented_beta_dataONEperpond_logit_vardisp)
 AIC(segmented_beta_dataONEperpond_logit_vardisp) 
 
 
+######################
+# Package: Segmented #
+######################
+library(segmented)
 
+# here is the beta regression object that I want to segment 
+betareg_dataFP_logit
 
+segmented(betareg_dataFP_logit, seg.Z=~TOTP_avg, psi=list(TOTP_avg=c(0.05)), data = dataFPsmall)
 
 

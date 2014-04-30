@@ -1,18 +1,29 @@
 ##############################################
 # ANALYSIS OF CT & LI DUCKWEED SURVEY DATA   #
 # Threshold & breakpoint detection           #
-# UPDATED: 02/25/2014 by MJ McCann           #
+# UPDATED: 04/30/2014 by MJ McCann           #
 ##############################################
 
 library(strucchange)
 library(changepoint)
+library(tree)
 
 ############################################################################################### 
 # Package: tree 
 ###############################################################################################
+# This approach is dumb
+# tree() will always find a split! 
+
 # threshold, with package: tree 
 treeFPsmallTOTP <- tree(dataFPsmall$FPcover_max ~ dataFPsmall$TOTP_avg)
 treeFPsmallTOTP
+
+# threshold, with package: tree 
+treeFPTOTP <- tree(dataFP$FPcover_max ~ dataFP$TOTP_avg)
+treeFPTOTP
+plot(treeFPTOTP)
+text(treeFPTOTP)
+
 
 ############################################################################################### 
 # Package: strucchange 
