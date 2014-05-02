@@ -211,6 +211,31 @@ logLik(betareg_mix_dataFP_logit_priorcluster)
 AIC(betareg_mix_dataFP_logit_priorcluster) 
 clusters(betareg_mix_dataFP_logit_priorcluster) 
 
+# add cluster assignments to the original data frame 
+# need to deal with the fact that there are 6 missing values of TotP
+dataFP$betareg_mix_dataFP_logit_priorcluster <- rep(NA, nrow(dataFP))
+dataFP_TOTP <- subset(dataFP, dataFP$TOTP_avg > 0) # split the dataframe into waterbodies w/ TOTP
+dataFP_noTOTP <- subset(dataFP, is.na(dataFP$TOTP_avg)) # and waterbodies w/o TOTP
+dataFP_TOTP$betareg_mix_dataFP_logit_priorcluster<-clusters(betareg_mix_dataFP_logit_priorcluster) # add cluster identities to the data.frame of waterbodies w/ TOTP
+dataFP <- merge(dataFP_TOTP,dataFP_noTOTP,all.x=T,all.y=T) # add the dataframes back together 
+rm(dataFP_TOTP,dataFP_noTOTP)
+
+# convert the phi estimates back to the original scale 
+# component 1
+# phi -0.34274
+exp(-0.34274)
+# SE 0.99712
+
+# component 2
+# phi 3.68594
+exp(3.68594)
+# SE 0.49193
+
+
+# Get the means of each cluster 
+mean(subset(dataFP$FPcover_max, dataFP$betareg_mix_dataFP_logit_priorcluster == 1))
+mean(subset(dataFP$FPcover_max, dataFP$betareg_mix_dataFP_logit_priorcluster == 2))
+
 # The null model 
 formula <- FPcover_max ~ 1
 betareg_mix_dataFP_logit_priorcluster_null <- betamix(formula, link="logit", data=dataFP, k = 2, nstart = 100, cluster=cbind(dataFP$prior_cluster1,dataFP$prior_cluster2))
