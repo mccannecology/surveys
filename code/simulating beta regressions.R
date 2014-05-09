@@ -91,6 +91,142 @@ for (i in 1:length(a)) {
 
 # plot it  
 plot(temp[,1],temp[,2],log="x",ylim=c(0,1))
+plot(temp[,1],temp[,2],ylim=c(0,1))
+
+#################################
+# with a slope 
+# very high percision 
+# this might not be the best slope
+# it should probably hit a ceiling before TOTP ~ 0.5 
+# 
+# X values don't match my TOTAL P values 
+#################################
+xvalues <- seq(0.01,1.5,0.01)
+
+# this is the slope of the line 
+m = (max(xvalues,na.rm=T) - min(xvalues,na.rm=T)) / 
+  (max(xvalues,na.rm=T) - min(xvalues,na.rm=T))
+intercept = min(xvalues,na.rm=T) # this is the intercept of the line 
+
+phi = 100
+mu <- rep(0,length(xvalues)) # make a blank vector of mu
+
+# fill it will approprate mu values based on the regression on TOTP 
+for (i in 1:length(mu)) {
+  mu[i] <- m*xvalues[i] + intercept 
+}
+
+# make a blank vector of a and b
+a <- rep(0,length(xvalues))
+b <- rep(0,length(xvalues))
+
+# figure out the a and b for each mu 
+for (i in 1:length(a)) {
+  a[i] <- mu[i] * phi 
+  b[i] <- (-mu[i]*phi) + phi
+}
+
+# generate the random betas with each mu valuae 
+temp <- matrix(rep(0,2*length(xvalues)),ncol=2)
+for (i in 1:length(a)) {
+  temp[i,1] <- xvalues[i]
+  temp[i,2] <- rbeta(1,a[i],b[i])
+}
+
+# plot it  
+plot(temp[,1],temp[,2],log="x",ylim=c(0,1),xlab="Predictor variable",ylab="Resposne variable")
+plot(temp[,1],temp[,2],xlim=c(0,1),ylim=c(0,1),xlab="Predictor variable",ylab="Resposne variable")
+
+
+
+#################################
+# with a slope 
+# low percision 
+# this might not be the best slope
+# it should probably hit a ceiling before TOTP ~ 0.5 
+# 
+# X values don't match my TOTAL P values 
+#################################
+xvalues <- seq(0.01,1,0.01)
+
+# this is the slope of the line 
+m = (max(xvalues,na.rm=T) - min(xvalues,na.rm=T)) / 
+  (max(xvalues,na.rm=T) - min(xvalues,na.rm=T))
+intercept = min(xvalues,na.rm=T) # this is the intercept of the line 
+
+phi = 10
+mu <- rep(0,length(xvalues)) # make a blank vector of mu
+
+# fill it will approprate mu values based on the regression on TOTP 
+for (i in 1:length(mu)) {
+  mu[i] <- m*xvalues[i] + intercept 
+}
+
+# make a blank vector of a and b
+a <- rep(0,length(xvalues))
+b <- rep(0,length(xvalues))
+
+# figure out the a and b for each mu 
+for (i in 1:length(a)) {
+  a[i] <- mu[i] * phi 
+  b[i] <- (-mu[i]*phi) + phi
+}
+
+# generate the random betas with each mu valuae 
+temp <- matrix(rep(0,2*length(xvalues)),ncol=2)
+for (i in 1:length(a)) {
+  temp[i,1] <- xvalues[i]
+  temp[i,2] <- rbeta(1,a[i],b[i])
+}
+
+# plot it  
+plot(temp[,1],temp[,2],log="x",ylim=c(0,1),xlab="Predictor variable",ylab="Response variable")
+plot(temp[,1],temp[,2],xlim=c(0,1),ylim=c(0,1),xlab="Predictor variable",ylab="Response variable")
+
+
+#################################
+# with a slope 
+# very low percision 
+# this might not be the best slope
+# it should probably hit a ceiling before TOTP ~ 0.5 
+# 
+# X values don't match my TOTAL P values 
+#################################
+xvalues <- seq(0.01,1,0.01)
+
+# this is the slope of the line 
+m = (max(xvalues,na.rm=T) - min(xvalues,na.rm=T)) / 
+  (max(xvalues,na.rm=T) - min(xvalues,na.rm=T))
+intercept = min(xvalues,na.rm=T) # this is the intercept of the line 
+
+phi = 1
+mu <- rep(0,length(xvalues)) # make a blank vector of mu
+
+# fill it will approprate mu values based on the regression on TOTP 
+for (i in 1:length(mu)) {
+  mu[i] <- m*xvalues[i] + intercept 
+}
+
+# make a blank vector of a and b
+a <- rep(0,length(xvalues))
+b <- rep(0,length(xvalues))
+
+# figure out the a and b for each mu 
+for (i in 1:length(a)) {
+  a[i] <- mu[i] * phi 
+  b[i] <- (-mu[i]*phi) + phi
+}
+
+# generate the random betas with each mu valuae 
+temp <- matrix(rep(0,2*length(xvalues)),ncol=2)
+for (i in 1:length(a)) {
+  temp[i,1] <- xvalues[i]
+  temp[i,2] <- rbeta(1,a[i],b[i])
+}
+
+# plot it  
+plot(temp[,1],temp[,2],log="x",ylim=c(0,1),xlab="Predictor variable",ylab="Response variable")
+plot(temp[,1],temp[,2],xlim=c(0,1),ylim=c(0,1),xlab="Predictor variable",ylab="Response variable")
 
 #################################
 # with a slope 
@@ -133,6 +269,7 @@ for (i in 1:length(a)) {
 
 # plot it  
 plot(temp[,1],temp[,2],log="x",ylim=c(0,1))
+plot(temp[,1],temp[,2],ylim=c(0,1))
 
 #################################
 # with a slope 
