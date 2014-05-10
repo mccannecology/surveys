@@ -20,7 +20,7 @@ dataFP$FPcover_max_percent <- dataFP$FPcover_max*100
 # with color 
 Fig3a <- ggplot(data=Fig3data, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
 Fig3a <- Fig3a + geom_line(aes(x=TOTP_avg,y=fitted),colour="blue",size=1)
-Fig3a <- Fig3a + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
+Fig3a <- Fig3a + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
 Fig3a <- Fig3a + geom_text(aes(x=0.0075,y=1,label="a)"),size=7)
 Fig3a <- Fig3a + scale_x_log10() 
 y_breaks <- seq(0,1,0.25)
@@ -42,7 +42,7 @@ dataFP_beta_logit_cluster_prior_clusterv3_plot
 # With color 
 Fig3b <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_clusterv3))) + stat_smooth(method=glm, family=binomial, se=F,colour="blue",size=1) + geom_point(size=2) 
 Fig3b <- Fig3b + scale_shape_manual(values=c(1,19),name="Cluster")
-Fig3b <- Fig3b + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
+Fig3b <- Fig3b + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
 Fig3b <- Fig3b + geom_text(aes(x=0.0075,y=1,label="b)"),size=7)
 Fig3b <- Fig3b + scale_x_log10()
 y_breaks <- seq(0,1,0.25)
@@ -57,7 +57,7 @@ Fig3b
 # black and white 
 Fig3b <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_clusterv3))) + stat_smooth(method=glm, family=binomial, se=F, colour="black",size=1) + geom_point(size=2) 
 Fig3b <- Fig3b + scale_shape_manual(values=c(1,19),name="Cluster")
-Fig3b <- Fig3b + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
+Fig3b <- Fig3b + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
 Fig3b <- Fig3b + geom_text(aes(x=0.0075,y=1,label="f)"),size=7)
 Fig3b <- Fig3b + scale_x_log10()
 y_breaks <- seq(0,1,0.25)

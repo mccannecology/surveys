@@ -15,6 +15,21 @@ dataFPsmall$FPcover_max_percent <- dataFPsmall$FPcover_max*100
 # Surfacea area  #
 # dataFP         #
 ##################
+JASM_SA2 <-ggplot(data=dataFP, aes(x=surfacearea_ha,y=FPcover_max_percent)) + geom_point(size=3) 
+JASM_SA2 <- JASM_SA2 + ylab("Floating plant cover (%)") 
+JASM_SA2 <- JASM_SA2 + xlab("Surface area (ha)")
+JASM_SA2 <- JASM_SA2 + theme_classic(base_size=18)
+JASM_SA2
+ggsave(file="JASM_SA2.jpg", JASM_SA2, height=5,width=5)
+
+
+JASM_SA3 <-ggplot(data=dataFP, aes(x=surfacearea_ha,y=FPcover_max_percent)) + geom_point(size=3) 
+JASM_SA3 <- JASM_SA3 + scale_x_log10()
+JASM_SA3 <- JASM_SA3 + ylab("Floating plant cover (%)") 
+JASM_SA3 <- JASM_SA3 + xlab("Surface area (ha)")
+JASM_SA3 <- JASM_SA3 + theme_classic(base_size=18)
+JASM_SA3
+
 JASM_SA <-ggplot(data=dataFP, aes(x=surfacearea_ha,y=FPcover_max_percent)) + geom_point(size=3) 
 JASM_SA <- JASM_SA + scale_x_log10()
 JASM_SA <- JASM_SA + geom_vline(xintercept = 5,colour="red",size=1,linetype="longdash") 
