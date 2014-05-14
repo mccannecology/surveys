@@ -46,78 +46,44 @@ ggsave(file="Appendix_D_Fig1.jpg", Appendix_D_Fig1, height=10,width=5)
 ##############
 
 ################
-# Fig. 1d      #
-# EMPIRICAL    #
-# "LINEAR"     #
-# (LOGISTIC)   #
+# Beta regress #
+# dataFPsmall  # 
 ################ 
+# get rid of 0s and 1s 
+dataFPsmall$FPcover_max[dataFPsmall$FPcover_max == 1] <- (1*(length(dataFPsmall$FPcover_max)-1)+0.5)/(length(dataFPsmall$FPcover_max))
+dataFPsmall$FPcover_max[dataFPsmall$FPcover_max == 0] <- (0*(length(dataFPsmall$FPcover_max)-1)+0.5)/(length(dataFPsmall$FPcover_max))
+
+library(betareg)
+
+# re-run the beta regression
 formula <- FPcover_max ~ TOTP_avg
-glm_dataFPsmall_binomial_logit <- glm(formula, data=dataFPsmall, family=binomial(link=logit))
-summary(glm_dataFPsmall_binomial_logit)
-logLik(glm_dataFPsmall_binomial_logit)
-AIC(glm_dataFPsmall_binomial_logit)
+betareg_dataFPsmall_logit <- betareg(formula, data=dataFPsmall, link="logit")
+summary(betareg_dataFPsmall_logit)
+AIC(betareg_dataFPsmall_logit)
+logLik(betareg_dataFPsmall_logit)
 
-# colour
-b1append <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
-b1append <- b1append + stat_smooth(method=glm, family=binomial, se=F)
-b1append <- b1append + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b1append <- b1append + geom_text(aes(x=0.0095,y=1,label="d)"),size=7)
-b1append <- b1append + scale_x_log10() 
+# add the fitted values to my original data set for plotting 
+# will need to work around NAs 
+AppD2_c_data <- cbind(dataFPsmall$TOTP_avg,dataFPsmall$FPcover_max)
+AppD2_c_data <- AppD2_c_data[complete.cases(AppD2_c_data),]
+AppD2_c_data <- cbind(AppD2_c_data,betareg_dataFPsmall_logit$fitted)
+AppD2_c_data <- as.data.frame(AppD2_c_data)
+names(AppD2_c_data) <- c("TOTP_avg","FPcover_max","fitted")
+AppD2_c_data
+
+# with color 
+library(ggplot2)
+AppD2_c <- ggplot(data=AppD2_data, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
+AppD2_c <- AppD2_c + geom_line(aes(x=TOTP_avg,y=fitted),colour="blue",size=1)
+AppD2_c <- AppD2_c + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+AppD2_c <- AppD2_c + geom_text(aes(x=0.0075,y=1,label="c)"),size=7)
+AppD2_c <- AppD2_c + scale_x_log10() 
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
-b1append <- b1append + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-b1append <- b1append + theme_classic(base_size=18)
-b1append 
-
-################
-# Fig. 1e      #
-# EMPIRICAL    #
-# SEGMENTED    #
-# THRESHOLD    #
-################
-# use "segmented logistic.R" first 
-# generates your breakpoint 
-# breakpoint is used below and is defined in the segmented logistic script 
-
-breaks <- dataFPsmall$TOTP_avg[which(dataFPsmall$TOTP_avg >= 0.00001 & dataFPsmall$TOTP_avg <= 0.5)]    # create a vector to hold potential breakpoints 
-
-mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
-
-for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
-  piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family=binomial(link=logit), data=dataFPsmall)
-  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
-}
-
-mse <- as.numeric(mse) # converts list to numeric 
-breakpoint<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
-breakpoint # returns the breakpoint 
-
-# re-run the glm() using this breakpoint 
-segmented_dataFPsmall_binomial_logit <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFPsmall)
-summary(segmented_dataFPsmall_binomial_logit)     
-AIC(segmented_dataFPsmall_binomial_logit) # gives you the incorrect AIC - does not account for estimating the breakpoint parameter 
-logLik(segmented_dataFPsmall_binomial_logit)
--2*logLik(segmented_dataFPsmall_binomial_logit)[1]+2*5 # calculate the actual AIC for this model 
-breakpoint
-
-# Add new variables to the data frame 
-# used to plot the segmented data in ggplot2
-dataFPsmall$breakpoint <- ifelse(dataFPsmall$TOTP_avg <= breakpoint, "below", "above")
-
-# colour
-b2append <- ggplot(data=dataFPsmall, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
-b2append <- b2append + stat_smooth(method=glm, family=binomial, se=F, aes(fill=factor(breakpoint)))
-b2append <- b2append + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b2append <- b2append + geom_text(aes(x=0.0095,y=1,label="e)"),size=7)
-b2append <- b2append + geom_vline(xintercept=breakpoint,colour="red",size=1,linetype="longdash") # add vertical line @ threshold value
-b2append <- b2append + scale_x_log10()
-b2append <- b2append + theme(legend.position="none")
-y_breaks <- seq(0,1,0.25)
-y_labels <- as.character(y_breaks*100)
-b2append <- b2append + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-b2append <- b2append + theme_classic(base_size=18) + theme(legend.position="none")
-b2append <- b2append + theme(axis.title.y=element_blank())
-b2append
+AppD2_c <- AppD2_c + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+AppD2_c <- AppD2_c + theme_classic(base_size=18)
+AppD2_c <- AppD2_c + theme(axis.title.x=element_blank())
+AppD2_c 
 
 ################
 # Fig. 1f      #
@@ -158,38 +124,33 @@ dataFPsmall <- merge(dataFPsmall_TOTP,dataFPsmall_noTOTP,all.x=T,all.y=T) # add 
 rm(dataFPsmall_TOTP,dataFPsmall_noTOTP)
 
 # colour
-b3append <- ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_clusterv3))) + stat_smooth(method=glm, family=binomial, se=F) + geom_point(size=2) 
-b3append <- b3append + scale_shape_manual(values=c(1,19),name="Cluster")
-b3append <- b3append + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-b3append <- b3append + geom_text(aes(x=0.0095,y=1,label="f)"),size=7)
-b3append <- b3append + scale_x_log10()
+AppD2_d <- ggplot(dataFPsmall,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_clusterv3))) 
+AppD2_d <- AppD2_d + stat_smooth(method=glm, family=binomial, se=F, size=1) 
+AppD2_d <- AppD2_d + geom_point(size=2) 
+AppD2_d <- AppD2_d + scale_shape_manual(values=c(1,19),name="Cluster")
+AppD2_d <- AppD2_d + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
+AppD2_d <- AppD2_d + geom_text(aes(x=0.0095,y=1,label="d)"),size=7)
+AppD2_d <- AppD2_d + scale_x_log10()
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
-b3append <- b3append + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-b3append <- b3append + geom_vline(xintercept=0.01972,colour="red",size=1,linetype="longdash") # add vertical line @ lower threshold value 
-b3append <- b3append + geom_vline(xintercept=0.2085,colour="red",size=1,linetype="longdash") # add vertical line @ upper threshold value 
-b3append <- b3append + theme_classic(base_size=18)
-b3append <- b3append + theme(legend.position=c(0.95,0.2))
-b3append <- b3append + theme(axis.title.y=element_blank())
-b3append 
+AppD2_d <- AppD2_d + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+AppD2_d <- AppD2_d + geom_vline(xintercept=0.01972,colour="red",size=1,linetype="longdash") # add vertical line @ lower threshold value 
+AppD2_d <- AppD2_d + geom_vline(xintercept=0.2085,colour="red",size=1,linetype="longdash") # add vertical line @ upper threshold value 
+AppD2_d <- AppD2_d + theme_classic(base_size=18)
+AppD2_d <- AppD2_d + theme(legend.position=c(0.95,0.2))
+AppD2_d <- AppD2_d + theme(axis.title.y=element_blank())
+AppD2_d 
 
 ###################
 # ARRANGING PLOTS #
 ###################
 # original plots 
-appE_a1
-appE_a2
-appE_a3
-
-# or 
-
-appD_a1
-appD_a2
-appD_a3
+AppD2_a <- Fig3a
+AppD2_b <- Fig3b 
 
 
-Appendix_D_Fig2 <- arrangeGrob(appD_a1,appD_a2,appD_a3,b1append,b2append,b3append,ncol=3,nrow=2) #grid.arrange does not work with ggsave()
+Appendix_D_Fig2 <- arrangeGrob(AppD2_a,AppD2_b,AppD2_c,AppD2_d,ncol=2,nrow=2) #grid.arrange does not work with ggsave()
 Appendix_D_Fig2
-ggsave(file="Appendix_D_Fig2.pdf", Appendix_D_Fig2, height=8,width=11)
-ggsave(file="Appendix_D_Fig2.png", Appendix_D_Fig2, height=8,width=11)
-ggsave(file="Appendix_D_Fig2.jpg", Appendix_D_Fig2, height=8,width=11)
+ggsave(file="Appendix_D_Fig2.pdf", Appendix_D_Fig2, height=8,width=8)
+ggsave(file="Appendix_D_Fig2.png", Appendix_D_Fig2, height=8,width=8)
+ggsave(file="Appendix_D_Fig2.jpg", Appendix_D_Fig2, height=8,width=8)
