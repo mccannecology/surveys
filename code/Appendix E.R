@@ -30,14 +30,15 @@ nrow(dataFP_noshifts)
 write.csv(dataFP_noshifts, file = "FP ponds less than 5ha no shifts.csv", row.names = FALSE )
 
 ###################
+# Fig E1a         #
 # Appendix E      #
 # re-do Fig.2     #
 # FPcover_max     #
 ################### 
-E1 <- Fig02
-E1 <- E1 + scale_y_continuous(limits=c(0,80),expand=c(0,0))
-E1 <- E1 + geom_text(aes(x=5,y=78,label="a)"),size=7) # add pane label
-E1
+AppE1_a <- Fig02
+AppE1_a <- AppE1_a + scale_y_continuous(limits=c(0,80),expand=c(0,0))
+AppE1_a <- AppE1_a + geom_text(aes(x=5,y=78,label="a)"),size=7) # add pane label
+AppE1_a
 
 dip.test(dataFP$FPcover_max)
 
@@ -57,6 +58,7 @@ vrs03
 wvrs03
 
 ###################
+# Fig E1b         #
 # Appendix E      #
 # re-do Fig.2     #
 # min. FP value   #
@@ -64,13 +66,13 @@ wvrs03
 ################### 
 dataFP$FPcover_low_est_percent <- dataFP$FPcover_low_est*100 
 
-E2 <- ggplot(dataFP,aes(FPcover_low_est_percent)) + stat_bin(binwidth=20,right=TRUE,col="black")
-E2 <- E2 + ylab("Frequency") + xlab("Floating plant cover (%)")
-E2 <- E2 + scale_x_continuous(limits=c(0,101),breaks=c(0,20,40,60,80,100),expand=c(0,0)) + scale_y_continuous(limits=c(0,80),expand=c(0,0))
-E2 <- E2 + theme_classic(base_size=18)
-E2 <- E2 + theme(axis.title.y=element_blank())
-E2 <- E2 + geom_text(aes(x=5,y=78,label="b)"),size=7) # add pane label
-E2
+AppE1_b <- ggplot(dataFP,aes(FPcover_low_est_percent)) + stat_bin(binwidth=20,right=TRUE,col="black")
+AppE1_b <- AppE1_b + ylab("Frequency") + xlab("Floating plant cover (%)")
+AppE1_b <- AppE1_b + scale_x_continuous(limits=c(0,101),breaks=c(0,20,40,60,80,100),expand=c(0,0)) + scale_y_continuous(limits=c(0,80),expand=c(0,0))
+AppE1_b <- AppE1_b + theme_classic(base_size=18)
+AppE1_b <- AppE1_b + theme(axis.title.y=element_blank())
+AppE1_b <- AppE1_b + geom_text(aes(x=5,y=78,label="b)"),size=7) # add pane label
+AppE1_b
 
 dip.test(dataFP$FPcover_low_est)
 
@@ -90,19 +92,20 @@ vrs04
 wvrs04
 
 ###################
+# Fig E1c         #
 # Appendix E      #
 # re-do Fig.2     #
 # 8 removed       #
 ################### 
 dataFP_noshifts$FPcover_low_est_percent <- dataFP_noshifts$FPcover_max*100 
 
-E3 <- ggplot(dataFP_noshifts,aes(FPcover_low_est_percent)) + stat_bin(binwidth=20,right=TRUE,col="black")
-E3 <- E3 + ylab("Frequency") + xlab("Floating plant cover (%)")
-E3 <- E3 + scale_x_continuous(limits=c(0,101),breaks=c(0,20,40,60,80,100),expand=c(0,0)) + scale_y_continuous(limits=c(0,80),expand=c(0,0))
-E3 <- E3 + theme_classic(base_size=18)
-E3 <- E3 + theme(axis.title.y=element_blank())
-E3 <- E3 + geom_text(aes(x=5,y=78,label="c)"),size=7) # add pane label
-E3
+AppE1_c <- ggplot(dataFP_noshifts,aes(FPcover_low_est_percent)) + stat_bin(binwidth=20,right=TRUE,col="black")
+AppE1_c <- AppE1_c + ylab("Frequency") + xlab("Floating plant cover (%)")
+AppE1_c <- AppE1_c + scale_x_continuous(limits=c(0,101),breaks=c(0,20,40,60,80,100),expand=c(0,0)) + scale_y_continuous(limits=c(0,80),expand=c(0,0))
+AppE1_c <- AppE1_c + theme_classic(base_size=18)
+AppE1_c <- AppE1_c + theme(axis.title.y=element_blank())
+AppE1_c <- AppE1_c + geom_text(aes(x=5,y=78,label="c)"),size=7) # add pane label
+AppE1_c
 
 dip.test(dataFP_noshifts$FPcover_max)
 
@@ -124,90 +127,96 @@ wvrs05
 #################
 # ARRANGE 
 #################
-appendixE_freq <- arrangeGrob(E1,E2,E3,ncol=3,nrow=1) #grid.arrange does not work with ggsave()
+appendixE_freq <- arrangeGrob(AppE1_a,AppE1_b,AppE1_c,ncol=3,nrow=1) #grid.arrange does not work with ggsave()
 appendixE_freq
 
 ggsave(file="appendixE_freq.jpg", appendixE_freq, height=5,width=15)
 
 
-###################################################3
+###################################################
 # number of waterbodies (dataONEperpond) with FP cover> 66.666%
 nrow(subset(dataONEperpond, dataONEperpond$FPcover_low_est >= 0.66666)) # 12 
 
+
+
+
+
+
+##########################
+# dataFP max FP estimate # 
+##########################
+##########
+# FigE2a #
+##########
+# Beta reg.    
+AppE2_a <- Fig3a
+AppE2_a
+##########
+# FigE2b #
+##########
+# Laten class Beta reg.    
+AppE2_b <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_clusterv3))) + stat_smooth(method=glm, family=binomial, se=F,colour="blue",size=1) + geom_point(size=2) 
+AppE2_b <- AppE2_b + scale_shape_manual(values=c(1,19),name="Cluster")
+AppE2_b <- AppE2_b + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+AppE2_b <- AppE2_b + geom_text(aes(x=0.0075,y=1,label="b)"),size=7)
+AppE2_b <- AppE2_b + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+AppE2_b <- AppE2_b + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+AppE2_b <- AppE2_b + theme_classic(base_size=18)
+AppE2_b <- AppE2_b + theme(legend.position=c(0.85,0.3))
+AppE2_b 
+
 ###################
-# Appendix E      #
-# EMPIRICAL       #
-# "LINEAR"        #
-# (LOGISTIC)      #
+# beta regress    #
 # FPcover_low_est #
 ################### 
-appE_b1 <- ggplot(data=dataFP, aes(x=TOTP_avg,y=FPcover_low_est)) + geom_point(size=2) 
-appE_b1 <- appE_b1 + stat_smooth(method=glm, family=binomial, se=F)
-appE_b1 <- appE_b1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-appE_b1 <- appE_b1 + geom_text(aes(x=0.0075,y=1,label="d)"),size=7)
-appE_b1 <- appE_b1 + scale_x_log10() 
+##########
+# FigE2c #
+##########
+dataFP$FPcover_low_est
+
+# get rid of your 0s and 1s
+dataFP$FPcover_low_est[dataFP$FPcover_low_est == 1] <- (1*(length(dataFP$FPcover_low_est)-1)+0.5)/(length(dataFP$FPcover_low_est))
+dataFP$FPcover_low_est[dataFP$FPcover_low_est == 0] <- (0*(length(dataFP$FPcover_low_est)-1)+0.5)/(length(dataFP$FPcover_low_est))
+
+# fit the model 
+betareg_dataFP_low_est_logit <- betareg(FPcover_low_est ~ TOTP_avg, data=dataFP, link="logit")
+summary(betareg_dataFP_low_est_logit)
+betareg_dataFP_low_est_logit$fitted
+logLik(betareg_dataFP_low_est_logit)
+AIC(betareg_dataFP_low_est_logit)
+
+# add the fitted values to my original data set for plotting 
+# will need to work around NAs 
+AppE2_c_data <- cbind(dataFP$TOTP_avg,dataFP$FPcover_max)
+AppE2_c_data <- AppE2_c_data[complete.cases(AppE2_c_data),]
+AppE2_c_data <- cbind(AppE2_c_data,betareg_dataFP_low_est_logit$fitted)
+AppE2_c_data <- as.data.frame(AppE2_c_data)
+names(AppE2_c_data) <- c("TOTP_avg","FPcover_max","fitted")
+AppE2_c_data
+
+# with color 
+library(ggplot2)
+AppE2_c <- ggplot(data=AppE2_c_data, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
+AppE2_c <- AppE2_c + geom_line(aes(x=TOTP_avg,y=fitted),colour="blue",size=1)
+AppE2_c <- AppE2_c + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+AppE2_c <- AppE2_c + geom_text(aes(x=0.0075,y=1,label="c)"),size=7)
+AppE2_c <- AppE2_c + scale_x_log10() 
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
-appE_b1 <- appE_b1 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-appE_b1 <- appE_b1 + theme_classic()
-appE_b1 
+AppE2_c <- AppE2_c + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+AppE2_c <- AppE2_c + theme_classic(base_size=18)
+AppE2_c <- AppE2_c + theme(axis.title.x=element_blank())
+AppE2_c 
 
-glmFPsmallTOTPbinomial_low_est <- glm(FPcover_low_est ~ TOTP_avg, family=binomial, data=dataFP)
-summary(glmFPsmallTOTPbinomial_low_est) 
-AIC(glmFPsmallTOTPbinomial_low_est) 
-
-
+##########
+# FigE2d #
+##########
 ###################
-# Appendix E      #
-# EMPIRICAL       #
-# SEGMENTED       #
-# THRESHOLD       #
-# FPcover_low_est #
-###################
-# generates your breakpoint 1st
-breaks <- dataFP$TOTP_avg[which(dataFP$TOTP_avg >= 0.00001 & dataFP$TOTP_avg <= 0.2)]    # create a vector to hold potential breakpoints 
-
-mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
-
-for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
-  piecewise <- glm(FPcover_low_est ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family = binomial, data=dataFP)
-  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
-}
-mse <- as.numeric(mse) # converts list to numeric 
-breakpoint03<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
-breakpoint03 # 0.03004
-breakpoint<-breakpoint03
-breakpoint
-
-# Add new variables to the data frame just for plotting the segmented data in ggplot2
-# segmented data: TOTP_avg < breakpoint02 and TOTP_avg >= breakpoint03
-dataFP$breakpoint03 <- ifelse(dataFP$TOTP_avg <= breakpoint03, "below", "above")
-
-segmented.glmFPsmallTOTPbinomial_low_est <- glm(FPcover_low_est ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFP)
-summary(segmented.glmFPsmallTOTPbinomial_low_est)     
--2*logLik(segmented.glmFPsmallTOTPbinomial_low_est)[1]+2*5 # calculate the actual AIC for this model 
-rm(breaks,mse,breakpoint03,piecewise) # clean up your workspace 
-
-# plot it 
-appE_b2 <- ggplot(data=dataFP, aes(x=TOTP_avg,y=FPcover_low_est)) + geom_point(size=2) 
-appE_b2 <- appE_b2 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint03)))
-appE_b2 <- appE_b2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-appE_b2 <- appE_b2 + geom_text(aes(x=0.0075,y=1,label="e)"),size=7)
-appE_b2 <- appE_b2 + geom_vline(xintercept=breakpoint03,colour="red",size=1,linetype="longdash") # add vertical line @ threshold value 
-appE_b2 <- appE_b2 + scale_x_log10()
-y_breaks <- seq(0,1,0.25)
-y_labels <- as.character(y_breaks*100)
-appE_b2 <- appE_b2 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-appE_b2 <- appE_b2 + theme_classic() + theme(legend.position="none")
-appE_b2
-
-###################
-# Appendix E      #
-# EMPIRICAL       #
 # Mixture         #
 # Beta regression #
 # k = 2 clusters  #
-# ALT. STATES     #
 # FPcover_low_est #
 ###################
 dataFP$FPcover_low_est
@@ -250,92 +259,71 @@ dataFP <- merge(dataFP_TOTP,dataFP_noTOTP,all.x=T,all.y=T) # add the dataframes 
 rm(dataFP_TOTP,dataFP_noTOTP)
 
 # plot 
-appE_b3 <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_low_est,shape=factor(beta_logit_cluster_prior_clusterv3_low_est))) + stat_smooth(method=glm, family=binomial, se=F) + geom_point(size=2) 
-appE_b3 <- appE_b3 + scale_shape_manual(values=c(1,19),name="Cluster")
-appE_b3 <- appE_b3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-appE_b3 <- appE_b3 + geom_text(aes(x=0.0075,y=1,label="f)"),size=7)
-appE_b3 <- appE_b3 + scale_x_log10()
+AppE2_d <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_low_est,shape=factor(beta_logit_cluster_prior_clusterv3_low_est))) 
+AppE2_d <- AppE2_d + stat_smooth(method=glm, family=binomial, se=F, size=1) 
+AppE2_d <- AppE2_d + geom_point(size=2) 
+AppE2_d <- AppE2_d + scale_shape_manual(values=c(1,19),name="Cluster")
+AppE2_d <- AppE2_d + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
+AppE2_d <- AppE2_d + geom_text(aes(x=0.0075,y=1,label="d)"),size=7)
+AppE2_d <- AppE2_d + scale_x_log10()
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
-appE_b3 <- appE_b3 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-appE_b3 <- appE_b3 + geom_vline(xintercept=0.02234,colour="red",size=1,linetype="longdash") # add vertical line @ lower threshold value 
-appE_b3 <- appE_b3 + geom_vline(xintercept=0.457171,colour="red",size=1,linetype="longdash") # add vertical line @ upper threshold value 
-appE_b3 <- appE_b3 + theme_classic()
-appE_b3 <- appE_b3 + theme(legend.position=c(1,0.3))
-appE_b3 <- appE_b3 + theme(axis.title.y=element_blank())
-appE_b3 
+AppE2_d <- AppE2_d + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+AppE2_d <- AppE2_d + theme_classic()
+AppE2_d <- AppE2_d + theme(legend.position=c(1,0.3))
+AppE2_d <- AppE2_d + theme(axis.title.y=element_blank())
+AppE2_d 
 
+##########
+# FigE2e #
+##########
 ###################
-# Appendix E      #
-# EMPIRICAL       #
-# "LINEAR"        #
-# (LOGISTIC)      #
+# Beta regression #
 # 8 removed       #
 ################### 
-glmFPsmallTOTPbinomial_no_shifts <- glm(FPcover_max ~ TOTP_avg, family=binomial, data=dataFP_noshifts)
-summary(glmFPsmallTOTPbinomial_no_shifts) 
-AIC(glmFPsmallTOTPbinomial_no_shifts) 
+dataFP_noshifts$FPcover_max
 
-appE_c1 <- ggplot(data=dataFP_noshifts, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
-appE_c1 <- appE_c1 + stat_smooth(method=glm, family=binomial, se=F)
-appE_c1 <- appE_c1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-appE_c1 <- appE_c1 + geom_text(aes(x=0.0075,y=1,label="g)"),size=7)
-appE_c1 <- appE_c1 + scale_x_log10() 
+# get rid of your 0s and 1s
+dataFP_noshifts$FPcover_max[dataFP_noshifts$FPcover_max == 1] <- (1*(length(dataFP_noshifts$FPcover_max)-1)+0.5)/(length(dataFP_noshifts$FPcover_max))
+dataFP_noshifts$FPcover_max[dataFP_noshifts$FPcover_max == 0] <- (0*(length(dataFP_noshifts$FPcover_max)-1)+0.5)/(length(dataFP_noshifts$FPcover_max))
+
+# fit the model 
+betareg_dataFP_noshifts_logit <- betareg(FPcover_max ~ TOTP_avg, data=dataFP_noshifts, link="logit")
+summary(betareg_dataFP_noshifts_logit)
+betareg_dataFP_noshifts_logit$fitted
+logLik(betareg_dataFP_noshifts_logit)
+AIC(betareg_dataFP_noshifts_logit)
+
+# add the fitted values to my original data set for plotting 
+# will need to work around NAs 
+AppE2_e_data <- cbind(dataFP_noshifts$TOTP_avg,dataFP_noshifts$FPcover_max)
+AppE2_e_data <- AppE2_e_data[complete.cases(AppE2_e_data),]
+AppE2_e_data <- cbind(AppE2_e_data,betareg_dataFP_noshifts_logit$fitted)
+AppE2_e_data <- as.data.frame(AppE2_e_data)
+names(AppE2_e_data) <- c("TOTP_avg","FPcover_max","fitted")
+AppE2_e_data
+
+# with color 
+library(ggplot2)
+AppE2_e <- ggplot(data=AppE2_e_data, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
+AppE2_e <- AppE2_e + geom_line(aes(x=TOTP_avg,y=fitted),colour="blue",size=1)
+AppE2_e <- AppE2_e + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+AppE2_e <- AppE2_e + geom_text(aes(x=0.0075,y=1,label="e)"),size=7)
+AppE2_e <- AppE2_e + scale_x_log10() 
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
-appE_c1 <- appE_c1 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-appE_c1 <- appE_c1 + theme_classic()
-appE_c1 
+AppE2_e <- AppE2_e + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+AppE2_e <- AppE2_e + theme_classic(base_size=18)
+AppE2_e <- AppE2_e + theme(axis.title.x=element_blank())
+AppE2_e 
 
+##########
+# FigE2f #
+##########
 ###################
-# Appendix E      #
-# EMPIRICAL       #
-# SEGMENTED       #
-# THRESHOLD       #
-# 8 removed       #
-###################
-# generates your breakpoint 1st
-
-breaks <- dataFP_noshifts$TOTP_avg[which(dataFP_noshifts$TOTP_avg >= 0.00001 & dataFP_noshifts$TOTP_avg <= 0.2)]    # create a vector to hold potential breakpoints 
-mse <- numeric(length(breaks)) # create a blank vector to hold MSE     
-for(i in 1:length(breaks)){ # loop over all of the potential breakpoints & actually try them out in a lm()
-  piecewise <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg < breaks[i]) + TOTP_avg*(TOTP_avg>=breaks[i]), family = binomial, data=dataFP_noshifts)
-  mse[i] <- summary(piecewise)[4] # If this is a lm() I should index [6], if it's a glm() I should index [4]
-}
-mse <- as.numeric(mse) # converts list to numeric 
-breakpoint04<-breaks[which(mse==min(mse))] # picks the breakpoint with the lowest mse
-breakpoint04 # 0.03004
-
-# Add new variables to the data frame just for plotting the segmented data in ggplot2
-# segmented data: TOTP_avg < breakpoint02 and TOTP_avg >= breakpoint02 
-dataFP_noshifts$breakpoint04 <- ifelse(dataFP_noshifts$TOTP_avg <= breakpoint04, "below", "above")
-
-segmented.glmFPsmallTOTPbinomial_noshifts <- glm(FPcover_max ~ TOTP_avg*(TOTP_avg<breakpoint) + TOTP_avg*(TOTP_avg>=breakpoint), family=binomial(link=logit), data=dataFP_noshifts)
-summary(segmented.glmFPsmallTOTPbinomial_noshifts)    
-AIC(segmented.glmFPsmallTOTPbinomial_noshifts)    
--2*logLik(segmented.glmFPsmallTOTPbinomial_noshifts)[1]+2*5 # calculate the actual AIC for this model 
-rm(breaks,mse,breakpoint03,piecewise) # clean up your workspace 
-
-# plot it
-appE_c2 <- ggplot(data=dataFP_noshifts, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
-appE_c2  <- appE_c2  + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint04)))
-appE_c2  <- appE_c2  + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-appE_c2  <- appE_c2  + geom_text(aes(x=0.0075,y=1,label="h)"),size=7)
-appE_c2  <- appE_c2  + geom_vline(xintercept=breakpoint04,colour="red",size=1,linetype="longdash") # add vertical line @ threshold value 
-appE_c2  <- appE_c2  + scale_x_log10()
-y_breaks <- seq(0,1,0.25)
-y_labels <- as.character(y_breaks*100)
-appE_c2  <- appE_c2  + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-appE_c2  <- appE_c2  + theme_classic() + theme(legend.position="none")
-appE_c2 
-
-###################
-# Appendix E      #
-# EMPIRICAL       #
 # Mixture         #
 # Beta regression #
 # k = 2 clusters  #
-# ALT. STATES     #
 # 8 shifts removed#
 ###################
 # get rid of your 0s and 1s
@@ -376,67 +364,26 @@ dataFP_noshifts <- merge(dataFP_noshifts_TOTP,dataFP_noshifts_noTOTP,all.x=T,all
 rm(dataFP_noshifts_TOTP,dataFP_noshifts_noTOTP)
 
 # plot it 
-appE_c3 <- ggplot(dataFP_noshifts,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_cluster))) + stat_smooth(method=glm, family=binomial, se=F) + geom_point(size=2) 
-appE_c3 <- appE_c3 + scale_shape_manual(values=c(1,19),name="Cluster")
-appE_c3 <- appE_c3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-appE_c3 <- appE_c3 + geom_text(aes(x=0.0075,y=1,label="i)"),size=7)
-appE_c3 <- appE_c3 + scale_x_log10()
+AppE2_f <- ggplot(dataFP_noshifts,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_cluster))) 
+AppE2_f <- AppE2_f + stat_smooth(method=glm, family=binomial, se=F, size=1) 
+AppE2_f <- AppE2_f+ geom_point(size=2) 
+AppE2_f <- AppE2_f + scale_shape_manual(values=c(1,19),name="Cluster")
+AppE2_f <- AppE2_f + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
+AppE2_f <- AppE2_f + geom_text(aes(x=0.0075,y=1,label="f)"),size=7)
+AppE2_f <- AppE2_f + scale_x_log10()
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
-appE_c3 <- appE_c3 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-appE_c3 <- appE_c3 + geom_vline(xintercept=0.02234,colour="red",size=1,linetype="longdash") # add vertical line @ lower threshold value 
-appE_c3 <- appE_c3 + geom_vline(xintercept=0.2085,colour="red",size=1,linetype="longdash") # add vertical line @ upper threshold value 
-appE_c3 <- appE_c3 + theme_classic()
-appE_c3 <- appE_c3 + theme(legend.position=c(0.85,0.3))
-appE_c3 <- appE_c3 + theme(axis.title.y=element_blank())
-appE_c3 
+AppE2_f <- AppE2_f + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+AppE2_f <- AppE2_f + theme_classic()
+AppE2_f <- AppE2_f + theme(legend.position=c(0.85,0.3))
+AppE2_f <- AppE2_f + theme(axis.title.y=element_blank())
+AppE2_f 
 
 
-########################################
-# A few small tweaks to original plots #
-########################################
-# I may need to remove the original plot labels 
-appE_a1 <- ggplot(data=dataFP, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
-appE_a1 <- appE_a1 + stat_smooth(method=glm, family=binomial, se=F)
-appE_a1 <- appE_a1 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-appE_a1 <- appE_a1 + geom_text(aes(x=0.0075,y=1,label="a)"),size=7)
-appE_a1 <- appE_a1 + scale_x_log10() 
-y_breaks <- seq(0,1,0.25)
-y_labels <- as.character(y_breaks*100)
-appE_a1 <- appE_a1 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-appE_a1 <- appE_a1 + theme_classic()
-appE_a1
-
-appE_a2 <- ggplot(data=dataFP, aes(x=TOTP_avg,y=FPcover_max)) + geom_point(size=2) 
-appE_a2 <- appE_a2 + stat_smooth(method=glm, family=binomial, se=F,aes(fill=factor(breakpoint03)))
-appE_a2 <- appE_a2 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-appE_a2 <- appE_a2 + geom_text(aes(x=0.0075,y=1,label="b)"),size=7)
-appE_a2 <- appE_a2 + geom_vline(xintercept=breakpoint,colour="red",size=1,linetype="longdash") # add vertical line @ threshold value 
-appE_a2 <- appE_a2 + scale_x_log10()
-y_breaks <- seq(0,1,0.25)
-y_labels <- as.character(y_breaks*100)
-appE_a2 <- appE_a2 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-appE_a2 <- appE_a2 + theme_classic() + theme(legend.position="none")
-appE_a2
-
-appE_a3 <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_clusterv3))) + stat_smooth(method=glm, family=binomial, se=F) + geom_point(size=2) 
-appE_a3 <- appE_a3 + scale_shape_manual(values=c(1,19),name="Cluster")
-appE_a3 <- appE_a3 + xlab("Total P (mg/L)") + ylab("Floating plant cover(%)")
-appE_a3 <- appE_a3 + geom_text(aes(x=0.0075,y=1,label="c)"),size=7)
-appE_a3 <- appE_a3 + scale_x_log10()
-y_breaks <- seq(0,1,0.25)
-y_labels <- as.character(y_breaks*100)
-appE_a3 <- appE_a3 + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-appE_a3 <- appE_a3 + geom_vline(xintercept=0.01972,colour="red",size=1,linetype="longdash") # add vertical line @ lower threshold value 
-appE_a3 <- appE_a3 + geom_vline(xintercept=0.2085,colour="red",size=1,linetype="longdash") # add vertical line @ upper threshold value 
-appE_a3 <- appE_a3 + theme_classic(base_size=18)
-appE_a3 <- appE_a3 + theme(legend.position=c(0.85,0.3))
-appE_a3 <- appE_a3 + theme(axis.title.y=element_blank())
-appE_a3 
 
 ###################
 # ARRANGING PLOTS #
 ###################
-appendixE <- arrangeGrob(appE_a1, appE_a2, appE_a3,appE_b1,appE_b2,appE_b3,appE_c1,appE_c2,appE_c3,ncol=3,nrow=3) #grid.arrange does not work with ggsave()
+appendixE <- arrangeGrob(AppE2_a, AppE2_b, AppE2_c, AppE2_d, AppE2_e, AppE2_f, ncol=2,nrow=3) #grid.arrange does not work with ggsave()
 appendixE 
 ggsave(file="appendixE.jpg", appendixE, height=11,width=11)

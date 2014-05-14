@@ -134,8 +134,6 @@ AppD2_d <- AppD2_d + scale_x_log10()
 y_breaks <- seq(0,1,0.25)
 y_labels <- as.character(y_breaks*100)
 AppD2_d <- AppD2_d + scale_y_continuous(breaks=y_breaks,labels=y_labels)
-AppD2_d <- AppD2_d + geom_vline(xintercept=0.01972,colour="red",size=1,linetype="longdash") # add vertical line @ lower threshold value 
-AppD2_d <- AppD2_d + geom_vline(xintercept=0.2085,colour="red",size=1,linetype="longdash") # add vertical line @ upper threshold value 
 AppD2_d <- AppD2_d + theme_classic(base_size=18)
 AppD2_d <- AppD2_d + theme(legend.position=c(0.95,0.2))
 AppD2_d <- AppD2_d + theme(axis.title.y=element_blank())
@@ -146,7 +144,17 @@ AppD2_d
 ###################
 # original plots 
 AppD2_a <- Fig3a
-AppD2_b <- Fig3b 
+AppD2_b <- ggplot(dataFP,aes(x=TOTP_avg,y=FPcover_max,shape=factor(beta_logit_cluster_prior_clusterv3))) + stat_smooth(method=glm, family=binomial, se=F,colour="blue",size=1) + geom_point(size=2) 
+AppD2_b <- AppD2_b + scale_shape_manual(values=c(1,19),name="Cluster")
+AppD2_b <- AppD2_b + xlab("Total P (mg/L)") + ylab("Floating plant cover (%)")
+AppD2_b <- AppD2_b + geom_text(aes(x=0.0075,y=1,label="b)"),size=7)
+AppD2_b <- AppD2_b + scale_x_log10()
+y_breaks <- seq(0,1,0.25)
+y_labels <- as.character(y_breaks*100)
+AppD2_b <- AppD2_b + scale_y_continuous(breaks=y_breaks,labels=y_labels)
+AppD2_b <- AppD2_b + theme_classic(base_size=18)
+AppD2_b <- AppD2_b + theme(legend.position=c(0.85,0.3))
+AppD2_b  
 
 
 Appendix_D_Fig2 <- arrangeGrob(AppD2_a,AppD2_b,AppD2_c,AppD2_d,ncol=2,nrow=2) #grid.arrange does not work with ggsave()
