@@ -29,6 +29,7 @@ JASM_SA3 <- JASM_SA3 + ylab("Floating plant cover (%)")
 JASM_SA3 <- JASM_SA3 + xlab("Surface area (ha)")
 JASM_SA3 <- JASM_SA3 + theme_classic(base_size=18)
 JASM_SA3
+ggsave(file="JASM_SA3.jpg", JASM_SA3, height=5,width=5)
 
 JASM_SA <-ggplot(data=dataFP, aes(x=surfacearea_ha,y=FPcover_max_percent)) + geom_point(size=3) 
 JASM_SA <- JASM_SA + scale_x_log10()
@@ -45,8 +46,10 @@ ggsave(file="JASM_SA", JASM_SA, height=5,width=5)
 # FP frequency   #
 # dataONEperpond #
 ##################
+dataONEperpond$FPcover_max_percent[dataONEperpond$FPcover_max_percent == 0] <- 0.001
+
 JASMfig_All <- ggplot(dataONEperpond,aes(FPcover_max_percent)) 
-JASMfig_All <- JASMfig_All + stat_bin(binwidth=20,right=F,col="white")
+JASMfig_All <- JASMfig_All + stat_bin(binwidth=20,right=T,col="white")
 JASMfig_All <- JASMfig_All + ylab("Frequency") 
 JASMfig_All <- JASMfig_All + xlab("Floating plant cover (%)")
 JASMfig_All <- JASMfig_All + scale_x_continuous(limits=c(0,101),breaks=c(0,20,40,60,80,100),expand=c(0,0)) 
