@@ -17,12 +17,30 @@ library(tree)
 # threshold, with package: tree 
 treeFPsmallTOTP <- tree(dataFPsmall$FPcover_max ~ dataFPsmall$TOTP_avg)
 treeFPsmallTOTP
+plot(cv.tree(treeFPsmallTOTP))
 
 # threshold, with package: tree 
 treeFPTOTP <- tree(dataFP$FPcover_max ~ dataFP$TOTP_avg)
 treeFPTOTP
+plot(cv.tree(treeFPTOTP))
 plot(treeFPTOTP)
 text(treeFPTOTP)
+
+# threshold, with package: tree 
+treeFPTOTP <- tree(dataFP$FPcover_max ~ dataFP$surfacearea_ha)
+treeFPTOTP
+cv.tree(treeFPTOTP)
+plot(cv.tree(treeFPTOTP))
+plot(treeFPTOTP)
+text(treeFPTOTP)
+
+############################################################################################### 
+# Package: rpart 
+###############################################################################################
+rpart(FPcover_max ~ surfacearea_ha, data = dataFP)
+plotcp(rpart(FPcover_max ~ surfacearea_ha, data = dataFP))
+plot(rpart(FPcover_max ~ surfacearea_ha, data = dataFP))
+text(rpart(FPcover_max ~ surfacearea_ha, data = dataFP), use.n=TRUE, cex = 0.75) 
 
 
 ############################################################################################### 
