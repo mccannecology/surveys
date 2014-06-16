@@ -34,7 +34,7 @@ for (i in 1:nrow(dataONEperpond)){
 sp_composition
 
 # assign those species composition names to dataONEperpond 
-dataONEperpond$FP_species_composition[dataONEperpond$FP_species_richness > 0] <- sp_composition
+dataONEperpond$FP_species_composition[dataONEperpond$FP_species_richness != 0] <- sp_composition
 
 # re-name species composition labels 
 # convert to 1 or 2 letters 
